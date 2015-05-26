@@ -1,0 +1,1 @@
+Krux.ns._default.kxjsonp_userdata({"status":"200","body":{"code":"has_segments","kuid":"JTSAxUOd","kuid_long":"osawc9zcf","geo":{"domain":"mskcc.org","country":"us","dma":"501","zip":"10065","longitude":"-73.9638","latitude":"40.7653","region":"ny"},"segments":["pffhfla8q"]}});

@@ -1,0 +1,1245 @@
+
+.inner-content {
+	position:relative;
+	padding:20px;
+	float:left;
+}
+
+.section {
+	margin-bottom: 23px;
+}
+
+.static .inner-content {
+	padding: 0;
+}
+
+.static ol.toc li {
+	color: #216A9D;
+}	
+
+
+
+.primary-heading {
+	font-family:arial,helvetica,clean,sans-serif;
+	text-transform:none;
+	margin:-10px 0 15px 0; /* To nudge this up in line with the RHS content, as nclimate doesn't have top borders */
+}
+
+.primary-heading span {
+	border: 0;
+}
+
+.secondary-heading {
+	font-size:1.5em;
+	font-family:arial,helvetica,clean,sans-serif;
+	text-transform:none;
+	margin-bottom:20px;
+}
+
+h1.table-heading {
+	border:0;
+	margin-bottom:5px;
+}
+
+
+span.top {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+	padding-left:12px;
+	background:url(http://www.nature.com/view/nclimate/images/blue-arrow-up.png) no-repeat left center;
+	font-size:0.8em;
+}
+
+
+.tab-bar, .section {
+	position:relative;
+}
+
+.tab-bar ul {
+	list-style:none;
+	width:100%;
+	z-index: 1;
+}
+
+.tab-bar ul li {
+	display: inline;
+	margin-right: -2px;
+}
+
+.tab-bar ul li a {
+	border: 1px solid #e7e7e7;
+	padding: 5px 15px 4px;
+	border-bottom: 0 none;
+	color: #fff;
+	background: url("http://www.nature.com/view/images/bg_dark_grad.gif") repeat-x scroll 0 0 #AFB8C1;
+	font-size:91%;
+}
+
+.tab-bar ul li.active a {
+	background:url("http://www.nature.com/view/images/bg_light_grad.gif") repeat-x scroll 0 0 #FFFFFF;
+	border-color:#E7E7E7;
+	border-style:solid solid none;
+	border-width:1px 1px 0;
+	color:#333333;
+	cursor:default;
+}
+
+#archive div.tab-box {
+	border-color:#eee;
+	margin-top:3px;
+	width:625px;
+	float:left;
+}
+
+ul.articles {
+	margin-left: 20px;
+}
+
+ul.articles li h2, ul.collapsed-list li h2 {
+	font-weight:bold;
+}
+
+ul.articles li {
+	margin-bottom: 20px;
+}
+
+ul.articles li.sub {
+	margin-bottom:10px;
+	font-size:1.1em;
+	font-weight:bold;
+}
+
+ul.articles li p {
+	margin:0;
+}
+
+ul.jump-nav li {
+	display:inline;
+	border-right:1px solid #ccc;
+	margin: 0 4px 5px 4px;
+	line-height:1.8em;
+	font-size:0.85em;
+	padding-right: 7px;
+	font-weight: bold;
+}
+
+ul.jump-nav li.last {
+	border: 0;
+}
+
+.tab-box h2.secondary-heading {
+	padding: 0;
+	margin: 15px 0 10px;
+	font-size:1.1em;
+	font-weight: bold;
+}
+
+
+/* Categories */
+
+span#ajax-loader {
+	width:24px;
+	height:24px;
+	background:url(http://www.nature.com/view/nclimate/images/ajax-loader.gif) no-repeat;
+}
+
+div.categories span#ajax-loader, div.types span#ajax-loader {
+	right:20px;
+	left:auto !important;
+}
+
+#mainCat, #subCat, #mainType {
+	margin-right: 10px;
+}
+
+.js-enabled form#filter #submit-filter {
+	display:none;
+}
+
+form#filter {
+	float:left;
+	margin-bottom:20px;
+	width:100%;
+}
+
+form#filter label {
+	margin-right:5px;
+}
+
+form#filter .col-left {
+	float:left;
+	width:70%;
+}
+
+form#filter .col-right {
+	float:left;
+	width:30%;
+}
+
+form#filter .col-item {
+	width:100%;
+	margin-bottom:5px;
+}
+
+table.archive th, table.archive td
+{
+    border: 1px solid #ccc;
+}
+
+table.archive {
+    border-width: 0 0 1px 1px;
+    border-spacing: 0;
+	width:100%;
+	table-layout: fixed;
+}
+
+table.archive td, table.archive th {
+    padding: 10px;
+}
+
+table.archive td {
+	vertical-align: top;
+}
+
+table.archive tr.even {
+	background: #eee;
+}
+
+th.date {
+	width: 18%;
+}
+
+
+th.type {
+	width: 18%;
+}
+
+table.archive ul.subjects li {
+	margin-bottom:5px;
+}
+
+table.archive h2 {
+	font-weight: bold;
+	margin:3px 0 5px 0;
+}
+
+table.archive h3 {
+	color:#aaa;
+}
+
+table.archive thead {
+	font-weight:bold;
+}
+
+table.archive thead a {
+	display: block;
+}
+
+table.archive thead a span.hide {
+	position:absolute;
+	left:-9000px;
+}
+
+th.asc, th.desc {
+	background: #eee;
+}
+
+th.desc a {
+	background:url(http://www.nature.com/view/nclimate/images/blue-arrow-down.png) no-repeat right center;
+}
+
+th.asc a {
+	background:url(http://www.nature.com/view/nclimate/images/blue-arrow-up.png) no-repeat right center;
+}
+
+ul.authors, ul.subjects {
+	margin-top:5px;
+	font-size:0.9em;
+}
+ul.authors li, ul.subjects li {
+	display:inline;
+}
+
+/* Pagination */
+
+.pagination {
+	margin-top: 20px;
+	padding-bottom: 20px;
+}
+
+.pagination span {
+	float: right;
+	margin-right: 20px;
+}
+
+.pagination ul {
+	list-style:none;
+	float: right;
+}
+
+.pagination ul li {
+	display: block;
+	float: left;
+	margin-left: 4px;
+}
+
+.pagination ul li a {
+	border:1px solid #216A9D;
+	padding: 2px 3px;
+	position:relative;
+}
+
+.pagination ul li.off a, .flip-dates li.off a {
+	border: 0;
+}
+
+.pagination ul li.active a, .pagination ul li a:hover {
+	background-color: #216A9D;
+	color: #fff;
+}
+
+.pagination ul li a span, .flip-dates li a span {
+	position:absolute;
+	left:-5000px;
+}
+
+.pagination ul li.off a:hover {
+	background-color: transparent;
+}
+
+ul li.prev a {
+	background:url(http://www.nature.com/view/nclimate/images/blue-arrow-left.png) no-repeat center;
+	width:10px;
+	height: 1em;
+	padding: 0;
+	display: block;
+}
+
+ul li.next a {
+	background:url(http://www.nature.com/view/nclimate/images/blue-arrow-right.png) no-repeat center;
+	width:10px;
+	height: 1em;
+	padding: 0;
+	display: block;
+}
+
+/* Archive Reports tab*/
+
+ul.report-list {
+	width:100%;
+}
+
+ul.report-list li {
+	float: left;
+	width:100%;
+	height:auto;
+	margin-bottom:20px;
+	padding-bottom:10px;
+	border-bottom: solid 1px #B7B7B7;
+}
+
+ul.report-list p.promo {
+	margin-bottom:5px;
+}
+
+ul.report-list li h2{
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+
+ul.report-list li p {
+	width:490px;
+	margin-right: 20px;
+	float:left;
+}
+
+.report-img {
+	float:right;
+	width:60px;
+	height:80px;
+	margin-bottom:20px;
+}
+
+dl.issue-data {
+	float:left;
+}
+
+
+dl.issue-data dt, dl.issue-data dd {
+	float:left;
+	font-size: 85%;
+	margin-right:5px;
+}
+
+dt.hideDate {
+	display:none;
+}
+
+/* Regional Reports*/
+
+.regional h1 {
+	margin-top:0;
+}
+
+#main-feature {
+	width: 100%;
+	float:left;
+	border-bottom: solid 1px #B7B7B7;
+	padding-bottom:10px;
+	margin-bottom:20px;
+}
+
+#main-feature p {
+	float:left;
+	width:450px;
+}
+
+#main-feature img {
+	width:150px;
+	height:201px;
+	float:right;
+	
+}
+
+p#img-credit {
+	font-size:85%;
+	font-style:italic;
+	width:auto;
+	clear: right;
+	float: right;
+}
+
+
+ul#regional-reports h2 {
+	font-weight: bold;
+	margin-bottom: 5px;
+}
+
+ul#regional-reports li.reports {
+	float: left;
+	width: 100%;
+	border-bottom: solid 1px #B7B7B7;
+	margin-bottom:10px;
+	padding-bottom: 10px;
+}
+
+dl.details {
+	font-size: 0.9em;
+	clear:left;
+}
+
+dl.details span {
+	margin-left: -3px;
+	margin-right: 3px;
+}
+
+dl.details dt, dl.details dd {
+	display: inline;
+}
+
+dl.details dt {
+	margin-right: 3px;
+}
+
+/* Carousel */
+
+#wrapper {
+	position: relative;      
+}
+
+.js-enabled .ui-jcoverflip--item {
+	position: absolute;
+	display: block;
+}
+
+#flip, #wrapper, #flip .ui-jcoverflip--title {
+	width: 585px;
+}
+
+.js-enabled #flip {
+	height: 200px;
+}
+
+.js-enabled #wrapper {
+    height: 250px;
+}
+
+.js-enabled ul#flip {
+	clip:rect(0px 487px 250px 89px); /*Recommended: much faster with clipping*/
+ 	position:absolute;
+}
+
+.js-enabled .ie8 ul#flip, .js-enabled .ie6 ul#flip, .js-enabled .ie7 ul#flip {
+	clip:rect(0px 487px 250px 89px);
+}
+
+
+#carouselItemTitle {
+  	margin: 200px auto 0;
+  	text-align:center;
+  	color: #555;
+  	font-size: 140%;
+  	font-weight: normal;
+  	color: #363636;
+}
+
+.ie6 #carouselItemTitle {
+	margin-top:185px;
+}
+
+#carouselItemTitle a {
+    display: block;
+    color: #363636;
+}
+
+ul#flip img {
+  	display: block;
+  	border: 0;
+}
+
+.js-enabled #wrapper {
+	background: url(http://www.nature.com/view/ecommerce/static/images/gradient-base.gif) no-repeat scroll center 130px transparent;
+	overflow: hidden;
+	position: relative;
+	background-size:100% auto;
+	-moz-background-size:100% auto;
+	-o-background-size:100% auto;
+	-webkit-background-size:100% auto;
+}
+
+.ui-jcoverflip--item {
+  	cursor: pointer;
+}
+
+ul#flip {
+    float:left;
+    margin-top:30px;
+}
+
+ul#flip, ul#flip li {
+  	margin: 0;
+  	padding: 0;
+  	display: block;
+  	list-style-type: none;
+}
+
+ul#flip li {
+	background:#fff;
+	border: solid 1px #B7B7B7;
+	float:left;
+	margin:0 4px 4px 0;
+	padding:5px;
+}
+
+.js-enabled ul#flip li {
+	float:none;
+	margin:0;
+}
+
+.js-enabled ul#flip {
+	float:none;
+	margin-top:0;
+}
+
+#flip_next, #flip_previous {
+	display:none;
+    position:absolute;
+    top: 30%;
+    border:0;
+    left:30px;
+	background:0;
+	width:40px;
+	height: 40px;
+	overflow: hidden; /* This prevents the <a> dotted border extending left to the offset span */
+}
+
+.js-enabled #flip_next, .js-enabled #flip_previous {
+	display:block;
+}
+
+#flip_next span, #flip_previous span {
+	position: absolute;
+	left: -9000px;
+}
+
+#flip_previous {
+	background:url(http://www.nature.com/view/ecommerce/static/images/carousel-left.jpg) no-repeat;
+}
+
+#flip_next {
+    right:40px;
+    left:auto;
+	background:url(http://www.nature.com/view/ecommerce/static/images/carousel-right.jpg) no-repeat;
+}
+
+ul.flip-dates {
+	list-style:none;
+	float: right;
+}
+
+ul.flip-dates li {
+	display:inline;
+	float:left;
+	margin-left:4px;
+}
+
+ul.flip-dates li a {
+	padding:2px 3px;
+}
+
+.flip-dates li.active a, .flip-dates li a:hover {
+	font-weight: bold;
+	text-decoration: none;
+}
+
+.flip-dates li.off a:hover {
+	background-color: transparent;
+}
+
+.submit-box a, .jobseekers-box a {
+	background: #0792AF;
+	background: -webkit-gradient(linear, 0 0, 0 100%, from(#01738D), to(#0792AF));
+	background: -moz-linear-gradient(top, #01738D, #0792AF);
+}
+
+
+/* Styles for RHS boxes in non-AIP pages */
+#extranav ul.box-footer {
+	border:0;
+}
+
+#extranav ul.box-footer li {
+	float:left;
+	margin:0;
+	padding:0;
+	text-align:right;
+	font-size:0.9em;
+}
+
+#extranav ul.box-footer li.last {
+	float:right;
+} 
+
+#nature-events-box h2 {
+	padding:9px 9px 0;
+}
+
+#nature-events-box a {
+	font-weight: bold;
+}
+
+div.box-padding {
+	padding:9px;
+	position:relative;
+}
+
+
+
+
+/* Homepage */
+
+.home ul.article-list, ul.authors {
+	padding-left:0;
+	border-bottom:0;
+}
+
+.home ul.col-1 {
+	width:323px;
+}
+
+.home ul.col-2 {
+	width:305px;
+}
+
+.home ul.article-list {
+	float:left;
+	border-top:0;
+}
+
+.home ul.article-list li h2 {
+	margin-top:0;
+}
+
+.home .primary-heading, #research .primary-heading {
+	margin-top:0;
+	margin-bottom:5px;
+}
+.home .primary-heading {
+    border-bottom:1px solid #B7B7B7;
+    margin-bottom:20px;
+}
+.home .article-list li#article-list-links {
+	border:0;
+	float:right;
+	text-align:right;
+}
+
+.home .main-article {
+    margin-bottom:20px;
+}
+
+.home .article-list li#article-list-links ul {
+	padding-left:0;
+}
+
+.home .article-list li#article-list-links ul li {
+	border:0;
+	margin:auto;
+	padding:0 0 5px;
+}
+.home .article-list li#article-list-links a, .more-link {
+	background: url("http://www.nature.com/view/nature/landing/styles/images/grey-arrow-right.png") no-repeat scroll 100% 50%;
+	padding-right:12px;
+	font-weight:bold;
+	float:right;
+	margin:10px 0 0 20px;
+}
+
+.home .article-list h1 span.free, .home .media-left-big .free {
+    color:#CC0033;
+    text-transform:uppercase;
+}
+
+.media-left-big .media {
+    display: block;
+    left: 0;
+    width:50%;
+    margin-right:10px;
+}
+
+.media-left-big {
+    padding-left:50%;
+    margin-bottom:10px;
+    min-height:180px;
+}
+
+.media-left-big .media a {
+    position:relative;
+    display:inline-block;
+}
+
+.media-left-big .media img {
+    float:left;
+}
+
+.media-left-big .media a:hover p {
+    text-decoration:none;
+}
+
+.media-left-big div.media p {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 290px;
+    margin: 0;
+    padding:0 5px;
+    text-align: right;
+    font-style: italic;
+    color: #fff;
+    background: #000;
+    background: rgba(0,0,0,0.5);
+}
+
+body.ie6 #article-list-links.odd {
+	margin-left:163px;
+}
+
+.home #article-list-links.odd {
+	margin-right:0;
+	clear:none;
+}
+
+.home div.content-box {
+	padding:10px;
+	width:285px;
+	min-height:7.5em;
+	background:#eee;
+	margin-bottom:20px;
+	float:left;
+}
+
+.home div.content-box.right {
+	float:right;
+}
+
+.home div.content-box h2 {
+	margin-top:0;
+}
+
+.home div.content-box a {
+	font-weight:bold;
+	background: url("http://www.nature.com/view/nclimate/images/blue-arrow-right.png") no-repeat scroll right center;
+	padding-right:12px;
+}
+
+/* Homepage - jobs & events boxes */
+
+#nature-events-box h2, #nature-jobs-box h2  {
+	padding:9px 9px 0;
+	margin:0;
+}
+
+#nature-jobs-box ul, #nature-events-box ul {
+	padding:0;
+}
+
+
+div.sponsors-box-padding {
+	padding:9px;
+	height: auto;
+	position:relative;
+	min-height: 110px;
+}
+
+h2#sponsored-box-title {
+	padding-top: 40px;
+	display:block;
+	width:150px;
+}
+
+#sponsors-box img {
+	position: absolute;
+	right:10px;
+	top: 10px;
+	max-width:110px;
+	max-height:110px;
+}
+
+div.box ul li {
+	list-style:none;
+	margin-bottom:0;
+}
+
+div.box .box-padding li {
+	padding:5px 0;
+}
+
+div.box .box-padding ul li li {
+	padding:0;
+}
+
+#constrain-content div.box .box-footer {
+	background:url("http://www.nature.com/view/images/bg_light_grad.gif") repeat-x scroll 0 0 #FFFFFF;
+	margin:0;
+	padding:3px 9px;
+	text-align:right;
+	border:0;
+	font-size:0.9em;
+	border-top:1px solid #ccc;
+}
+
+div.box .box-footer li {
+	float:left;
+}
+
+div.box .box-footer li.last {
+	float:right;
+}
+
+.home #nature-jobs-box, #research #nature-jobs-box {
+	width:303px;
+	float:left;
+}
+
+.home #nature-events-box, #research #nature-events-box {
+	width:303px;
+	float:right;
+}
+
+.section-wrap {
+	float:left;
+	width:100%;
+}
+
+#open-innovation-box h3 {
+	font-weight: bold;
+}
+
+#open-innovation-box ul.challenge-list img {
+	float:left;
+	height:25px;
+	margin:5px 5px 0 0;
+	width:25px;
+}
+
+#open-innovation-box ul.challenge-list dl {
+	float:left;
+	font-size:0.95em;
+}
+
+#open-innovation-box dt {
+	clear:left;
+	float:left;
+	padding:0 0.3em 0 0;
+}
+
+#open-innovation-box dd {
+	clear:right;
+	float:left;
+}
+
+#open-innovation-box ul.challenge-list p {
+	clear:both;
+}
+
+#open-innovation-box dd.reward {
+	font-weight:bold;
+}
+
+#open-innovation-box li.powered {
+	font-size:91%;
+	position:relative;
+	text-align:left;
+	width:160px;
+	height:1.9em;
+}
+
+#open-innovation-box ul.box-footer li {
+	text-align:left;
+}
+
+#open-innovation-box ul.box-footer li.last {
+	font-size:1em;
+}
+
+#open-innovation-box li.powered a {
+	background:none;
+	padding-right:0;
+}
+
+#open-innovation-box li.powered img {
+	position:absolute;
+	right:0;
+	top:-3px;
+}
+
+#open-innovation-box li.powered span {
+	display:block;
+	width:65px;
+	margin-top:3px;
+}
+
+
+a#regional-btn {
+	display: block;
+	cursor:pointer;
+	width: 262px;
+	height:72px;
+	line-height: 1.8em;
+	padding: 8px 18px 0px 18px;
+	margin-bottom: 20px;
+	border: 1px solid #a9c4d5;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-radius: 5px;
+	background: #f9f9f9;
+	background: -webkit-gradient(linear,0 0,0 100%,from(#F1F1F1),to(white));
+	background: -moz-linear-gradient(top,#F1F1F1,white);
+}
+
+a#regional-btn span.text {
+	display:block;
+	float:left;
+	color:#464646;
+	font-weight: bold;
+	margin-top: 7px;
+	width:70%;
+}
+
+a#regional-btn span.blue {
+	display: block;
+	width: 70%;
+	color: #1f699b;
+	background: url('/view/nclimate/images/regional-blue-arrow-button.png') no-repeat right;
+}
+
+p#regional-logo, span#regional-logo {
+	float:right;
+	display: block;
+	width: 63px;
+	height: 63px;
+	text-indent: -9999999px;
+	background: url('/view/nclimate/images/climate-KIC-logo.png') no-repeat;
+}
+
+/* Blogs box */
+#blogs-box {
+	margin-bottom:30px;
+}
+
+#blogs-box ul li.view-more {
+	border:0;
+}
+
+#blogs-box ul li a {
+	font-weight:bold;
+}
+
+#blogs-box ul li .desc {
+	margin-bottom:10px;
+}
+
+#blogs-box .box-padding {
+    border:1px solid #FFFFFF;
+}
+
+#blogs-box .view-more a {
+	background:url("http://www.nature.com/view/nature/landing/styles/images/grey-arrow-right.png") no-repeat 100% 50%;
+	padding-right:12px;
+}
+
+.static ol.toc li {
+	list-style-image:url(http://www.nature.com/view/nclimate/images/blue-arrow-small-down.png);
+}
+
+html.js-enabled #archive .active .tab {
+	border-color:#eee;
+}
+
+.author-list img.author {
+	float:left;
+	margin-top:15px;
+}
+body.ie6 .author-list img.author-first {
+	margin-top:0;
+}
+	
+body.authors .author-list .author-first {
+	margin-top:0;
+}
+body.authors .author-list p, body.authors .author-list h2, body.authors .author-list h3 {
+	padding-left:80px;
+}
+body.ie6 .author-list p, body.ie6 .author-list h2, body.ie6 .author-list h3 {
+	padding-left:10px;
+}
+
+
+
+/* Latest research / Latest opinion and analysis */
+.standard-teaser h2 {
+    margin-bottom:5px;
+}
+
+.standard-teaser h2 span {
+    background-color:#fff;
+    color:#494949;
+    padding:0;
+}
+
+.standard-teaser .tags li a {
+    color:#1f699b;
+    background:#e9f1f5;
+}
+
+.standard-teaser .tags li a:hover {
+    background:#1f699b;
+}
+
+
+.section-wrap {
+    margin-bottom:28px;
+}
+
+.standard-teaser .tags, .standard-teaser .links {
+    margin-top:0.5em;
+}
+
+
+
+/* Related article carousel */
+
+.related-carousel {
+    margin-top:20px;
+}
+
+.related-carousel .slider {
+    overflow:hidden;
+    padding-bottom:10px;
+    margin-top:10px;
+    background:#eee;
+}
+
+.related-carousel ul.items {
+    position:relative;
+}
+
+.related-carousel ul.items li {
+    width:273px;
+    float:left;
+    margin:10px;
+}
+
+.related-carousel .secondary-heading {
+    border:0;
+    margin-bottom:0;
+    display:inline;
+}
+
+.related-carousel h2.heading {
+    border-bottom:1px solid #aaa;
+    margin-bottom:7px;
+}
+
+.related-carousel span.journal-title {
+    background:none;
+    font-weight:bold;
+    color:#666;
+}
+
+.related-carousel span.date {
+    background:none;
+    color:#666;
+}
+
+.related-carousel ul.authors li {
+    color:#666;
+}
+
+.related-carousel .pagination {
+    margin-top:5px;
+    padding:0;
+    float:right;
+}
+
+.related-carousel .pagination li a {
+    font-size:1%;
+    width:5px;
+    height:8px;
+    display:block;
+    overflow:hidden;
+}
+
+.related-carousel .pagination li.next a, .related-carousel .pagination li.prev a {
+    width:7px;
+    height:13px;
+}
+
+
+/* TOC CSS */
+
+#issue-meta .primary-heading {
+    margin:4px 0 6px 0;
+}
+
+#issue-meta .sub-inner .secondary-heading  {
+    background-color:#0989a4;
+}
+
+#issue-meta .sub-inner {
+    position:relative;
+}
+
+#issue-meta .sub-inner .sub-inner-content #about-the-cover p, .js-enabled #issue-meta .sub-inner .sub-inner-content #about-the-cover.visible p {
+    padding-bottom:0;
+    margin-bottom:0;
+}
+
+#issue-meta .sub-inner .sub-inner-content #about-the-cover, .js-enabled #issue-meta .sub-inner .sub-inner-content #about-the-cover.visible {
+    padding-bottom:15px;
+}
+
+#issue-meta .sub-inner .sub-inner-content .nav li a {
+    background:url(http://www.nature.com/view/nclimate/images/blue-arrow-box-left.png) no-repeat;
+}
+
+#issue-meta .sub-inner .sub-inner-content .toc li ul li.group {
+    padding-top:0;
+}
+
+#issue-meta .sub-inner .sub-inner-content .toc li h2 {
+    border:0;
+    font-family:inherit;
+    text-transform:none;
+}
+
+#issue-meta .sub-inner .sub-inner-content .toc li ul li a {
+    background-image:url(http://www.nature.com/view/nclimate/images/blue-arrow-small-down.png);
+}
+
+.js-enabled #issue-meta .sub-inner .sub-inner-content #about-the-cover h3 a {
+    background-image:url(http://www.nature.com/view/nclimate/images/blue-arrow-small-down.png);
+}
+
+.js-enabled #issue-meta .sub-inner .sub-inner-content #about-the-cover.visible h3 a {
+    background-image:url(http://www.nature.com/view/nclimate/images/blue-arrow-small-up.png);
+}
+
+p.see-also {
+    padding-top:5px;
+    font-size:0.9em;
+}
+
+.etal {
+    font-style:italic;
+}
+
+.article-list .see-also {
+    float:left;
+    width:100%;
+}
+
+.special-feature .box {
+    float:left;
+    width:99.7%;
+}
+
+.special-feature .inner {
+    padding:20px;
+    float:left;
+}
+
+.special-feature img {
+    float:left;
+    margin-right:20px;
+}
+
+.special-feature h2 {
+    font-size:1.5em;
+    margin-bottom:10px;
+}
+
+
+/* Timelines */
+
+#timelines ol {
+    padding:0;
+}
+
+#timelines ol li {
+    list-style-type:none;
+}
+
+#timelines ol li .header {
+    width:100%;
+    background:#bbb;
+    border-bottom:1px solid #ccc;
+    border-top:2px solid #eee;
+    float:left;
+}
+
+#timelines ol li .header span {
+    display:block;
+    float:left;
+    padding:10px;
+    
+}
+
+#timelines ol li .header span.year {
+    font-size:150%;
+    font-family:"Times New Roman";
+}
+
+#timelines ol li .content {
+    padding:10px 10px 10px 100px;
+    background:#eee;
+    float:left;
+}
+
+
+/* v2 fixes */
+#extranav p, #extranav h2 {
+    margin:0;
+}

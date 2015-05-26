@@ -1,0 +1,143 @@
+% PRL look and style (easy on the eyes)
+\documentclass[aps,pre,twocolumn,nofootinbib,superscriptaddress,linenumbers]{revtex4-1}
+% Two-column style (for submission/review/editing)
+%\documentclass[aps,prl,preprint,nofootinbib,superscriptaddress,linenumbers]{revtex4-1}
+
+\pdfoutput=1
+\usepackage[pdftex]{graphicx}
+
+\usepackage{alltt}
+
+%\usepackage{palatino}
+
+%\usepackage{palatino}
+% Change to a sans serif font.
+\usepackage{sourcesanspro}
+\renewcommand*\familydefault{\sfdefault} %% Only if the base font of the document is to be sans serif
+\usepackage[T1]{fontenc}
+%\usepackage[font=sf,justification=justified]{caption}
+\usepackage[font=sf]{floatrow}
+
+% Rework captions to use sans serif font.
+\makeatletter
+\renewcommand\@make@capt@title[2]{%
+ \@ifx@empty\float@link{\@firstofone}{\expandafter\href\expandafter{\float@link}}%
+  {\sf\textbf{#1}}\sf\@caption@fignum@sep#2\quad
+}%
+\makeatother
+
+\usepackage{listings} % For code examples
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+\usepackage{amsmath}
+\usepackage{amssymb}
+%\usepackage[mathbf,mathcal]{euler}
+%\usepackage{citesort}
+\usepackage[caption=false]{subfig}
+\usepackage{dcolumn}
+\usepackage{boxedminipage}
+\usepackage{verbatim}
+\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
+\usepackage[group-separator={,}]{siunitx}
+
+%Strikethrough
+\usepackage{ulem}
+
+% Justification
+\captionsetup{singlelinecheck=off}
+
+% Pretty-printing of shell commands
+\newcommand{\shellcmd}[1]{\\\ \texttt{\scriptsize #1}}
+
+% The figures are in a figures/ subdirectory.
+\graphicspath{{../figures/}}
+
+%% DOCUMENT %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+%% TITLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\title{dispensing-errors-manuscript}
+
+\author{Sonya M. Hanson}
+  \affiliation{Computational Biology Program, Sloan Kettering Institute, Memorial Sloan Kettering Cancer Center, New York, NY 10065, United States}
+\author{Sean Ekins}
+  \affiliation{Collaborations in Chemistry, Fuquay-Varina, NC 27526, United States}
+\author{John D. Chodera}
+ \thanks{Corresponding author}
+ \email{john.chodera@choderalab.org}
+  \affiliation{Computational Biology Program, Sloan Kettering Institute, Memorial Sloan Kettering Cancer Center, New York, NY 10065, United States}
+
+\date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ABSTRACT/pacs
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{abstract}
+
+This is an abstract. How serial dilutions can be not so good at low volumes.
+
+\end{abstract}
+
+\maketitle
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% INTRODUCTION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Introduction}
+\label{section:introduction}
+
+This is the introduction. Some anecdotes and some Sean Ekins.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% METHOD
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{METHOD}
+
+Words.
+
+%\begin{figure*}[tb]
+%    \includegraphics[width=1.0\textwidth]{pipeline/pipeline2}
+%
+%  \caption{{\bf Diagrammatic representation of the various stages of the Ensembler pipeline and illustrative statistics for modeling all human tyrosine kinase catalytic domains.}
+%  On the left, the various stages of the {\bf Ensembler} pipeline are shown.
+%  On the right, the number of viable models surviving each stage of the pipeline is shown for modeling all 90 tyrosine kinases (\emph{All TKs}) and representative individual tyrosine kinases (\emph{SRC} and \emph{ABL}).
+%  Typical timings on a computer cluster (containing Intel Xeon E5-2665 2.4GHz hyperthreaded processors and NVIDIA GTX-680 or GTX-Titan GPUs) is reported to illustrate resource requirements per model for modeling the entire set of tyrosine kinases.
+%  Note that \emph{CPU-h} denotes the number of hours consumed by the equivalent of a single CPU hyperthread and \emph{GPU-h} on a single GPU---parallel execution via MPI reduces wall clock time nearly linearly.
+%  }
+%  \label{figpipeline}
+%\end{figure*}
+
+
+
+\subsection*{Serial Dilution}
+
+More words.
+
+\subsection*{How off?}
+
+This off.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CONCLUSION
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{CONCLUSION}
+
+Everyone should do things better.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% ACKNOWLEDGMENTS
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Acknowledgments}
+\label{section:acknowledgments}
+
+Thanks to everybody!
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% BIBLIOGRAPHY
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\bibliographystyle{prsty} 
+\bibliography{ms.bib}
+
+
+\end{document}
