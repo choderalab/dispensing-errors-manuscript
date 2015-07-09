@@ -56,7 +56,7 @@
 \begin{document}
 
 %% TITLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{dispensing-errors-manuscript}
+\title{Modeling experimental error in assays: Understanding discrepancies between assay results with different dispensing technologies}
 
 \author{Sonya M. Hanson}
   \affiliation{Computational Biology Program, Sloan Kettering Institute, Memorial Sloan Kettering Cancer Center, New York, NY 10065, United States}
@@ -74,7 +74,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-This is an abstract. How serial dilutions can be not so good at low volumes.
+All experimental assay measurements contain error.
+The magnitude and primary origin of this error is not often obvious.
+In this paper, we describe a simple set of techniques for modeling some of the major sources of error in experimental assays. We demonstrate how deceptively simple operations---such as the creation of a dilution series with a robotic liquid handler---can significantly amplify imprecision and even contribute substantially to bias.
+To illustrate these techniques, we review a classic example of how choice of dispensing technology can greatly impact assay measurements, and show how the primary contributions to discrepancies can be easily understood.
+We hope this will be a useful tool for experimental and computational chemists to understand common sources of error within assays that use dilution series and how to model and correct for them.
 
 \end{abstract}
 
@@ -86,7 +90,12 @@ This is an abstract. How serial dilutions can be not so good at low volumes.
 \section{Introduction}
 \label{section:introduction}
 
-This is the introduction. Some anecdotes and some Sean Ekins.
+Measuring the affinity of ligands to their target protein is critical to understanding most biological processes. These measurements, however, contain many sources of error that are often not adequately accounted for. In the case where affinity is measured by fluorescence using small molecule ligands in DMSO these sources of error include but are not limited to: compound impurities, imprecise compound dispensing, unmonitored water absorption by DMSO stocks, variability in protein concentration, and inherent noise in any fluorescence reading measurement. In many papers and reports errors or not provided or are inadequately explained. Our understanding of the reliability of experimental measurements of ligand binding affinity would be greatly increased if it was common practice to calculate expected experimental errors resulting from the major known sources.
+
+Often computational chemists are faced with comparing their models to experimental assay data for which there is no clear idea of the magnitude of the error. Sometimes no error is provided. Sometimes only a ballpark estimate is given. It would be useful to be able to get an estimate of how confident one should be in the data they are looking at. Other times, one might want to ensure ahead of time that an assay will produce useful data. For example if the error is larger than the dynamic range of the expected measurements, the assay will not be very useful.
+
+In this paper, we review common sources of error in experimental assays, and describe some simple modeling tools for simulating a model of an assay while including important sources of error. It should prove a powerful tool for modelers to understand how error depends on important parameters, like compound affinity. We have provided an accompanying iPython notebook with an example
+approach. This can be used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variations among controls match expectations.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % METHOD

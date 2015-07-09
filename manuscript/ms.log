@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  26 MAY 2015 19:30
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  9 JUL 2015 17:52
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1014,40 +1014,51 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/m/n' will be
 (Font)              scaled to size 9.0pt on input line 75.
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/m/n' will be
-(Font)              scaled to size 12.0pt on input line 81.
+(Font)              scaled to size 12.0pt on input line 85.
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/b/n' will be
-(Font)              scaled to size 12.0pt on input line 81.
+(Font)              scaled to size 12.0pt on input line 85.
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/m/n' will be
-(Font)              scaled to size 5.0pt on input line 81.
+(Font)              scaled to size 5.0pt on input line 85.
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/m/n' will be
-(Font)              scaled to size 7.0pt on input line 81.
+(Font)              scaled to size 7.0pt on input line 85.
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/m/it' will be
-(Font)              scaled to size 9.0pt on input line 81.
+(Font)              scaled to size 9.0pt on input line 85.
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/m/n' will be
-(Font)              scaled to size 6.0pt on input line 81.
+(Font)              scaled to size 6.0pt on input line 85.
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/m/n' will be
-(Font)              scaled to size 8.0pt on input line 81.
+(Font)              scaled to size 8.0pt on input line 85.
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/b/n' will be
-(Font)              scaled to size 9.0pt on input line 86.
+(Font)              scaled to size 9.0pt on input line 90.
+
+Underfull \hbox (badness 1348) in paragraph at lines 93--94
+\T1/SourceSansPro-LF/m/n/10 plained. Our un-der-stand-ing of the re-li-a-bil-it
+y of ex-per-i-
+ []
+
+
+Underfull \hbox (badness 1286) in paragraph at lines 97--99
+[]\T1/SourceSansPro-LF/m/n/10 In this pa-per, we re-view com-mon sources of er-
+ror in
+ []
 
 No file ms.bbl.
 [1{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 143.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 152.
 
 (./ms.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 143.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 143.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 152.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 152.
 Package rerunfilecheck Info: File `ms.out' has not changed.
-(rerunfilecheck)             Checksum: 253A844432954A4F3B19A7D0EC3912CC;460.
+(rerunfilecheck)             Checksum: 1EC86DB89D208637EC137EC121C3E6EA;559.
  ) 
 Here is how much of TeX's memory you used:
- 20236 strings out of 493315
- 373133 string characters out of 6137904
- 424240 words of memory out of 5000000
- 23380 multiletter control sequences out of 15000+600000
+ 20241 strings out of 493315
+ 373194 string characters out of 6137904
+ 448240 words of memory out of 5000000
+ 23385 multiletter control sequences out of 15000+600000
  98143 words of font info for 73 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 54i,8n,92p,257b,796s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 54i,8n,92p,877b,796s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/sourcesanspro/a_5tbsmu.en
 c}</usr/local/texlive/2013/texmf-dist/fonts/type1/adobe/sourcesanspro/SourceSan
 sPro-Bold.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/adobe/sourcesansp
@@ -1055,7 +1066,7 @@ ro/SourceSansPro-It.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/adobe/s
 ourcesanspro/SourceSansPro-Regular.pfb></usr/local/texlive/2013/texmf-dist/font
 s/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2013/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on ms.pdf (1 page, 103026 bytes).
+Output written on ms.pdf (1 page, 107385 bytes).
 PDF statistics:
  71 PDF objects out of 1000 (max. 8388607)
  62 compressed objects within 1 object stream

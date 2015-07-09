@@ -1,0 +1,118 @@
+OUTLINE
+
+Introduction
+
+Experimental assays are contaminated with error; many contributions to this error.
+compound impurities not exactly known
+imprecise quantities of compound are dispensed
+compound DMSO stocks may absorb water or degrade
+liquid handlers don’t pipette exact amount
+protein concentrations inexact
+measurements are inexact
+
+Often, computational chemist is faced with assay data without a clear idea of magnitude of error
+sometimes no error is provided
+sometimes only one ballpark estimate of error for whole assay is provided
+would really like some way to estimate how confident she should be in data
+
+Other times, we might want to ensure that assay will produce useful data
+if error is larger than dynamic range of measurements we expect to make, assay will be useless
+would be useful if we could model assay before actually carrying it out
+
+In this paper, we review common sources of error in experimental assays, and describe some simple modeling tools for simulating a model of an assay that includes some important sources of error.
+a powerful tool for modelers to understand how error depends on important parameters, like compound affinity
+provide accompanying IPython notebook with example
+this approach can also help optimize assay formats to ensure they provide maximally useful information
+can help troubleshoot problematic assays or ensure all major sources of error accounted for by ensuring that variation among controls matches expectation
+
+Introductory example: Ekins paper
+to illustrate these principles, we tackle a now-infamous example of the same assay performed using different dispensing technologies leading to vastly different IC50s (ref figure)
+discuss how this led to different QSAR models
+discuss various hyptheses from In the Pipeline about origin of discrepancy and concern expressed by chemists
+we will show how the discrepancies can be simply understood using a simple model of the assay
+figure: reproduce our version of Ekins IC50 comparison figure
+
+Experimental error
+
+Types of error
+imprecision (variance)
+inaccuracy (bias)
+
+Common sources of error in experimental assays
+
+Modeling experimental error
+
+Simple liquid handling: Mixing solutions
+example of how mixing solutions leads to error
+rules for propagation of error
+modeling the dilution operation
+figure: mixing two solutions
+
+Complex liquid handling: Dilution series
+surprisingly difficult to create a dilution series accurately
+discussion of difficulties in mixing, which aren’t even considered in our simple model; we assume good mixing
+modeling error in dilution series for a liquid handler: CVs are amplified with each dilution
+modeling error using LabCyte Echo
+modeling error with HP D300
+figure: dilution series illustration; comparison of CVs for liquid handling without dilution, LabCyte Echo, HP D300
+
+Modeling an enzymatic reaction
+simple model of a competition assay and measuring Vmax
+simple models can be created for other assay readouts
+
+Modeling plate reader measurement
+all observations have error
+
+Simple imprecision insufficient to explain the Ekins discrepancy: Fixed tips and the dilution effect
+figure: Ekins IC50 comparison with error bars; shifted to account for bias
+BMS papers that quantify and explain dilution effects
+figure: illustration of dilution effect; resulting bias vs IC50
+correcting for dilution effect brings Echo and tips-based dispensing much closer into agreement
+
+Discussion
+
+Why model assays?
+during assay design: will the assay meet my goals?
+during assay optimization: plug in measured uncertainties, optimize assay format
+assay validation: do we understand all of the primary sources of error?
+assay QC: are we reproducibly meeting our target behavior with our controls?
+after an assay has been performed: how can I estimate the magnitude of error?
+
+Take-away messages:
+it’s hard to make a good dilution series!
+a large liquid handling CV can still result in a smaller overall assay CV
+dilution effects can be important in liquid handling with fixed tips; can lead to large biases
+direct dispensing techniques can be useful in reducing bias and error
+
+Helpful resources:
+pointers to our IPython notebooks
+other useful resources for modeling assays
+
+___ Personal Notes __ Delete below
+
+
+FIGURES:
+1) reproduce our version of Ekins IC50 comparison figure
+2) mixing two solutions
+3) dilution series illustration; comparison of CVs for liquid handling without dilution, LabCyte Echo, HP D300
+4) Ekins IC50 comparison with error bars; shifted to account for bias
+5) illustration of dilution effect; resulting bias vs IC50
+
+
+
+Hi John,
+
+Some things that would be particularly useful after looking through the outline: 
+ - This first section of results, I am a bit unclear what we plan to say and how it relates to the Ekins paper:
+ "Simple liquid handling: Mixing solutions
+ example of how mixing solutions leads to error
+ rules for propagation of error
+ modeling the dilution operation
+ figure: mixing two solutions"
+ - If you have good examples for 'other useful resources for modeling assays' that would be great to look at!
+ - Also I'm a bit unclear on how we plan to incorporate the plate measurement error discussion. In the two patents it mentions using the Perkin Elmer EnVision plate reader for the EphB4 assay, do we want to incorporate the specs of this into our analysis somehow?
+ 
+ Thanks!
+ 
+ -Sonya
+
