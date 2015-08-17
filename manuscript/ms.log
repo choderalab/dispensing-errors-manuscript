@@ -1,6 +1,7 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  9 JUL 2015 17:52
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  2 AUG 2015 14:48
 entering extended mode
- restricted \write18 enabled.
+ \write18 enabled.
+ file:line:error style messages enabled.
  %&-line parsing enabled.
 **ms.tex
 (./ms.tex
@@ -1054,7 +1055,7 @@ Package rerunfilecheck Info: File `ms.out' has not changed.
 Here is how much of TeX's memory you used:
  20241 strings out of 493315
  373194 string characters out of 6137904
- 448240 words of memory out of 5000000
+ 448239 words of memory out of 5000000
  23385 multiletter control sequences out of 15000+600000
  98143 words of font info for 73 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
@@ -1066,7 +1067,7 @@ ro/SourceSansPro-It.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/adobe/s
 ourcesanspro/SourceSansPro-Regular.pfb></usr/local/texlive/2013/texmf-dist/font
 s/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2013/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on ms.pdf (1 page, 107385 bytes).
+Output written on ms.pdf (1 page, 107391 bytes).
 PDF statistics:
  71 PDF objects out of 1000 (max. 8388607)
  62 compressed objects within 1 object stream
