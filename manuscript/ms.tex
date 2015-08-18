@@ -74,11 +74,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-All experimental assay measurements contain error.
-The magnitude and primary origin of this error is not often obvious.
-In this paper, we describe a simple set of techniques for modeling some of the major sources of error in experimental assays. We demonstrate how deceptively simple operations---such as the creation of a dilution series with a robotic liquid handler---can significantly amplify imprecision and even contribute substantially to bias.
-To illustrate these techniques, we review a classic example of how choice of dispensing technology can greatly impact assay measurements, and show how the primary contributions to discrepancies can be easily understood.
-We hope this will be a useful tool for experimental and computational chemists to understand common sources of error within assays that use dilution series and how to model and correct for them.
+All experimental assay data is contaminated with error, but understanding the magnitude, type, and primary origin of this error is not often obvious.
+Here, we describe a simple set of assay modeling techniques that allow sources of error and bias to be simulated and propagated into assay results.
+We demonstrate how deceptively simple operations---such as the creation of a dilution series with a robotic liquid handler---can significantly amplify imprecision and even contribute substantially to bias.
+To illustrate these techniques, we review an infamous example of how choice of dispensing technology can greatly impact assay measurements, and show how the primary contributions to discrepancies between assay results can be easily understood.
+These simple modeling techniques---illustrated with an accompanying IPython notebook---can allow modelers making use of experimental data to understand the expected error and bias in the dataset, and even help experimentalists during the assay design stage to ensure that assays are capable of reaching their target accuracy and imprecision goals.
 
 \end{abstract}
 
@@ -90,9 +90,22 @@ We hope this will be a useful tool for experimental and computational chemists t
 \section{Introduction}
 \label{section:introduction}
 
-Measuring the affinity of ligands to their target protein is critical to understanding most biological processes. These measurements, however, contain many sources of error that are often not adequately accounted for. In the case where affinity is measured by fluorescence using small molecule ligands in DMSO these sources of error include but are not limited to: compound impurities, imprecise compound dispensing, unmonitored water absorption by DMSO stocks, variability in protein concentration, and inherent noise in any fluorescence reading measurement. In many papers and reports errors or not provided or are inadequately explained. Our understanding of the reliability of experimental measurements of ligand binding affinity would be greatly increased if it was common practice to calculate expected experimental errors resulting from the major known sources.
+Measuring the activity and potency of ligands---whether in biophysical or cell-based assays---is a critical step in optimizing small molecules for use as chemical probes or potential therapeutics, and indeed in probing biological processes in general.
+Use of this assay data is complicated by the fact that all assay data are contaminated with error, with contributions to this error arising from numerous sources.
 
-Often computational chemists are faced with comparing their models to experimental assay data for which there is no clear idea of the magnitude of the error. Sometimes no error is provided. Sometimes only a ballpark estimate is given. It would be useful to be able to get an estimate of how confident one should be in the data they are looking at. Other times, one might want to ensure ahead of time that an assay will produce useful data. For example if the error is larger than the dynamic range of the expected measurements, the assay will not be very useful.
+Often, the dominant contributions to assay error are simply not known---this is unsurprising, given the number and variety of potential contributions to assay error.
+Even for what might be considered a straightforward assay involving fluorescent measurements of ligand binding to a protein target, this might include (but is by no means limited to): compound impurities and degradation, imprecise compound dispensing, unmonitored water absorption by DMSO stocks, intrinsic compound fluorescence, compound insolubility or aggregation, variability in protein concentration or quality, pipetting errors, and inherent noise in any fluorescence measurement. 
+In an ideal world, a number of control experiments would be run to measure the magnitude of these effects, and data quality checks would either reject flawed data or ensure that all contributions to error have been carefully accounted for in producing an assessment of error and confidence for each assayed value.
+
+%Often computational chemists are faced with comparing their models to experimental assay data for which there is no clear idea of the magnitude of the error. Sometimes no error is provided. Sometimes only a ballpark estimate is given. It would be useful to be able to get an estimate of how confident one should be in the data they are looking at. Other times, one might want to ensure ahead of time that an assay will produce useful data. For example if the error is larger than the dynamic range of the expected measurements, the assay will not be very useful.
+
+Unfortunately, by the time the data reach the hands of a modeler (or other data consumer), the opportunity to perform these careful control experiments has passed, and yet somehow, one is expected to make good use of the data.
+In the worst case, the communicated assay data may not contain any estimate of error whatsoever, making it fiendishly difficult to draw conclusions from the data---is the difference between multiple assay values for closely related compounds due to a true structure-activity relationship driving potency, or simply due to random error?
+While aggregating many datasets can give a crude estimate of the general reliability of similar assays~\cite{kramer:j-med-chem:2012:uncertainty-of-public-data,kramer:plos-one:2013:mixed-ic50-data}, knowledge of how a particular assay was conducted can inform the construction of an assay-specific model incorporating some of the dominant contributions to error in a manner that can be suprisingly informative.
+
+
+%In many papers and reports errors or not provided or are inadequately explained. Our understanding of the reliability of experimental measurements of ligand binding affinity would be greatly increased if it was common practice to calculate expected experimental errors resulting from the major known sources.
+
 
 In this paper, we review common sources of error in experimental assays, and describe some simple modeling tools for simulating a model of an assay while including important sources of error. It should prove a powerful tool for modelers to understand how error depends on important parameters, like compound affinity. We have provided an accompanying iPython notebook with an example
 approach. This can be used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variations among controls match expectations.
