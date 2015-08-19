@@ -1,1 +1,1 @@
-# This is where the manuscript will be.
+# This is where the manuscript is.
