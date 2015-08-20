@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  20 AUG 2015 18:12
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2013.5.30)  20 AUG 2015 18:22
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1031,7 +1031,19 @@ LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/m/n' will be
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/b/n' will be
 (Font)              scaled to size 9.0pt on input line 90.
 LaTeX Font Info:    Font shape `T1/SourceSansPro-LF/b/n' will be
-(Font)              scaled to size 10.0pt on input line 114.
+(Font)              scaled to size 10.0pt on input line 104.
+
+
+Package natbib Warning: Citation `kramer_experimental_2012' on page 1 undefined
+ on input line 104.
+
+
+Package natbib Warning: Citation `kalliokoski_comparability_2013' on page 1 und
+efined on input line 104.
+
+
+Package natbib Warning: Citation `ekins_dispensing_2013' on page 1 undefined on
+ input line 113.
 
 
 LaTeX Warning: Reference `figure:acoustic-vs-tips' on page 1 undefined on input
@@ -1069,10 +1081,10 @@ LaTeX Warning: There were undefined references.
 
  ) 
 Here is how much of TeX's memory you used:
- 20287 strings out of 493315
- 374542 string characters out of 6137904
+ 20290 strings out of 493315
+ 374623 string characters out of 6137904
  442390 words of memory out of 5000000
- 23416 multiletter control sequences out of 15000+600000
+ 23419 multiletter control sequences out of 15000+600000
  106396 words of font info for 75 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  54i,8n,92p,587b,796s stack positions out of 5000i,500n,10000p,200000b,80000s
@@ -1083,10 +1095,10 @@ ro/SourceSansPro-It.pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/adobe/s
 ourcesanspro/SourceSansPro-Regular.pfb></usr/local/texlive/2013/texmf-dist/font
 s/type1/public/amsfonts/cm/cmsy6.pfb></usr/local/texlive/2013/texmf-dist/fonts/
 type1/public/amsfonts/cm/cmsy7.pfb>
-Output written on dispensing-errors.pdf (2 pages, 115581 bytes).
+Output written on dispensing-errors.pdf (2 pages, 115440 bytes).
 PDF statistics:
- 117 PDF objects out of 1000 (max. 8388607)
- 105 compressed objects within 2 object streams
+ 114 PDF objects out of 1000 (max. 8388607)
+ 102 compressed objects within 2 object streams
  22 named destinations out of 1000 (max. 500000)
  129 words of extra memory for PDF output out of 10000 (max. 10000000)
 
