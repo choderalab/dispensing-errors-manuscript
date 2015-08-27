@@ -111,7 +111,7 @@ This approach, while simple, should nevertheless provide a powerful tool for mod
 Not only modelers may find benefit in this approach---these tools can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variations among controls match expectations.
 
 We illustrate these concepts by considering a now-infamous example from the literature: a report by Ekins et al.~\cite{ekins_dispensing_2013} on how the choice of dispensing technology impacts the apparent biological activity of the same set of compounds under otherwise identical conditions.
-The datasets employed in the analyses [CITE] used either a standard liquid handler with fixed (washable) tips or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{figure:acoustic-vs-tips}).
+The datasets employed in the analyses [CITE] used either a standard liquid handler with fixed (washable) tips or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{figure:overview}).
 While the frustration for modelers was particularly great, since QSAR models derived from these otherwise identical assays produce surprisingly divergent predictions, numerous practitioners from all corners of drug discovery expressed their frustration in ensuing blog posts and commentaries~\cite{in-the-pipeline-comments}.
 Hosts of potential reasons were speculated~\cite{in-the-pipeline-comments}, including [LIST HERE].
 
@@ -142,16 +142,31 @@ Overall experimental error can be broken into two components: The \emph{imprecis
 
 \section*{Modeling experimental error}
 
+Modeling experimental error is as simple as adding known values for imprecision and inaccuracy into a known assay. 
 
 \subsection*{Simple liquid handling: Mixing solutions}
 
+When an assay involves mixing two compounds together, as with most assays, you also have to consider mixing efficiency. For example if an assay involves mixing compound stock with a protein solution, usually a small volume into a much larger volume, uneven mixing can cause wide variation in the results. Several examples of this have been seen where, bla, bla, bla [ref,ref,ref].
+
 \subsection*{Complex liquid handling: Dilution series}
+
+Dilution series are often used to characterize the activity and potency of ligands. In dilution series, however, experimental errors are compounded, because the errors at an initial step of the dilution series will carry through to the next step. For example a 10\% error when transferring 50 uL from an initial stock to 50 uL of buffer to make a 1:2 dilution, will then end up being a blank \% total error once the 8th part of the dilution series is made. Explain bias and CV.
 
 \subsubsection*{For a multichannel liquid-handler.}
 
+To use more realistic numbers, for the Tecan Genesis the imprecision is stated as blank and the inaccuracy as blank, which means that if we're doing a blank blank, we will get blank (Figure~\ref{figure:acoustic-vs-tips}).  
+
 \subsubsection*{For acoustic dispensing technology.}
 
+For acoustic dispensing, however, this accumulated error in a dilution series is not a factor, since each step of the dilution is pipetted separately and directly, with good precision and accuracy down to very low volumes, in the case of the LabCyte Echo (Figure~\ref{figure:acoustic-vs-tips}). Despite the promises of the LabCyte Echo, we can see that it's CV and biases are mostly similar to that of the Tecan Genesis, even taking into account compounded error in the dilution series.
+
 \subsubsection*{Fixed tips and the dilution effect.}
+
+Another aspect of dispensing with multichannel liquid-handler, is the possibility of the dilution effect when using liquid-based fixed-tip pipetting, such as on the Tecan Genesis. This dilution effect was previously characterize in blank et al, and we can use these values to improve our model for the error in the multichannel liquid-handler.
+
+NOTES:
+Add a table with inaccuracy, imprecision, dilution errors numbers?
+Be sure to add second section to each of these paragraphs explain replicate result.
 
 \subsection*{Modeling an enzymatic reaction}
 
