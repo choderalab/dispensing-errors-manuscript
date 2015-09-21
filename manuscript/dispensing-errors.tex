@@ -74,11 +74,11 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-All experimental assay data is contaminated with error, but understanding the magnitude, type, and primary origin of this error is not often obvious.
+All data has error, but understanding the magnitude, type, and primary origin of the errors in experimental assay data is not often obvious.
 Here, we describe a simple set of assay modeling techniques that allow sources of error and bias to be simulated and propagated into assay results.
 We demonstrate how deceptively simple operations---such as the creation of a dilution series with a robotic liquid handler---can significantly amplify imprecision and even contribute substantially to bias.
 To illustrate these techniques, we review an infamous example of how choice of dispensing technology can greatly impact assay measurements, and show how the primary contributions to discrepancies between assay results can be easily understood.
-These simple modeling techniques---illustrated with an accompanying IPython notebook---can allow modelers making use of experimental data to understand the expected error and bias in the dataset, and even help experimentalists during the assay design stage to ensure that assays are capable of reaching their target accuracy and imprecision goals.
+These simple modeling techniques---illustrated with an accompanying IPython notebook---can allow modelers to understand the expected error and bias in the experimental datasets, and even help experimentalists in the design stage to more effectively target accuracy and imprecision goals.
 
 \end{abstract}
 
@@ -90,44 +90,41 @@ These simple modeling techniques---illustrated with an accompanying IPython note
 \section{Introduction}
 \label{section:introduction}
 
-Measuring the activity and potency of ligands---whether in biophysical or cell-based assays---is a critical step in optimizing small molecules for use as chemical probes or potential therapeutics, and indeed in probing biological processes in general.
-All data are imperfect; use of this assay data for any purpose is invariably complicated by the fact that all assay data are contaminated with error, with contributions arising from numerous sources.
+Measuring the activity and potency of ligands---whether in biophysical or cell-based assays---is a critical tool in the understanding of biological processes.
+However, understanding assay data for the purpose of optimizing small molecules for use as chemical probes or potential therapeutics is complicated by the fact that all assay data are contaminated with error from numerous sources.
 
-Often, the dominant contributions to assay error are simply not known---this is unsurprising, given the number and variety of potential contributing factors.
+Often, the dominant contributions to assay error are simply not known---unsurprising, given the number and variety of potential contributing factors.
 Even for what might be considered a straightforward assay involving fluorescent measurements of a ligand binding to a protein target, this might include (but is by no means limited to): compound impurities and degradation~\cite{kozikowski_effect_2003,kozikowski_effect_2003-1,cheng_studies_2003,waybright_overcoming_2009}, imprecise compound dispensing, unmonitored water absorption by DMSO stocks, the effect of DMSO on protein stability~\cite{tjernberg_dmso-related_2005}, intrinsic compound fluorescence~\cite{simeonov_fluorescence_2008,baell_new_2010}, compound insolubility~\cite{di_biological_2006} or aggregation~\cite{mcgovern_common_2002,mcgovern_kinase_2003,feng_high-throughput_2005,feng_synergy_2006,baell_new_2010}, variability in protein concentration or quality, pipetting errors, and inherent noise in any fluorescence measurement---not to mention stray lab coat fibers as fluorescent contaminants~\cite{busch_does_2015}. 
-In an ideal world, a number of control experiments would be run to measure the magnitude of these effects, and data quality checks would either reject flawed data or ensure that all contributions to error have been carefully accounted for in producing an assessment of error and confidence for each assayed value.
+In an ideal world, control experiments would be performed to measure the magnitude of these effects, and data quality tests would either reject flawed data or ensure that all contributions to error have been carefully accounted for in producing an assessment of error and confidence for each assayed value.
 
 %Often computational chemists are faced with comparing their models to experimental assay data for which there is no clear idea of the magnitude of the error. Sometimes no error is provided. Sometimes only a ballpark estimate is given. It would be useful to be able to get an estimate of how confident one should be in the data they are looking at. Other times, one might want to ensure ahead of time that an assay will produce useful data. For example if the error is larger than the dynamic range of the expected measurements, the assay will not be very useful.
 
-Unfortunately, by the time the data reach the hands of a modeler (or other data consumer), the opportunity to perform these careful control experiments has passed, and yet somehow, one is expected to make good use of the data.
-In the worst case, the communicated assay data may not contain any estimate of error whatsoever, making it fiendishly difficult to draw conclusions from the data---is the difference between multiple assay values for closely related compounds due to a true structure-activity relationship driving potency, or simply due to random error?
-While aggregating many datasets can give a crude estimate of the general reliability of similar assays~\cite{kramer_experimental_2012,kalliokoski_comparability_2013}, knowledge of how a particular assay was conducted can inform the construction of an assay-specific model incorporating some of the dominant contributions to error in a manner that can be suprisingly informative.
+Unfortunately, by the time the data reach the hands of a modeler (or other data consumer), the opportunity to perform these careful control experiments has passed.
+In the worst case, the communicated assay data may not contain any estimate of error at all. Even when error has been estimated, it is often not based on a holistic picture of specific information known about the assay.
+One approach that has been useful is aggregating many datasets to give a crude estimate of the general reliability of a similar set of assays~\cite{kramer_experimental_2012,kalliokoski_comparability_2013}. However, going the other way, narrowing instead of broadening one's focus: the knowledge of how a particular assay was conducted can inform the construction of an assay-specific model incorporating some of the dominant contributions to error in a manner that can be surprisingly informative.
 
 %In many papers and reports errors or not provided or are inadequately explained. Our understanding of the reliability of experimental measurements of ligand binding affinity would be greatly increased if it was common practice to calculate expected experimental errors resulting from the major known sources.
 
 
 In this paper, we review some common sources of error in experimental assays, and describe some simple modeling tools for simulating a model of an assay that incorporates these important (often dominant) sources of error. 
-This approach, while simple, should nevertheless provide a powerful tool for modelers to understand how assay error depends on important parameters, such as providing a means to estimate the expected data error as a function of compound affinity.
-Not only modelers may find benefit in this approach---these tools can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variations among controls match expectations.
+This approach, while simple, provides a powerful tool to understand how assay error depends on  known parameters. For example, with this approach, we can estimate the expected data error as a function of compound affinity.
+Not only modelers could benefit from this approach---these tools can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variations among controls match expectations.
 
 We illustrate these concepts by considering a now-infamous example from the literature: a report by Ekins et al.~\cite{ekins_dispensing_2013} on how the choice of dispensing technology impacts the apparent biological activity of the same set of compounds under otherwise identical conditions.
 The datasets employed in the analyses [CITE] used either a standard liquid handler with fixed (washable) tips or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{figure:overview}).
 While the frustration for modelers was particularly great, since QSAR models derived from these otherwise identical assays produce surprisingly divergent predictions, numerous practitioners from all corners of drug discovery expressed their frustration in ensuing blog posts and commentaries~\cite{in-the-pipeline-comments}.
 Hosts of potential reasons were speculated~\cite{in-the-pipeline-comments}, including [LIST HERE].
 
-We make use this real-world example to illustrate some of the basic concepts behind modeling the most common sources of error in assays.
-For simplicity, we ask whether the most basic contributions to assay error---imprecision and bias in material transfer operations and imprecision in measurement---might account for some component of this discrepancy between assay techniques.
-We make use of very basic information---the assay protocol as described (with some additional inferences based on basic concepts such as compound solubility limits) and manufacturer specifications for imprecision and bias---to construct a model of each dispensing process to determine the overall inaccuracy and imprecision of the assay as a function of true compound affinity, and identify the steps that contribute the most to these assay data errors.
+We make use of this real-world example to illustrate some of the basic concepts behind modeling the most common sources of error in assays.
+For simplicity, we ask whether the most basic contributions to assay error---imprecision and bias in material transfer operations and imprecision in measurement---might account for some component of the discrepancy between assay techniques.
+We make use of basic information---the assay protocol as described (with some additional inferences based on basic concepts such as compound solubility limits) and manufacturer specifications for imprecision and bias---to construct a model of each dispensing process to determine the overall inaccuracy and imprecision of the assay as a function of true compound affinity, and identify the steps that contribute the most to these assay data errors.
 To better illustrate these techniques, we also provide an annotated IPython notebook that includes all of the computations described here in detail.
 Readers are encouraged to download these notebooks and play with them to see how different assay configurations affect assay error.
 
 \begin{figure*}[tb]
-   \includegraphics[trim={0 15cm 0 10cm},clip,width=0.75\textwidth]{../figures/Fig1-2.pdf}
-  \caption{{\bf Diagrammatic representation of the various stages of the Ensembler pipeline and illustrative statistics for modeling all human tyrosine kinase catalytic domains.}
-  On the left, the various stages of the {\bf Ensembler} pipeline are shown.
-  On the right, the number of viable models surviving each stage of the pipeline is shown for modeling all 90 tyrosine kinases (\emph{All TKs}) and representative individual tyrosine kinases (\emph{SRC} and \emph{ABL}).
-  Typical timings on a computer cluster (containing Intel Xeon E5-2665 2.4GHz hyperthreaded processors and NVIDIA GTX-680 or GTX-Titan GPUs) is reported to illustrate resource requirements per model for modeling the entire set of tyrosine kinases.
-  Note that \emph{CPU-h} denotes the number of hours consumed by the equivalent of a single CPU hyperthread and \emph{GPU-h} on a single GPU---parallel execution via MPI reduces wall clock time nearly linearly.
+   \includegraphics[trim={0 15cm 0 8cm},clip,width=0.75\textwidth]{../figures/Fig1-3.pdf}
+  \caption{{\bf The stages of creating a dilution series with either tip-based or acoustic dispensing.}
+  On the way from the raw material to the assay measurement there are a variety of steps. In the case of tip-based dispensing, such as for the Tecan Genesis, an initial dilution of ligand stock into buffer is created and then serially diluted to create the full dilution series used in the final detection and construction of saturation curves. In the case of acoustic dispensing, such as for the LabCyte Echo, the full dilution series is made via direct dispensing, which has a uniform error at each stage of the dilution.
   }
   \label{overview}
 \end{figure*}
@@ -153,7 +150,7 @@ When an assay involves mixing two compounds together, as with most assays, you a
 
 \subsection*{Complex liquid handling: Dilution series}
 
-Dilution series are often used to characterize the activity and potency of ligands. In dilution series, however, experimental errors are compounded, because the errors at an initial step of the dilution series will carry through to the next step. For example a 10\% error when transferring 50 uL from an initial stock to 50 uL of buffer to make a 1:2 dilution, will then end up being a blank \% total error once the 8th part of the dilution series is made. Explain bias and CV. CV's are amplified with each dilution
+Dilution series are often used to characterize the activity and potency of ligands. In dilution series, however, experimental errors are compounded, because the errors at an initial step of the dilution series will carry through to the next step. For example a 10\% error when transferring 50 $\mu$L from an initial stock to 50 $\mu$L of buffer to make a 1:2 dilution, will then end up being a blank \% total error once the 8th part of the dilution series is made. Explain bias and CV. CV's are amplified with each dilution
 
 \subsubsection*{For a multichannel liquid-handler.}
 
@@ -189,7 +186,7 @@ Creating a simple model of a competition assay can be done using standard formul
 
 \subsection*{Simple imprecision insufficient to explain the Ekins discrepancy}
 
-Plotting the inaccuracies and imprecisions and how the differ for tip-based dispensing vs. direct dispensing is extremely useful, and allows us to understand the errors in our assay results a bit better. It is easy to see that simple difference in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in Ekins et al between tip-based and direct dispensing.
+Plotting the inaccuracies and imprecisions and how they differ for tip-based dispensing vs. direct dispensing is extremely useful, and allows us to understand the errors in our assay results a bit better. It is easy to see that simple difference in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in Ekins et al between tip-based and direct dispensing.
 
 However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC50 shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{figure:IC50_bias}).
 
@@ -205,36 +202,18 @@ However, if we incorporate the final component of error in tip-based dispensing,
 %  \label{IC50_bias}
 %\end{figure*}
 
-NOTES:
-Add a table with inaccuracy, imprecision, dilution errors numbers?
-Be sure to add second section to each of these paragraphs explain replicate result.
-
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DISCUSSION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{DISCUSSION}
 
-OUTLINE FROM GOOGLE DOC (TO BE MADE INTO PROSE IN THE FUTURE):
-Why model assays?
-during assay design: 
-we can answer “will the assay meet my goals/needs?” before investing time or money
-can identify unknowns that will affect assay utility, and measure them if needed
-can better identify pilot experiments that will allow assay tuning (eg measure known compounds near expected assay limits)
-during assay optimization: plug in measured uncertainties, optimize assay format
-assay validation: do we understand all of the primary sources of error?
-assay QC: are we reproducibly meeting our target behavior with our controls?
-after an assay has been performed: how can I estimate the magnitude of error? 
-useful for modellers / data consumers
+Serial dilutions are commonly used in the process of determining biologically and clinically relevant values such as IC$_{ 50}$s  and K$_{d}$s. While high-throughput methods have improved the reproducibility of such results over manual pipetting, recent papers, many of which we have cited here, have revealed that even robotic liquid handlers are victim to systematic error. Here we have proposed a simple model [which, in addition to blank blank, other resources for modeling error] understanding the contribution of dilution errors to discrepancies in IC$_{ 50}$s between liquid handlers and direct dispensing methodologies. We hope this will be a useful tool for experimental and computational chemists to understand common sources of error within assays that use dilution series and how to model and correct for them.
 
-Take-away messages:
-it’s hard to make a good dilution series!
-a large liquid handling CV can still result in a smaller overall assay CV
-dilution effects can be important in liquid handling with fixed tips; can lead to large biases
-direct dispensing techniques (Echo and D300) can be useful in reducing bias and error
+This however, is just one example of what can generally be done if this model is pursued for other times of experiments relevant to computational modelers. Ideally, experimentalists should verify ahead of time via this or a similar approach that their assay appropriately discriminates among the properties of the molecules in question given the expected range of IC$_{ 50}$s or K$_{d}$s to be probed, combined with the errors already known to be intrinsic to the experiment. This kind of modeling will allow for assays to even be fine tuned to make sure the data is appropriate to the question at hand. For example, in the context of our own lab, it has informed the decision to use only direct dispensing technologies for a our fluorescent ligand-binding assays.
 
-Helpful resources:
-pointers to our IPython notebooks
-other useful resources for modeling assays
+Not only is this sort of modeling approach useful for design ahead of time and analysis after the fact of experiments, but it can be extremely useful in determining the right tests and controls to use to be sure errors and biases are properly taken into account in general. If one is not certain about the primary sources of error in an experiment, one is arguably not certain about the results of the experiment in general. Understanding these errors, and being certain they are accounted for via clear benchmarks in experimental assays could help ensure the reproducibility of assays in the future, which is currently a topic of great interest. Especially with such a wide ranging set of assays that use dilution series, most notably toward the development of proteins and small molecules to study and treat disease, this is a very important category of experiments to understand how to make more clearly reproducible and interpretable.
+
+While here we have illustrated the importance of modeling to the specific case of liquid handling with fixed tips in the context of measuring IC50's of EPHB4, there are still large discrepancies that have not been explained, and large swaths of systems both biological and mechanical that are still open for further investigation. As experiments get more automated and analysis becomes more quantitative understanding these errors will be increasingly important both for the consumers (modelers) and producers (experimentalists) of these data.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
