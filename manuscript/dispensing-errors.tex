@@ -101,13 +101,15 @@ In an ideal world, control experiments would be performed to measure the magnitu
 
 Unfortunately, by the time the data reach the hands of a modeler (or other data consumer), the opportunity to perform these careful control experiments has passed.
 In the worst case, the communicated assay data may not contain any estimate of error at all. Even when error has been estimated, it is often not based on a holistic picture of specific information known about the assay.
-One approach that has been useful is aggregating many datasets to give a crude estimate of the general reliability of a similar set of assays~\cite{kramer_experimental_2012,kalliokoski_comparability_2013}. However, going the other way, narrowing instead of broadening one's focus: the knowledge of how a particular assay was conducted can inform the construction of an assay-specific model incorporating some of the dominant contributions to error in a manner that can be surprisingly informative.
+One approach that has been useful is aggregating many datasets to give a crude estimate of the general reliability of a similar set of assays~\cite{kramer_experimental_2012,kalliokoski_comparability_2013}. 
+However, going the other way, narrowing instead of broadening one's focus: the knowledge of how a particular assay was conducted can inform the construction of an assay-specific model incorporating some of the dominant contributions to error in a manner that can be highly informative.
 
 %In many papers and reports errors or not provided or are inadequately explained. Our understanding of the reliability of experimental measurements of ligand binding affinity would be greatly increased if it was common practice to calculate expected experimental errors resulting from the major known sources.
 
 
 In this paper, we review some common sources of error in experimental assays, and describe some simple modeling tools for simulating a model of an assay that incorporates these important (often dominant) sources of error. 
-This approach, while simple, provides a powerful tool to understand how assay error depends on  known parameters. For example, with this approach, we can estimate the expected data error as a function of compound affinity.
+This approach, while simple, provides a powerful tool to understand how assay error depends on  known parameters. 
+For example, with this approach, we can estimate the expected data error as a function of compound affinity.
 Not only modelers could benefit from this approach---these tools can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variations among controls match expectations.
 
 We illustrate these concepts by considering a now-infamous example from the literature: a report by Ekins et al.~\cite{ekins_dispensing_2013} on how the choice of dispensing technology impacts the apparent biological activity of the same set of compounds under otherwise identical conditions.
@@ -124,7 +126,9 @@ Readers are encouraged to download these notebooks and play with them to see how
 \begin{figure*}[tb]
    \includegraphics[trim={0 15cm 0 8cm},clip,width=0.75\textwidth]{../figures/Fig1-3.pdf}
   \caption{{\bf The stages of creating a dilution series with either tip-based or acoustic dispensing.}
-  On the way from the raw material to the assay measurement there are a variety of steps. In the case of tip-based dispensing, such as for the Tecan Genesis, an initial dilution of ligand stock into buffer is created and then serially diluted to create the full dilution series used in the final detection and construction of saturation curves. In the case of acoustic dispensing, such as for the LabCyte Echo, the full dilution series is made via direct dispensing, which has a uniform error at each stage of the dilution.
+  On the way from the raw material to the assay measurement there are a variety of steps. 
+  In the case of tip-based dispensing, such as for the Tecan Genesis, an initial dilution of ligand stock into buffer is created and then serially diluted to create the full dilution series used in the final detection and construction of saturation curves. 
+  In the case of acoustic dispensing, such as for the LabCyte Echo, the full dilution series is made via direct dispensing, which has a uniform error at each stage of the dilution.
   }
   \label{overview}
 \end{figure*}
@@ -137,8 +141,9 @@ Readers are encouraged to download these notebooks and play with them to see how
 
 Overall experimental error can be broken into two components: The \emph{imprecision} (or variance), which characterizes the random component of the error that causes different replicates of the same assay to give slightly different results, and the \emph{inaccuracy} (or bias), which is the deviation of the average over many replicates from the true value of the quantity being measured.
 
-There are a variety of sources of experimental error... (figure out here what should be here, and what should be in intro).
-
+There are a variety of sources of experimental error. 
+{\color{red} [SMH: Figure out here what should be here, and what should be in intro.]}
+{\color{red} [JDC: Here, we just want to describe a few of the issues that will lead to imprecision or inaccuracy.  For imprecision, random variation in the quantity delivered by a pipette, random errors in the reported mass of a dry compound, or random errors in the measured fluorescence of a well will all contribute.  The important thing is that the mean of these errors over many repetitions is zero.  If the mean is \emph{not} zero, this is an example of inaccuracy, or bias---where a calibration error leads to a systematic deviation in the volume delivered by a pipette, the mass measured by a balance, or the average fluorescence measured by a plate reader.]}
 
 \section*{Modeling experimental error}
 
@@ -146,23 +151,38 @@ Modeling experimental error is as simple as adding known values for imprecision 
 
 \subsection*{Simple liquid handling: Mixing solutions}
 
-When an assay involves mixing two compounds together, as with most assays, you also have to consider mixing efficiency. For example if an assay involves mixing compound stock with a protein solution, usually a small volume into a much larger volume, uneven mixing can cause wide variation in the results. Several examples of this have been seen where, bla, bla, bla [ref,ref,ref]. Rules for propagation of error. Mention that the difficulties in mixing are not even considered in our simple model (we just assume good mixing).
+When an assay involves mixing two compounds together, as with most assays, you also have to consider mixing efficiency. 
+For example if an assay involves mixing compound stock with a protein solution, usually a small volume into a much larger volume, uneven mixing can cause wide variation in the results. 
+\begin{itemize}
+  \item Several examples of this have been seen where, bla, bla, bla [ref,ref,ref]. 
+  \item Rules for propagation of error. 
+  \item Mention that the difficulties in mixing are not even considered in our simple model (we just assume good mixing).
+\end{itemize}
 
-\subsection*{Complex liquid handling: Dilution series}
+\subsection*{Making a dilution series}
 
-Dilution series are often used to characterize the activity and potency of ligands. In dilution series, however, experimental errors are compounded, because the errors at an initial step of the dilution series will carry through to the next step. For example a 10\% error when transferring 50 $\mu$L from an initial stock to 50 $\mu$L of buffer to make a 1:2 dilution, will then end up being a blank \% total error once the 8th part of the dilution series is made. Explain bias and CV. CV's are amplified with each dilution
+Dilution series are often used to characterize the activity and potency of ligands. In dilution series, however, experimental errors are compounded, because the errors at an initial step of the dilution series will carry through to the next step. 
+For example a 10\% error when transferring 50 $\mu$L from an initial stock to 50 $\mu$L of buffer to make a 1:2 dilution, will then end up being a blank \% total error once the 8th part of the dilution series is made. 
+\begin{itemize}
+  \item Explain bias and CV. 
+  \item CV is amplified with each dilution
+\end{itemize}
 
-\subsubsection*{For a multichannel liquid-handler.}
+\subsubsection*{Pipette-based liquid handling.}
 
 To use more realistic numbers, for the Tecan Genesis the imprecision is stated as blank and the inaccuracy as blank, which means that if we're doing a blank blank, we will get blank (Figure~\ref{figure:acoustic-vs-tips}).  
 
-\subsubsection*{For acoustic dispensing technology.}
+\subsubsection*{Direct dispensing technologies.}
 
 For acoustic dispensing, however, this accumulated error in a dilution series is not a factor, since each step of the dilution is pipetted separately and directly, with good precision and accuracy down to very low volumes, in the case of the LabCyte Echo (Figure~\ref{figure:acoustic-vs-tips}). Despite the promises of the LabCyte Echo, we can see that it's CV and biases are mostly similar to that of the Tecan Genesis, even taking into account compounded error in the dilution series.
 
-\subsubsection*{Fixed tips and the dilution effect.}
+\subsubsection*{Fixed pipette tips and the dilution effect.}
 
-Another aspect of dispensing with multichannel liquid-handler, is the possibility of the dilution effect when using liquid-based fixed-tip pipetting, such as on the Tecan Genesis. This dilution effect was previously characterize in blank et al (BMS paper(S?)), and we can use these values to improve our model for the error in the multichannel liquid-handler. We can easily see that including this error, significantly shifts the bias we see for tip-based dispensing (Figure~\ref{figure:acoustic-vs-tips}).
+Another aspect of dispensing with multichannel liquid-handler, is the possibility of the dilution effect when using liquid-based fixed-tip pipetting, such as on the Tecan Genesis. 
+This dilution effect was previously characterized in blank et al (BMS paper(S?)), and we can use these values to improve our model for the error in the multichannel liquid-handler. 
+We can easily see that including this error, significantly shifts the bias we see for tip-based dispensing (Figure~\ref{figure:acostic-vs-tips}).
+
+{\color{red}[JDC: Do we want to describe this here, or instead discuss it within \emph{Pipette-based liquid handling} above (breaking this into disposable and fixed tips), or tackle it later after we note that imprecision is insufficient to explain the Ekins discrepancy?]}
 
 %\begin{figure*}[tb]
 %    \includegraphics[width=1.0\textwidth]{pipeline/pipeline2}
@@ -178,15 +198,19 @@ Another aspect of dispensing with multichannel liquid-handler, is the possibilit
 
 \subsection*{Modeling plate reader measurement}
 
-When measuring readouts of fluorescence assays, it is important to take intrinsic error in plate reader measurement into account. All observations have error. Luckily most plate readers already have these stats on hand in their manuals. For example the $\___$ used in this example has a fluorescence detection threshold of $\__$ and an error of $\__$.
+When measuring readouts of fluorescence assays, it is important to take intrinsic error in plate reader measurement into account. All observations have error. 
+Luckily most plate readers already have these stats on hand in their manuals. 
+For example the {\bf XXX} used in this example has a fluorescence detection threshold of {\bf XXX} and an error of {\bf XXX}.
 
 \subsection*{Modeling an enzymatic reaction}
 
-Creating a simple model of a competition assay can be done using standard formulas, here assuming we have data for Vmax. Similar models can be created for different assay readouts.
+Creating a simple model of a competition assay can be done using standard formulas, here assuming we have data for $V_\mathrm{max}$. 
+Similar models can be created for different assay readouts.
 
-\subsection*{Simple imprecision insufficient to explain the Ekins discrepancy}
+\subsection*{Imprecision is insufficient to explain the Ekins discrepancy}
 
-Plotting the inaccuracies and imprecisions and how they differ for tip-based dispensing vs. direct dispensing is extremely useful, and allows us to understand the errors in our assay results a bit better. It is easy to see that simple difference in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in Ekins et al between tip-based and direct dispensing.
+Plotting the inaccuracies and imprecisions and how they differ for tip-based dispensing vs. direct dispensing is extremely useful, and allows us to understand the errors in our assay results a bit better. 
+It is easy to see that simple difference in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in Ekins et al between tip-based and direct dispensing.
 
 However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC50 shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{figure:IC50_bias}).
 
@@ -205,15 +229,24 @@ However, if we incorporate the final component of error in tip-based dispensing,
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DISCUSSION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{DISCUSSION}
+\section{Discussion}
 
-Serial dilutions are commonly used in the process of determining biologically and clinically relevant values such as IC$_{ 50}$s  and K$_{d}$s. While high-throughput methods have improved the reproducibility of such results over manual pipetting, recent papers, many of which we have cited here, have revealed that even robotic liquid handlers are victim to systematic error. Here we have proposed a simple model [which, in addition to blank blank, other resources for modeling error] understanding the contribution of dilution errors to discrepancies in IC$_{ 50}$s between liquid handlers and direct dispensing methodologies. We hope this will be a useful tool for experimental and computational chemists to understand common sources of error within assays that use dilution series and how to model and correct for them.
+Serial dilutions are commonly used in the process of determining biologically and clinically relevant values such as inhibition concentrations (IC$_{ 50}$)  and dissociation constants (K$_{d}$). 
+While high-throughput automation methods can improve the reproducibility of these measurements over manual pipetting, even robotic liquid handlers are victim to systematic error. 
+Here, we have demonstrated how a simple model {\color{red} [which, in addition to blank blank, other resources for modeling error]} that allowed us to estimate the imprecision and inaccuracy of the measured IC$_{50}$ values, as well as identify the difficulty in creating an accurate dilution series as the major contribution to discrepancies in measurements between fixed pipette tip and direct dispensing technologies. 
+We hope this will be a useful tool for experimental and computational chemists to understand common sources of error within assays that use dilution series and how to model and correct for them.
 
-This however, is just one example of what can generally be done if this model is pursued for other times of experiments relevant to computational modelers. Ideally, experimentalists should verify ahead of time via this or a similar approach that their assay appropriately discriminates among the properties of the molecules in question given the expected range of IC$_{ 50}$s or K$_{d}$s to be probed, combined with the errors already known to be intrinsic to the experiment. This kind of modeling will allow for assays to even be fine tuned to make sure the data is appropriate to the question at hand. For example, in the context of our own lab, it has informed the decision to use only direct dispensing technologies for a our fluorescent ligand-binding assays.
+This however, is just one example of what can generally be done if this model is pursued for other times of experiments relevant to computational modelers.
+Ideally, experimentalists should verify ahead of time via this or a similar approach that their assay appropriately discriminates among the properties of the molecules in question given the expected range of IC$_{ 50}$s or K$_{d}$s to be probed, combined with the errors already known to be intrinsic to the experiment. 
+This kind of modeling will allow for assays to even be fine tuned to make sure the data is appropriate to the question at hand. 
+For example, in our own laboratory, it has informed the decision to use only direct dispensing technologies for a our fluorescent ligand-binding assays.
 
-Not only is this sort of modeling approach useful for design ahead of time and analysis after the fact of experiments, but it can be extremely useful in determining the right tests and controls to use to be sure errors and biases are properly taken into account in general. If one is not certain about the primary sources of error in an experiment, one is arguably not certain about the results of the experiment in general. Understanding these errors, and being certain they are accounted for via clear benchmarks in experimental assays could help ensure the reproducibility of assays in the future, which is currently a topic of great interest. Especially with such a wide ranging set of assays that use dilution series, most notably toward the development of proteins and small molecules to study and treat disease, this is a very important category of experiments to understand how to make more clearly reproducible and interpretable.
+Not only is this sort of modeling approach useful for design ahead of time and analysis after the fact of experiments, but it can be extremely useful in determining the right tests and controls to use to be sure errors and biases are properly taken into account in general. If one is not certain about the primary sources of error in an experiment, one is arguably not certain about the results of the experiment in general. 
+Understanding these errors, and being certain they are accounted for via clear benchmarks in experimental assays could help ensure the reproducibility of assays in the future, which is currently a topic of great interest. 
+Especially with such a wide ranging set of assays that use dilution series, most notably toward the development of proteins and small molecules to study and treat disease, this is a very important category of experiments to understand how to make more clearly reproducible and interpretable.
 
-While here we have illustrated the importance of modeling to the specific case of liquid handling with fixed tips in the context of measuring IC50's of EPHB4, there are still large discrepancies that have not been explained, and large swaths of systems both biological and mechanical that are still open for further investigation. As experiments get more automated and analysis becomes more quantitative understanding these errors will be increasingly important both for the consumers (modelers) and producers (experimentalists) of these data.
+While here we have illustrated the importance of modeling to the specific case of liquid handling with fixed tips in the context of measuring IC50 values for EPHB4 inhibitors, there are still large discrepancies that have not been explained, and large swaths of systems both biological and mechanical that are still open for further investigation. 
+As experiments become more automated and analysis becomes more quantitative understanding these errors will be increasingly important both for the consumers (modelers) and producers (experimentalists) of these data.
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -223,6 +256,14 @@ While here we have illustrated the importance of modeling to the specific case o
 \label{section:acknowledgments}
 
 Thanks to everybody!
+
+\begin{itemize}
+  \item Funding sources (SKI, NIH core grant for JDC)
+  \item Adrienne Chow, Anthony Lozada, and Tecan?
+  \item Terry Stouch (JCAMD)
+  \item Anthony Nicholls (statistics of drug discovery GRC)
+  \item Paul Czodrowski (IPython notebooks)
+\end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BIBLIOGRAPHY
