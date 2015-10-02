@@ -7,6 +7,6 @@ conda install --yes seaborn ipython
 ```
 
 ## Manifest
-* `New_Template.ipynb` - potential new notebook template 
-* `Serial Dilution Accuracy.ipynb` - current notebook
+* `New_Format_with_Slider.ipynb` - current notebook, still with some outstanding, known, issues 
+* `Serial Dilution Accuracy.ipynb` - old format notebook
 * `img/` - images used in notebook
