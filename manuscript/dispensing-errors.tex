@@ -113,7 +113,7 @@ For example, with this approach, we can estimate the expected data error as a fu
 Not only modelers could benefit from this approach---these tools can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variations among controls match expectations.
 
 We illustrate these concepts by considering a now-infamous example from the literature: a report by Ekins et al.~\cite{ekins_dispensing_2013} on how the choice of dispensing technology impacts the apparent biological activity of the same set of compounds under otherwise identical conditions.
-The datasets employed in the analyses [CITE] used either a standard liquid handler with fixed (washable) tips or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{figure:overview}).
+The datasets employed in the analyses [CITE] used either a standard liquid handler with fixed (washable) tips or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{overview}).
 While the frustration for modelers was particularly great, since QSAR models derived from these otherwise identical assays produce surprisingly divergent predictions, numerous practitioners from all corners of drug discovery expressed their frustration in ensuing blog posts and commentaries~\cite{in-the-pipeline-comments}.
 Hosts of potential reasons were speculated~\cite{in-the-pipeline-comments}, including [LIST HERE].
 
@@ -141,9 +141,7 @@ Readers are encouraged to download these notebooks and play with them to see how
 
 Overall experimental error can be broken into two components: The \emph{imprecision} (or variance), which characterizes the random component of the error that causes different replicates of the same assay to give slightly different results, and the \emph{inaccuracy} (or bias), which is the deviation of the average over many replicates from the true value of the quantity being measured.
 
-There are a variety of sources of experimental error. 
-{\color{red} [SMH: Figure out here what should be here, and what should be in intro.]}
-{\color{red} [JDC: Here, we just want to describe a few of the issues that will lead to imprecision or inaccuracy.  For imprecision, random variation in the quantity delivered by a pipette, random errors in the reported mass of a dry compound, or random errors in the measured fluorescence of a well will all contribute.  The important thing is that the mean of these errors over many repetitions is zero.  If the mean is \emph{not} zero, this is an example of inaccuracy, or bias---where a calibration error leads to a systematic deviation in the volume delivered by a pipette, the mass measured by a balance, or the average fluorescence measured by a plate reader.]}
+There are a variety of sources of experimental error. For imprecision, random variation in the quantity delivered by a pipette, random errors in the reported mass of a dry compound, or random errors in the measured fluorescence of a well will all contribute.  The important thing is that the mean of these errors over many repetitions is zero.  If the mean is \emph{not} zero, this is an example of inaccuracy, or bias---where a calibration error leads to a systematic deviation in the volume delivered by a pipette, the mass measured by a balance, or the average fluorescence measured by a plate reader.
 
 \section*{Modeling experimental error}
 
@@ -162,7 +160,7 @@ For example if an assay involves mixing compound stock with a protein solution, 
 \subsection*{Making a dilution series}
 
 Dilution series are often used to characterize the activity and potency of ligands. In dilution series, however, experimental errors are compounded, because the errors at an initial step of the dilution series will carry through to the next step. 
-For example a 10\% error when transferring 50 $\mu$L from an initial stock to 50 $\mu$L of buffer to make a 1:2 dilution, will then end up being a blank \% total error once the 8th part of the dilution series is made. 
+For example a 10\% error when transferring 50 $\mu$L from an initial stock to 50 $\mu$L of buffer to make a 1:2 dilution, will then end up being a 28\% total error once the 8th part of the dilution series is made. 
 \begin{itemize}
   \item Explain bias and CV. 
   \item CV is amplified with each dilution
@@ -170,31 +168,46 @@ For example a 10\% error when transferring 50 $\mu$L from an initial stock to 50
 
 \subsubsection*{Pipette-based liquid handling.}
 
-To use more realistic numbers, for the Tecan Genesis the imprecision is stated as blank and the inaccuracy as blank, which means that if we're doing a blank blank, we will get blank (Figure~\ref{figure:acoustic-vs-tips}).  
+To use more realistic numbers, for the Tecan Genesis the imprecision is stated as blank and the inaccuracy as blank, which means that if we're doing a blank blank, we will get blank (Figure~\ref{acoustic-vs-tips}).  
+
+\begin{figure*}[tb]
+    \includegraphics[width=0.5\textwidth]{../figures/dilution.pdf}
+
+  \caption{{\bf A programmatic tip-based dilution series.}
+  In this dilution series we start with our initial well at concentration, $C0$, with initial volume, $Vinitial$. A volume, $Vtransfer$, is then transferred into a volume, $Vbuffer$, of buffer. In this case $Vtransfer$ and $Vbuffer$ are equal, so the concentration of the second well will be $C0/2$. This transfer is then repeated for all subsequent wells, the number of which is defined by $ndilutions$. From the last well the volume $Vtransfer$ is removed, so that all wells have the same final volume of $Vtransfer=Vbuffer$.
+  }
+  \label{dilution}
+\end{figure*}
 
 \subsubsection*{Direct dispensing technologies.}
 
-For acoustic dispensing, however, this accumulated error in a dilution series is not a factor, since each step of the dilution is pipetted separately and directly, with good precision and accuracy down to very low volumes, in the case of the LabCyte Echo (Figure~\ref{figure:acoustic-vs-tips}). Despite the promises of the LabCyte Echo, we can see that it's CV and biases are mostly similar to that of the Tecan Genesis, even taking into account compounded error in the dilution series.
+For acoustic dispensing, however, this accumulated error in a dilution series is not a factor, since each step of the dilution is pipetted separately and directly, with good precision and accuracy down to very low volumes, in the case of the LabCyte Echo (Figure~\ref{acoustic-vs-tips}). Despite the promises of the LabCyte Echo, we can see that it's CV and biases are mostly similar to that of the Tecan Genesis, even taking into account compounded error in the dilution series.
+
+\begin{figure*}[tb]
+    \includegraphics[trim={0 9cm 0 9cm},clip,width=0.5\textwidth]{../figures/direct_dispense.pdf}
+
+  \caption{{\bf A programmatic direct dispense-based dilution series.}
+  With direct dispense, each well is defined individually, not depending on the other, and $C0$ defines the concentration of the ligand stock. The $mix\_volume$ defines the final volume of the enzyme and ligand mix. The $dispense\_volume$ is the amount of the compound stock in DMSO that is dispensed into the mix\_volume, and is what determines the final concentration of the ligand in the direct dispense assay setup. To maintain a constant DMSO concentration throughout the assay, in this case 120 nL, a volume, defined by $backfill\_volume$, of pure DMSO is dispensed into the assay.
+  }
+  \label{direct_dispense}
+\end{figure*}
 
 \subsubsection*{Fixed pipette tips and the dilution effect.}
 
 Another aspect of dispensing with multichannel liquid-handler, is the possibility of the dilution effect when using liquid-based fixed-tip pipetting, such as on the Tecan Genesis. 
 This dilution effect was previously characterized in blank et al (BMS paper(S?)), and we can use these values to improve our model for the error in the multichannel liquid-handler. 
-We can easily see that including this error, significantly shifts the bias we see for tip-based dispensing (Figure~\ref{figure:acostic-vs-tips}).
+We can easily see that including this error, significantly shifts the bias we see for tip-based dispensing (Figure~\ref{acoustic-vs-tips}).
 
 {\color{red}[JDC: Do we want to describe this here, or instead discuss it within \emph{Pipette-based liquid handling} above (breaking this into disposable and fixed tips), or tackle it later after we note that imprecision is insufficient to explain the Ekins discrepancy?]}
 
-%\begin{figure*}[tb]
-%    \includegraphics[width=1.0\textwidth]{pipeline/pipeline2}
-%
-%  \caption{{\bf Diagrammatic representation of the various stages of the Ensembler pipeline and illustrative statistics for modeling all human tyrosine kinase catalytic domains.}
-%  On the left, the various stages of the {\bf Ensembler} pipeline are shown.
-%  On the right, the number of viable models surviving each stage of the pipeline is shown for modeling all 90 tyrosine kinases (\emph{All TKs}) and representative individual tyrosine kinases (\emph{SRC} and \emph{ABL}).
-%  Typical timings on a computer cluster (containing Intel Xeon E5-2665 2.4GHz hyperthreaded processors and NVIDIA GTX-680 or GTX-Titan GPUs) is reported to illustrate resource requirements per model for modeling the entire set of tyrosine kinases.
-%  Note that \emph{CPU-h} denotes the number of hours consumed by the equivalent of a single CPU hyperthread and \emph{GPU-h} on a single GPU---parallel execution via MPI reduces wall clock time nearly linearly.
-%  }
-%  \label{acoustic-vs-tips}
-%\end{figure*}
+\begin{figure*}[tb]
+    \includegraphics[width=1.0\textwidth]{../figures/tips_v_acoustic.pdf}
+
+  \caption{{\bf Comparing modeled errors in pIC50 values from tip-based vs acoustic dispensing.}
+  Using our model we can look at the variance in activity measurements as a function of inhibitor concentration $[I]$ (top), which then directly translates into a distribution of measured $pIC50$ values (middle), from which we can find out the bias and variance, or CV, as a function of pKi seen in these assays (bottom). While using acoustic dispensing methods the CV creeps up as a function of pKi, when a known dilution effect is added to the tip-based dispensing, a large bias is easy to spot.
+  }
+  \label{acoustic-vs-tips}
+\end{figure*}
 
 \subsection*{Modeling plate reader measurement}
 
@@ -212,19 +225,16 @@ Similar models can be created for different assay readouts.
 Plotting the inaccuracies and imprecisions and how they differ for tip-based dispensing vs. direct dispensing is extremely useful, and allows us to understand the errors in our assay results a bit better. 
 It is easy to see that simple difference in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in Ekins et al between tip-based and direct dispensing.
 
-However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC50 shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{figure:IC50_bias}).
+However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC50 shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{IC50_bias}).
 
-%\begin{figure*}[tb]
-%    \includegraphics[width=1.0\textwidth]{pipeline/pipeline2}
-%
-%  \caption{{\bf Diagrammatic representation of the various stages of the Ensembler pipeline and illustrative statistics for modeling all human tyrosine kinase catalytic domains.}
-%  On the left, the various stages of the {\bf Ensembler} pipeline are shown.
-%  On the right, the number of viable models surviving each stage of the pipeline is shown for modeling all 90 tyrosine kinases (\emph{All TKs}) and representative individual tyrosine kinases (\emph{SRC} and \emph{ABL}).
-%  Typical timings on a computer cluster (containing Intel Xeon E5-2665 2.4GHz hyperthreaded processors and NVIDIA GTX-680 or GTX-Titan GPUs) is reported to illustrate resource requirements per model for modeling the entire set of tyrosine kinases.
-%  Note that \emph{CPU-h} denotes the number of hours consumed by the equivalent of a single CPU hyperthread and \emph{GPU-h} on a single GPU---parallel execution via MPI reduces wall clock time nearly linearly.
-%  }
-%  \label{IC50_bias}
-%\end{figure*}
+\begin{figure*}[tb]
+    \includegraphics[trim={0 4cm 0 4cm},clip,width=0.5\textwidth]{../figures/compare-pIC50-bias_corrected.pdf}
+
+  \caption{{\bf Adding bias shifts pIC50 values closer to equivalence.}
+  Here we see (in red) the original experimental data points with errors bars representing the uncertainty calculated from our models. Adding in the bias from our models (in green) shifts the experimental pIC50 values closer to if tip-based assay and acoustic-based assay measurements resulted in the same final measurement. While this does not entirely explain the discrepancies between the two sets of data, it provides an initial insight, and shows the power of building simple error models to improve our understanding of experimental data sets.
+  }
+  \label{IC50_bias}
+\end{figure*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DISCUSSION
