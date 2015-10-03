@@ -113,7 +113,7 @@ For example, with this approach, we can estimate the expected data error as a fu
 Not only modelers could benefit from this approach---these tools can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variations among controls match expectations.
 
 We illustrate these concepts by considering a now-infamous example from the literature: a report by Ekins et al.~\cite{ekins_dispensing_2013} on how the choice of dispensing technology impacts the apparent biological activity of the same set of compounds under otherwise identical conditions.
-The datasets employed in the analyses [CITE] used either a standard liquid handler with fixed (washable) tips or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{overview}).
+The datasets employed in the analyses [CITE] used either a standard liquid handler with fixed (washable) tips or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{fig:overview}).
 While the frustration for modelers was particularly great, since QSAR models derived from these otherwise identical assays produce surprisingly divergent predictions, numerous practitioners from all corners of drug discovery expressed their frustration in ensuing blog posts and commentaries~\cite{in-the-pipeline-comments}.
 Hosts of potential reasons were speculated~\cite{in-the-pipeline-comments}, including [LIST HERE].
 
@@ -130,7 +130,7 @@ Readers are encouraged to download these notebooks and play with them to see how
   In the case of tip-based dispensing, such as for the Tecan Genesis, an initial dilution of ligand stock into buffer is created and then serially diluted to create the full dilution series used in the final detection and construction of saturation curves. 
   In the case of acoustic dispensing, such as for the LabCyte Echo, the full dilution series is made via direct dispensing, which has a uniform error at each stage of the dilution.
   }
-  \label{overview}
+  \label{fig:overview}
 \end{figure*}
 
 
@@ -141,73 +141,111 @@ Readers are encouraged to download these notebooks and play with them to see how
 
 Overall experimental error can be broken into two components: The \emph{imprecision} (or variance), which characterizes the random component of the error that causes different replicates of the same assay to give slightly different results, and the \emph{inaccuracy} (or bias), which is the deviation of the average over many replicates from the true value of the quantity being measured.
 
-There are a variety of sources of experimental error. For imprecision, random variation in the quantity delivered by a pipette, random errors in the reported mass of a dry compound, or random errors in the measured fluorescence of a well will all contribute.  The important thing is that the mean of these errors over many repetitions is zero.  If the mean is \emph{not} zero, this is an example of inaccuracy, or bias---where a calibration error leads to a systematic deviation in the volume delivered by a pipette, the mass measured by a balance, or the average fluorescence measured by a plate reader.
+There are a variety of sources of experimental error. 
+For imprecision, random variation in the quantity delivered by a pipette, random errors in the reported mass of a dry compound, or random errors in the measured fluorescence of a well will all contribute. 
+The important thing is that the mean of these errors over many repetitions is zero. 
+If the mean is \emph{not} zero, this is an example of inaccuracy, or bias---where a calibration error leads to a systematic deviation in the volume delivered by a pipette, the mass measured by a balance, or the average fluorescence measured by a plate reader.
 
 \section*{Modeling experimental error}
 
-Modeling experimental error is as simple as adding known values for imprecision and inaccuracy into a known assay. 
+Modeling experimental error can be done in many ways. 
+Here we take the approach that it is as simple as adding known values for imprecision and inaccuracy in pipetting into a model of your assay, and using parametric bootstrapping [ref] to sample through many replicates and getting a resulting expected bias and coefficient of variation (CV), which correspond to the imprecision and inaccuracy, respectively. 
+
+Since the main values for imprecision and inaccuracy that we need to consider are those for the volumes being pipetted, to sample across many replicates we just randomly draw from a normal distribution:
+\begin{equation} \label{eq:1}
+Volume \sim \mathcal{N}(\mu,\sigma^2) 
+\end{equation}
+where $\mu$ is the bias and $\sigma^2$ is the variance, which are defined by the imprecision and inaccuracy values, respectively, provided by the manufacturer of the liquid-handler.
+
+\subsection*{Error propagation}
+
+Error propagation, for example when we have many pipetting steps in a row each with its own error, can be a bit trickier to implement. 
+While there are a variety of ways of doing this, derivable from the Taylor Expansion, using parametric bootstrapping [ref] to sample through many replicates, as mentioned above, avoids having to implement these more complex forms of error propagation.
+Bootstrapping allows you to approximate the sampling distribution by simulating from a good estimate of the real process.
+The more common form of boostrapping is resampling bootstrapping, where the 'good estimate of the real process' resamples estimates from the observed sample.
+Here, parametric bootstrapping is used, where the 'good estimate of the real process' is a simulation of a model.
+This works well for a variety of models, and here we show it for a specific rather simple case, but it can be expanded to include much more complicated error models, without making the math of the error propagation any more complicated.
+In this case knowing the sampling distribution lets us quantify uncertainty
 
 \subsection*{Simple liquid handling: Mixing solutions}
 
 When an assay involves mixing two compounds together, as with most assays, you also have to consider mixing efficiency. 
 For example if an assay involves mixing compound stock with a protein solution, usually a small volume into a much larger volume, uneven mixing can cause wide variation in the results. 
 \begin{itemize}
-  \item Several examples of this have been seen where, bla, bla, bla [ref,ref,ref]. 
-  \item Rules for propagation of error. 
+  \item Several examples of this have been seen [ref,ref]
   \item Mention that the difficulties in mixing are not even considered in our simple model (we just assume good mixing).
 \end{itemize}
 
 \subsection*{Making a dilution series}
 
-Dilution series are often used to characterize the activity and potency of ligands. In dilution series, however, experimental errors are compounded, because the errors at an initial step of the dilution series will carry through to the next step. 
-For example a 10\% error when transferring 50 $\mu$L from an initial stock to 50 $\mu$L of buffer to make a 1:2 dilution, will then end up being a 28\% total error once the 8th part of the dilution series is made. 
-\begin{itemize}
-  \item Explain bias and CV. 
-  \item CV is amplified with each dilution
-\end{itemize}
+Dilution series are often used to characterize the activity and potency of ligands. 
+In dilution series, error propagation is especially important, as pipetting happens as many times as there are steps in the dilution, with each pipetting step contributing its own error. 
+Thus, the instrumentation used can have a real effect on the results obtained.
+Here we compare an aqueous dilution series made with a tip-based liquid handler (specifically the Tecan Genesis), and a direct-dispensing dilution series made with acoustic dispensing (specifically the Labcyte Echo).
 
-\subsubsection*{Pipette-based liquid handling.}
+\subsubsection*{Tip-based liquid handling.}
 
-To use more realistic numbers, for the Tecan Genesis the imprecision is stated as blank and the inaccuracy as blank, which means that if we're doing a blank blank, we will get blank (Figure~\ref{acoustic-vs-tips}).  
+To construct a model of a dilution series we start with our initial well at concentration, $C0$, and then transfer volume, $Vtransfer$, to create $ndilutions$ as illustrated in (Figure~\ref{fig:dilution}). 
+We can add imprecision and bias to this by using manufacturer-provided values for the Tecan Genesis: the imprecision is stated as 3\% and the inaccuracy as 3-5\% for the volumes in question [ref]. 
+The concentration of each well is determined by the volumes $Vtransfer$ and $Vbuffer$, each of which is defined in our model as randomly drawn from a normal distribution \ref{eq:1}, where the bias and the variance that have been pulled from a linear interpolation of the provided imprecision and inaccuracy, respectively, provided by the manufacturer.
+Then, applying the parametric bootstrapping model, which is simply sampling over this variation with many replicates, we can get a good estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}).
 
 \begin{figure*}[tb]
     \includegraphics[width=0.5\textwidth]{../figures/dilution.pdf}
 
   \caption{{\bf A programmatic tip-based dilution series.}
-  In this dilution series we start with our initial well at concentration, $C0$, with initial volume, $Vinitial$. A volume, $Vtransfer$, is then transferred into a volume, $Vbuffer$, of buffer. In this case $Vtransfer$ and $Vbuffer$ are equal, so the concentration of the second well will be $C0/2$. This transfer is then repeated for all subsequent wells, the number of which is defined by $ndilutions$. From the last well the volume $Vtransfer$ is removed, so that all wells have the same final volume of $Vtransfer=Vbuffer$.
+  In this dilution series we start with our initial well at concentration, $C0$, with initial volume, $Vinitial$. A volume, $Vtransfer$, is then transferred into a volume, $Vbuffer$, of buffer. 
+  In this case $Vtransfer$ and $Vbuffer$ are equal, so the concentration of the second well will be $C0/2$. This transfer is then repeated for all subsequent wells, the number of which is defined by $ndilutions$. 
+  From the last well the volume $Vtransfer$ is removed, so that all wells have the same final volume of $Vtransfer=Vbuffer$.
   }
-  \label{dilution}
+  \label{fig:dilution}
 \end{figure*}
 
 \subsubsection*{Direct dispensing technologies.}
 
-For acoustic dispensing, however, this accumulated error in a dilution series is not a factor, since each step of the dilution is pipetted separately and directly, with good precision and accuracy down to very low volumes, in the case of the LabCyte Echo (Figure~\ref{acoustic-vs-tips}). Despite the promises of the LabCyte Echo, we can see that it's CV and biases are mostly similar to that of the Tecan Genesis, even taking into account compounded error in the dilution series.
+To construct a model of a dilution series we start with our initial ligand stock in DMSO at concentration, $C0$, and then transfer a volume, $dispense\_volume$, into each well (Figure~\ref{fig:direct_dispense}). 
+We can add imprecision and bias to this by using manufacturer-provided values for the Labcyte Echo: the imprecision is stated as 8\% and the inaccuracy as 10\% for the volumes in question [ref]. 
+The concentration of each well is determined by the volumes $dispense\_volume$ and $mix\_volume$, each of which is defined in our model as randomly drawn from a normal distribution \ref{eq:1}, where the bias and the variance that have been pulled from a linear interpolation of the provided imprecision and inaccuracy, respectively, provided by the manufacturer.
+Then, applying the parametric bootstrapping model, we can get a good estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}).
 
 \begin{figure*}[tb]
     \includegraphics[trim={0 9cm 0 9cm},clip,width=0.5\textwidth]{../figures/direct_dispense.pdf}
 
   \caption{{\bf A programmatic direct dispense-based dilution series.}
-  With direct dispense, each well is defined individually, not depending on the other, and $C0$ defines the concentration of the ligand stock. The $mix\_volume$ defines the final volume of the enzyme and ligand mix. The $dispense\_volume$ is the amount of the compound stock in DMSO that is dispensed into the mix\_volume, and is what determines the final concentration of the ligand in the direct dispense assay setup. To maintain a constant DMSO concentration throughout the assay, in this case 120 nL, a volume, defined by $backfill\_volume$, of pure DMSO is dispensed into the assay.
+  With direct dispense, each well is defined individually, not depending on the other, and $C0$ defines the concentration of the ligand stock. The $mix\_volume$ defines the final volume of the enzyme and ligand mix. 
+  The $dispense\_volume$ is the amount of the compound stock in DMSO that is dispensed into the mix\_volume, and is what determines the final concentration of the ligand in the direct dispense assay setup. 
+  To maintain a constant DMSO concentration throughout the assay, in this case 120 nL, a volume, defined by $backfill\_volume$, of pure DMSO is dispensed into the assay.
   }
-  \label{direct_dispense}
+  \label{ref:direct_dispense}
 \end{figure*}
 
 \subsubsection*{Fixed pipette tips and the dilution effect.}
 
-Another aspect of dispensing with multichannel liquid-handler, is the possibility of the dilution effect when using liquid-based fixed-tip pipetting, such as on the Tecan Genesis. 
-This dilution effect was previously characterized in blank et al (BMS paper(S?)), and we can use these values to improve our model for the error in the multichannel liquid-handler. 
-We can easily see that including this error, significantly shifts the bias we see for tip-based dispensing (Figure~\ref{acoustic-vs-tips}).
-
-{\color{red}[JDC: Do we want to describe this here, or instead discuss it within \emph{Pipette-based liquid handling} above (breaking this into disposable and fixed tips), or tackle it later after we note that imprecision is insufficient to explain the Ekins discrepancy?]}
+Just including accuracy and imprecision, the errors from tip-based vs. acoustic based dispensing look quite similar, and don't seem to explain the discrepencies in the dataset in Ekins. et al. 
+Another aspect of dispensing with multichannel liquid-handler, specific to liquid-based fixed-tip pipetting, such as the Tecan Genesis has, is the dilution effect. 
+This dilution effect was previously characterized by a couple papers from Bristol Meyers Squibb ~\cite{dong_use_2006}~\cite{gu_dilution_2007}, where they found that the system liquid used to create the pressure differences required for pipetting, can mix with sample when it is being aspirated (Figure~\ref{fig:dilution_effect}). 
+This mix of system liquid and sample dilutes the sample, and the Bristol Meyers Squibb team was able to use a combination of the Artel dye-based Multichannel Verification System (MVS) and gravimentric methods to quantify that this dilution contributes a -6.30\% inaccuracy for a target volume of 20 $\mu$L ~\cite{dong_use_2006}.
+This inaccuracy can then be included in our model, using the same method of taking a random sample from a normal distribution and iterating over many replicates, and we can look at the resulting CV and bias seen in volumes, concentrations and quantities, as for the disposable tip model (which won't have this error) and the acoustic-dispensing model (Figure~\ref{fig:volumes-n-concentrations}).
 
 \begin{figure*}[tb]
-    \includegraphics[width=1.0\textwidth]{../figures/tips_v_acoustic.pdf}
+    \includegraphics[width=0.325\textwidth]{../figures/dilution_effect.pdf}
 
-  \caption{{\bf Comparing modeled errors in pIC50 values from tip-based vs acoustic dispensing.}
-  Using our model we can look at the variance in activity measurements as a function of inhibitor concentration $[I]$ (top), which then directly translates into a distribution of measured $pIC50$ values (middle), from which we can find out the bias and variance, or CV, as a function of pKi seen in these assays (bottom). While using acoustic dispensing methods the CV creeps up as a function of pKi, when a known dilution effect is added to the tip-based dispensing, a large bias is easy to spot.
+  \caption{{\bf Dilution effect illustration.}
+  This diagram is based on the explanation of the dilution effect in ~\cite{gu_dilution_2007}. This effect is seen in fixed-tip automated liquid handlers that use liquid-based dispensing technology. It has been seen that sample can be diluted by the system liquid (light purple), when the liquid sticks to the side of the tip and is mixed with the sample (blue) as it is aspirated. This mix of system liquid and sample (red) then dilutes the sample when it is dispensed. While the air gap (white) minimizes this dilution effect, it is still a known problem in fixed tip liquid-based automated liquid handling technologies.
   }
-  \label{acoustic-vs-tips}
+  \label{fig:dilution_effect}
 \end{figure*}
+
+
+\begin{figure*}[tb]
+    \includegraphics[width=1.0\textwidth]{../figures/placeholder.pdf}
+
+  \caption{{\bf Comparing modeled errors in volume, concentration, and quantity for tip-based vs acoustic dispensing.}
+  Using our model we can look at the variance (top) and bias (middle) in volume, concentration, and quantity as a function of the dilution.
+  }
+  \label{fig:volumes-n-concentrations}
+\end{figure*}
+
 
 \subsection*{Modeling plate reader measurement}
 
@@ -218,7 +256,16 @@ For example the {\bf XXX} used in this example has a fluorescence detection thre
 \subsection*{Modeling an enzymatic reaction}
 
 Creating a simple model of a competition assay can be done using standard formulas, here assuming we have data for $V_\mathrm{max}$. 
-Similar models can be created for different assay readouts.
+Similar models can be created for different assay readouts.  This is all we need to be able to understand expected variance and bias in  pIC50 values (Figure~\ref{fig:acoustic-vs-tips}).
+
+\begin{figure*}[tb]
+    \includegraphics[width=1.0\textwidth]{../figures/tips_v_acoustic.pdf}
+
+  \caption{{\bf Comparing modeled errors in pIC50 values from tip-based vs acoustic dispensing.}
+  Using our model we can look at the variance in activity measurements as a function of inhibitor concentration $[I]$ (top), which then directly translates into a distribution of measured $pIC50$ values (middle), from which we can find out the bias and variance, or CV, as a function of pKi seen in these assays (bottom). While using acoustic dispensing methods the CV creeps up as a function of pKi, when a known dilution effect is added to the tip-based dispensing, a large bias is easy to spot.
+  }
+  \label{fig:acoustic-vs-tips}
+\end{figure*}
 
 \subsection*{Imprecision is insufficient to explain the Ekins discrepancy}
 
@@ -233,7 +280,7 @@ However, if we incorporate the final component of error in tip-based dispensing,
   \caption{{\bf Adding bias shifts pIC50 values closer to equivalence.}
   Here we see (in red) the original experimental data points with errors bars representing the uncertainty calculated from our models. Adding in the bias from our models (in green) shifts the experimental pIC50 values closer to if tip-based assay and acoustic-based assay measurements resulted in the same final measurement. While this does not entirely explain the discrepancies between the two sets of data, it provides an initial insight, and shows the power of building simple error models to improve our understanding of experimental data sets.
   }
-  \label{IC50_bias}
+  \label{fig:IC50_bias}
 \end{figure*}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
