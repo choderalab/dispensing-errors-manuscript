@@ -75,10 +75,10 @@ Understanding discrepancies between assays using different dispensing technologi
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{abstract}
 
-All experimental assay data contains error, but understanding the magnitude, type, and primary origin of this error is not often obvious.
+All experimental assay data contains error, but the magnitude, type, and primary origin of this error is often not obvious.
 Here, we describe a simple set of assay modeling techniques based on the bootstrap principle that allow sources of error and bias to be simulated and propagated into assay results.
 We demonstrate how deceptively simple operations---such as the creation of a dilution series with a robotic liquid handler---can significantly amplify imprecision and even contribute substantially to bias.
-To illustrate these techniques, we review an infamous example of how choice of dispensing technology greatly impacted assay measurements, and show how the primary contributions to discrepancies between assays can be easily understood and potentially corrected for.
+To illustrate these techniques, we review an infamous example of how choice of dispensing technology can impact assay measurements, and show how the primary contributions to discrepancies between assays can be easily understood and potentially corrected for.
 These simple modeling techniques---illustrated with an accompanying IPython notebook---can allow modelers to understand the expected error and bias in experimental datasets, and even help experimentalists design assays to more effectively reach accuracy and imprecision goals.
 
 \end{abstract}
@@ -97,22 +97,20 @@ However, understanding assay data for the purpose of optimizing small molecules 
 Often, the dominant contributions to assay error are simply not known.
 This is unsurprising, given the number and variety of potential contributing factors.
 Even for what might be considered a straightforward assay involving fluorescent measurements of a ligand binding to a protein target, this might include (but is by no means limited to): compound impurities and degradation~\cite{kozikowski_effect_2003,kozikowski_effect_2003-1,cheng_studies_2003,waybright_overcoming_2009}, imprecise compound dispensing {\color{red}[CITE?]}, unmonitored water absorption by DMSO stocks {\color{red}[CITE?]}, the effect of DMSO on protein stability~\cite{tjernberg_dmso-related_2005}, intrinsic compound fluorescence~\cite{simeonov_fluorescence_2008,baell_new_2010}, compound insolubility~\cite{di_biological_2006} or aggregation~\cite{mcgovern_common_2002,mcgovern_kinase_2003,feng_high-throughput_2005,feng_synergy_2006,baell_new_2010}, variability in protein concentration or quality, pipetting errors, and inherent noise in any fluorescence measurement---not to mention stray lab coat fibers as fluorescent contaminants~\cite{busch_does_2015}. 
-In an ideal world, control experiments would be performed to measure the magnitude of these effects, and data quality tests would either reject flawed data or ensure that all contributions to error have been carefully accounted for in producing an assessment of error and confidence for each assayed value.
-
-%Often computational chemists are faced with comparing their models to experimental assay data for which there is no clear idea of the magnitude of the error. Sometimes no error is provided. Sometimes only a ballpark estimate is given. It would be useful to be able to get an estimate of how confident one should be in the data they are looking at. Other times, one might want to ensure ahead of time that an assay will produce useful data. For example if the error is larger than the dynamic range of the expected measurements, the assay will not be very useful.
+Under ideal circumstances, control experiments would be performed to measure the magnitude of these effects, and data quality tests would either reject flawed data or ensure that all contributions to error have been carefully accounted for in producing an assessment of error and confidence for each assayed value.
 
 Unfortunately, by the time the data reach the hands of a modeler (or other data consumer), the opportunity to perform these careful control experiments has passed.
-In the worst case, the communicated assay data may not contain any estimate of error at all. Even when error has been estimated, it is often not based on a holistic picture of specific information known about the assay.
+In the worst case, the communicated assay data may not contain any estimate of error at all. 
+Even when error has been estimated, it is often not based on a holistic picture of specific information known about the assay.
+% JDC: I might tinker with the next few sentences to make it clear that this "analysis of heterogeneous public data" is a prior of last resort.
 One approach that has been useful is aggregating many datasets to give a crude estimate of the general reliability of a similar set of assays by quantifying the variation in measurements of a single quantity~\cite{kramer_experimental_2012,kalliokoski_comparability_2013}. 
 Care must be taken to distinguish between fully independent replicates and partial replicates that only repeat part of the experiment (for example, repeated measurements performed using the same stock solutions), since partial measurements can often underestimate true error by orders of magnitude~\cite{jdc-itc-paper}.
 Alternatively, when multiple independent measurements are not available, the knowledge of how a particular assay was conducted can inform the construction of an assay-specific model incorporating some of the dominant contributions to error in a manner that can be highly informative.
 
-%In many papers and reports errors or not provided or are inadequately explained. Our understanding of the reliability of experimental measurements of ligand binding affinity would be greatly increased if it was common practice to calculate expected experimental errors resulting from the major known sources.
-
-In this paper, we review some common sources of error in experimental assays, and describe some simple modeling tools based on the bootstrap principle for simulating a model of an assay that incorporates these important (often dominant) sources of error. 
-This approach, while simple, provides a powerful tool to understand how assay error depends on  known parameters. 
-For example, with this approach, we can estimate the expected data error as a function of true compound affinity.
-Not only modelers could benefit from this approach---these tools can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variations among controls match expectations.
+In this paper, we review some common sources of error in experimental assays, and describe a set of simple modeling concepts based on the bootstrap principle.
+Using only the assay protocol and basic assessments of the imprecision and inaccuracy of various operations, we show how to construct and simulate a simple model of the assay that incorporates these important (often dominant) sources of error. 
+This approach, while simple, provides a powerful tool to understand how assay error depends on both the assay protocol and the imprecision and inaccuracy of basic operations, as well as the true value of the quantity being measured (such as compound affinity). 
+This strategy is not limited in utility to modelers and consumers of assay data---they can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variation among control measurements match expectations.
 
 We illustrate these concepts by considering a now-infamous example from the literature: a report by Ekins et al.~\cite{ekins_dispensing_2013} on how the choice of dispensing technology impacts the apparent biological activity of the same set of compounds under otherwise identical conditions.
 The datasets employed in the analyses {\color{red}[CITE]} were generated using either a standard liquid handler with fixed (washable) tips\footnote{{\color{red}We should have a footnote clarifying how we know these were fixed tips.}} or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{fig:overview}).
