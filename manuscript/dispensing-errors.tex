@@ -104,7 +104,7 @@ In the worst case, the communicated assay data may not contain any estimate of e
 Even when error has been estimated, it is often not based on a holistic picture of specific information known about the assay.
 % JDC: I might tinker with the next few sentences to make it clear that this "analysis of heterogeneous public data" is a prior of last resort.
 One approach that has been useful is aggregating many datasets to give a crude estimate of the general reliability of a similar set of assays by quantifying the variation in measurements of a single quantity~\cite{kramer_experimental_2012,kalliokoski_comparability_2013}. 
-Care must be taken to distinguish between fully independent replicates and partial replicates that only repeat part of the experiment (for example, repeated measurements performed using the same stock solutions), since partial measurements can often underestimate true error by orders of magnitude~\cite{jdc-itc-paper}.
+Care must be taken to distinguish between fully independent replicates and partial replicates that only repeat part of the experiment (for example, repeated measurements performed using the same stock solutions), since partial measurements can often underestimate true error by orders of magnitude~\cite{chodera_entropy-enthalpy_2013}.
 Alternatively, when multiple independent measurements are not available, the knowledge of how a particular assay was conducted can inform the construction of an assay-specific model incorporating some of the dominant contributions to error in a manner that can be highly informative.
 
 \color{blue}
@@ -116,9 +116,9 @@ This approach, while simple, provides a powerful tool to understand how assay er
 This strategy is not limited in utility to modelers and consumers of assay data---they can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variation among control measurements match expectations.
 
 We illustrate these concepts by considering a now-infamous example from the literature: a report by Ekins et al.~\cite{ekins_dispensing_2013} on how the choice of dispensing technology impacts the apparent biological activity of the same set of compounds under otherwise identical conditions.
-The datasets employed in the analyses {\color{red}[CITE]} were generated using either a standard liquid handler with fixed (washable) tips\footnote{{\color{red}We should have a footnote clarifying how we know these were fixed tips.}} or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{fig:overview}).
-While the frustration for modelers was particularly great, since QSAR models derived from these otherwise identical assays produce surprisingly divergent predictions, numerous practitioners from all corners of drug discovery expressed their frustration in ensuing blog posts and commentaries~\cite{in-the-pipeline-comments}.
-Hosts of potential reasons were speculated~\cite{in-the-pipeline-comments}, including {\color{red}[LIST HERE]}.
+The datasets employed in the analyses ~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010} were generated using either a standard liquid handler with fixed (washable) tips\footnote{{\color{red}We should have a footnote clarifying how we know these were fixed tips.}} or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{fig:overview}).
+While the frustration for modelers was particularly great, since QSAR models derived from these otherwise identical assays produce surprisingly divergent predictions, numerous practitioners from all corners of drug discovery expressed their frustration in ensuing blog posts and commentaries~\cite{lowe_drug_2015,evanko_serial_2013,ekins_what_2013}.
+Hosts of potential reasons were speculated, including {\color{red}[LIST HERE]}.
 
 \color{blue}
 We make use of this real-world example to illustrate some of the basic concepts behind modeling the most common sources of error in assays.
@@ -154,7 +154,7 @@ If the mean is \emph{not} zero, this is an example of inaccuracy, or bias---wher
 \section*{Modeling experimental error}
 
 There are many approaches to the modeling of error and its propagation into derived data.
-Often, laboratory courses provide an introduction to the tracking of measurement imprecision, propagating this into derived quantities using Taylor series expansions---commonly referred to simply as \emph{propagation of error}~\cite{taylor-train-book}.
+Often, laboratory courses provide an introduction to the tracking of measurement imprecision, propagating this into derived quantities using Taylor series expansions---commonly referred to simply as \emph{propagation of error}~\cite{taylor_introduction_1997}.
 For example, for a function $f(x,y)$ of two measured quantities $x$ and $y$ and their associated errors $\sigma_x$ and $\sigma_y$, the error propagation rule is,
 \begin{eqnarray}
 \delta^2 f &=& \left[\frac{\partial f}{\partial x}\right]^2_x \, \sigma^2_x + \left[\frac{\partial f}{\partial y}\right]^2_y \sigma^2_y + \left[\frac{\partial f}{\partial x}\right]_x \left[\frac{\partial f}{\partial y}\right]_y \, \sigma^2_{xy} \nonumber \\ \label{equation:error-propagation}
@@ -261,7 +261,7 @@ Here we compare an aqueous dilution series made with a tip-based liquid handler 
 
 \subsubsection*{Tip-based liquid handling.}
 
-To construct a model of a dilution series we start with our initial well at concentration, $C0$, and then transfer volume, $Vtransfer$, to create $ndilutions$ as illustrated in (Figure~\ref{fig:dilution}). 
+To construct a model of a dilution series we start with our initial well at concentration, $Cinitial$, and then transfer volume, $Vtransfer$, to create $ndilutions$ as illustrated in (Figure~\ref{fig:dilution}). 
 We can add imprecision and bias to this by using manufacturer-provided values for the Tecan Genesis: the imprecision is stated as 3\% and the inaccuracy as 3-5\% for the volumes in question [ref]. 
 The concentration of each well is determined by the volumes $Vtransfer$ and $Vbuffer$, each of which is defined in our model as randomly drawn from a normal distribution \ref{eq:1}, where the bias and the variance that have been pulled from a linear interpolation of the provided imprecision and inaccuracy, respectively, provided by the manufacturer.
 Then, applying the parametric bootstrapping model, which is simply sampling over this variation with many replicates, we can get a good estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}).
@@ -270,8 +270,8 @@ Then, applying the parametric bootstrapping model, which is simply sampling over
     \includegraphics[width=0.5\textwidth]{../figures/dilution.pdf}
 
   \caption{{\bf A programmatic tip-based dilution series.}
-  In this dilution series we start with our initial well at concentration, $C0$, with initial volume, $Vinitial$. A volume, $Vtransfer$, is then transferred into a volume, $Vbuffer$, of buffer. 
-  In this case $Vtransfer$ and $Vbuffer$ are equal, so the concentration of the second well will be $C0/2$. This transfer is then repeated for all subsequent wells, the number of which is defined by $ndilutions$. 
+  In this dilution series we start with our initial well at concentration, $Cintial$, with initial volume, $Vinitial$. A volume, $Vtransfer$, is then transferred into a volume, $Vbuffer$, of buffer. 
+  In this case $Vtransfer$ and $Vbuffer$ are equal, so the concentration of the second well will be $Cinitial/2$. This transfer is then repeated for all subsequent wells, the number of which is defined by $ndilutions$. 
   From the last well the volume $Vtransfer$ is removed, so that all wells have the same final volume of $Vtransfer=Vbuffer$.
   }
   \label{fig:dilution}
@@ -292,7 +292,7 @@ Then, applying the parametric bootstrapping model, we can get a good estimate fo
   The $dispense\_volume$ is the amount of the compound stock in DMSO that is dispensed into the mix\_volume, and is what determines the final concentration of the ligand in the direct dispense assay setup. 
   To maintain a constant DMSO concentration throughout the assay, in this case 120 nL, a volume, defined by $backfill\_volume$, of pure DMSO is dispensed into the assay.
   }
-  \label{ref:direct_dispense}
+  \label{fig:direct_dispense}
 \end{figure*}
 
 \subsubsection*{Fixed pipette tips and the dilution effect.}
@@ -352,7 +352,7 @@ Similar models can be created for different assay readouts.  This is all we need
 Plotting the inaccuracies and imprecisions and how they differ for tip-based dispensing vs. direct dispensing is extremely useful, and allows us to understand the errors in our assay results a bit better. 
 It is easy to see that simple difference in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in Ekins et al between tip-based and direct dispensing.
 
-However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC50 shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{IC50_bias}).
+However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC50 shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{fig:IC50_bias}).
 
 \begin{figure*}[tb]
     \includegraphics[trim={0 4cm 0 4cm},clip,width=0.5\textwidth]{../figures/compare-pIC50-bias_corrected.pdf}
