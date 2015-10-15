@@ -41,7 +41,7 @@
 \usepackage[group-separator={,}]{siunitx}
 
 %Strikethrough
-\usepackage{ulem}
+\usepackage[normalem]{ulem}
 
 % Justification
 \captionsetup{singlelinecheck=off}
@@ -107,34 +107,31 @@ One approach that has been useful is aggregating many datasets to give a crude e
 Care must be taken to distinguish between fully independent replicates and partial replicates that only repeat part of the experiment (for example, repeated measurements performed using the same stock solutions), since partial measurements can often underestimate true error by orders of magnitude~\cite{chodera_entropy-enthalpy_2013}.
 Alternatively, when multiple independent measurements are not available, the knowledge of how a particular assay was conducted can inform the construction of an assay-specific model incorporating some of the dominant contributions to error in a manner that can be highly informative.
 
-\color{blue}
-[JDC: Text marked in blue in two places is repetitive.  Which one to trim?]
 In this paper, we review some common sources of error in experimental assays, and describe a set of simple modeling concepts based on the bootstrap principle.
 Using only the assay protocol and basic specifications of the imprecision and inaccuracy of various operations such as weighing and volume transfers, we show how to construct and simulate a simple model of the assay that incorporates these important (often dominant) sources of error. 
 This approach, while simple, provides a powerful tool to understand how assay error depends on both the assay protocol and the imprecision and inaccuracy of basic operations, as well as the true value of the quantity being measured (such as compound affinity). 
-\color{black}
-This strategy is not limited in utility to modelers and consumers of assay data---they can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variation among control measurements match expectations.
+This strategy is not limited to modelers and consumers of assay data---it can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variation among control measurements match expectations.
 
 We illustrate these concepts by considering a now-infamous example from the literature: a report by Ekins et al.~\cite{ekins_dispensing_2013} on how the choice of dispensing technology impacts the apparent biological activity of the same set of compounds under otherwise identical conditions.
 The datasets employed in the analyses ~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010} were generated using either a standard liquid handler with fixed (washable) tips\footnote{{\color{red}We should have a footnote clarifying how we know these were fixed tips.}} or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{fig:overview}).
 While the frustration for modelers was particularly great, since QSAR models derived from these otherwise identical assays produce surprisingly divergent predictions, numerous practitioners from all corners of drug discovery expressed their frustration in ensuing blog posts and commentaries~\cite{lowe_drug_2015,evanko_serial_2013,ekins_what_2013}.
 Hosts of potential reasons were speculated, including {\color{red}[LIST HERE]}.
 
-\color{blue}
-We make use of this real-world example to illustrate some of the basic concepts behind modeling the most common sources of error in assays.
+%We make use of this real-world example to illustrate some of the basic concepts behind modeling the most common sources of error in assays.
 For simplicity, we ask whether simplest contributions to assay error---imprecision and bias in material transfer operations and imprecision in measurement---might account for some component of the discrepancy between assay techniques.
 We make use of basic information---the assay protocol as described (with some additional inferences based on basic concepts such as compound solubility limits) and manufacturer specifications for imprecision and bias---to construct a model of each dispensing process to determine the overall inaccuracy and imprecision of the assay as a function of true compound affinity, and identify the steps that contribute the most to these assay data errors.
-\color{black}
-To better illustrate these techniques, we also provide an annotated IPython notebook that includes all of the computations described here in detail.
+To better illustrate these techniques, we also provide an annotated IPython notebook [\url{http://choderalab.org/dispensing-errors-manuscript}] that includes all of the computations described here in detail.
 Readers are encouraged to download these notebooks and play with them to see how different assay configurations affect assay error.
 
 \begin{figure*}[tb]
    \includegraphics[trim={0 15cm 0 8cm},clip,width=0.75\textwidth]{../figures/Fig1-4.pdf}
-  \caption{{\bf The stages of creating a dilution series with either tip-based or acoustic dispensing.}
-  On the way from the raw material to the assay measurement there are a variety of steps. 
-  In the case of tip-based dispensing, such as for the Tecan Genesis, an initial dilution of ligand stock into buffer is created and then serially diluted to create the full dilution series used in the final detection and construction of saturation curves. 
-  In the case of acoustic dispensing, such as for the LabCyte Echo, the full dilution series is made via direct dispensing, which has a uniform error at each stage of the dilution.
-  }
+  \caption{{\bf Illustration of the stages of the assay protocols considered here, for both tip-based and acoustic dispensing.}
+  Two different assay protocols---utilizing different dispensing technologies---were used to perform the same assay discussed in \citep{ekins_dispensing_2013}.
+  In the case of tip-based dispensing, a Tecan Genesis liquid handler was used to create a serial dilution from which the final assay mixture was prepared. 
+  In the case of acoustic dispensing, a LabCyte Echo was used to directly dispense different amounts of compound into the assay mixture.
+  Product accumulation was measured for various concentrations of ligand with the same concentration of protein, and the resulting data were fit to obtain pIC50 estimates.
+  The resulting pIC50 data for each assay protocol were highly discrepant, as shown in the central figure plotting the two against each other.
+   }
   \label{fig:overview}
 \end{figure*}
 
@@ -277,8 +274,8 @@ The concentration of each well is determined by the volumes $Vtransfer$ and $Vbu
 Then, applying the parametric bootstrapping model, which is simply sampling over this variation with many replicates, we can get a good estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}).
 Further more, as can be scene in the schematic in Figure~\ref{fig:overview}, because the dilution series is created before addition of the compound to the enzyme solution, there is an additional error term added upon transferring the dilution series results into the enzyme solution (in this case 2 $\mu$L into 10 $\mu$L).
 
-\begin{figure*}[tb]
-    \includegraphics[width=0.5\textwidth]{../figures/dilution.pdf}
+\begin{figure}[tb]
+    \includegraphics[width=\columnwidth]{../figures/dilution.pdf}
 
   \caption{{\bf A programmatic tip-based dilution series.}
   In this dilution series we start with our initial well at concentration, $Cintial$, with initial volume, $Vinitial$. A volume, $Vtransfer$, is then transferred into a volume, $Vbuffer$, of buffer. 
@@ -286,7 +283,7 @@ Further more, as can be scene in the schematic in Figure~\ref{fig:overview}, bec
   From the last well the volume $Vtransfer$ is removed, so that all wells have the same final volume of $Vtransfer=Vbuffer$.
   }
   \label{fig:dilution}
-\end{figure*}
+\end{figure}
 
 \subsubsection*{Direct dispensing technologies.}
 
@@ -296,8 +293,8 @@ The concentration of each well is determined by the volumes $dispense\_volume$ a
 Then, applying the parametric bootstrapping model, we can get a good estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}).
 Because direct dispensing technologies dispense directly into the enzyme assay, there is one less set of errors in tip-based pipetting inaccuracies and imprecisions that does not need to be included here.
 
-\begin{figure*}[tb]
-    \includegraphics[trim={0 9cm 0 9cm},clip,width=0.5\textwidth]{../figures/direct_dispense.pdf}
+\begin{figure}[tb]
+    \includegraphics[trim={0 9cm 0 9cm},clip,width=\columnwidth]{../figures/direct_dispense.pdf}
 
   \caption{{\bf A programmatic direct dispense-based dilution series.}
   With direct dispense, each well is defined individually, not depending on the other, and $C0$ defines the concentration of the ligand stock. The $mix\_volume$ defines the final volume of the enzyme and ligand mix. 
@@ -305,7 +302,7 @@ Because direct dispensing technologies dispense directly into the enzyme assay, 
   To maintain a constant DMSO concentration throughout the assay, in this case 120 nL, a volume, defined by $backfill\_volume$, of pure DMSO is dispensed into the assay.
   }
   \label{fig:direct_dispense}
-\end{figure*}
+\end{figure}
 
 \subsubsection*{Fixed tips and the dilution effect.}
 
