@@ -113,7 +113,7 @@ This approach, while simple, provides a powerful tool to understand how assay er
 This strategy is not limited to modelers and consumers of assay data---it can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error accounted for by checking that variation among control measurements match expectations.
 
 We illustrate these concepts by considering a now-infamous example from the literature: a report by Ekins et al.~\cite{ekins_dispensing_2013} on how the choice of dispensing technology impacts the apparent biological activity of the same set of compounds under otherwise identical conditions.
-The datasets employed in the analyses ~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010} were generated using either a standard liquid handler with fixed (washable) tips\footnote{{\color{red}We should have a footnote clarifying how we know these were fixed tips.}} or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{fig:overview}).
+The datasets employed in the analyses~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010} were generated using either a standard liquid handler with fixed (washable) tips\footnote{{\color{red}We should have a footnote clarifying how we know these were fixed tips.}} or an acoustic droplet dispensing device to prepare the assay, resulting in highly divergent assay results (Figure~\ref{fig:overview}).
 While the frustration for modelers was particularly great, since QSAR models derived from these otherwise identical assays produce surprisingly divergent predictions, numerous practitioners from all corners of drug discovery expressed their frustration in ensuing blog posts and commentaries~\cite{lowe_drug_2015,evanko_serial_2013,ekins_what_2013}.
 Hosts of potential reasons were speculated, including {\color{red}[LIST HERE FROM REREADING COMMENT THREAD FOR IN THE PIPELINE POST]}.
 
@@ -125,12 +125,12 @@ Readers are encouraged to download these notebooks and play with them to see how
 
 \begin{figure*}[tb]
    \includegraphics[trim={0 15cm 0 8cm},clip,width=0.75\textwidth]{../figures/Fig1-4.pdf}
-  \caption{{\bf Illustration of the stages of the assay protocols considered here, for both tip-based and acoustic dispensing.}
+  \caption{{\bf Illustration of the stages of the two assay protocols considered here, for both tip-based and acoustic dispensing.}
   Two different assay protocols---utilizing different dispensing technologies---were used to perform the same assay discussed in \citep{ekins_dispensing_2013}.
   In the case of tip-based dispensing, a Tecan Genesis liquid handler was used to create a serial dilution from which the final assay mixture was prepared. 
   In the case of acoustic dispensing, a LabCyte Echo was used to directly dispense different amounts of compound into the assay mixture.
-  Product accumulation was measured for various concentrations of ligand with the same concentration of protein, and the resulting data were fit to obtain pIC50 estimates.
-  The resulting pIC50 data for each assay protocol were highly discrepant, as shown in the central figure plotting the two against each other.
+  Product accumulation was measured for various concentrations of ligand with the same concentration of protein, and the resulting data were fit to obtain pIC$_{50}$ estimates.
+  The resulting pIC$_{50}$ data for each assay protocol were highly discrepant, as shown in the central figure plotting the two against each other.
    }
   \label{fig:overview}
 \end{figure*}
@@ -243,14 +243,14 @@ c_n &=& C_n / (v_n + w_n)
 All we had to do was add one additional step to our bootstrap simulation scheme in which the stock concentration $C_n$ is drawn from a normal distribution with each bootstrap realization.
 The model can be expanded indefinitely with additional independent measurements or random variables in the same simple way.
 
-Below, we exploit this modularity to design a simple scheme and simulate an entire assay without being overwhelmed by complexity.
+Below, we exploit this modularity to design a simple scheme to simulate an entire assay without being overwhelmed by complexity.
 All of the errors we discuss arise  from the transfer and mixing of volumes of solutions with different concentrations of compound as described above.
-While the completeness of mixing can itself be a source of error in certain assays ~\cite{walling_mixing_2007,weiss_modeling_2002,mitre_turbo-mixing_2007}, we have chosen not to explicitly include this incomplete mixing effect in our model, but it could similarly be added within this framework.
-Next we will use this method of modeling error and apply it to a specific example from the literature, looking at IC50s for compounds targeting the EphB4 receptor ~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010}, breaking down how errors differ depending on the dispensing technology under otherwise identical conditions.
+While the completeness of mixing can itself be a source of error in certain assays---a surprising amount of effort is required to ensure thorough mixing~\cite{walling_mixing_2007,weiss_modeling_2002,mitre_turbo-mixing_2007}---we have chosen not to explicitly include this incomplete mixing effect in our model, but it could similarly be added within this framework.
+Next, we will use this method of modeling error and apply it to a specific example from the literature, looking at IC$_{50}$s for compounds targeting the EphB4 receptor~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010}, breaking down how errors differ depending on the dispensing technology under otherwise identical conditions.
 
 \subsection*{Modeling an enzymatic reaction}
 
-Our assay measures the accumulation of product {\color{red}[JDC: or was it depletion of substrate?]} over some short interval of time when the inhibitor is added in different concentrations in the presence of substrate; fitting a curve obtained over a range of inhibitor concentrations yields an observed $IC50$.
+Our assay measures the accumulation of product {\color{red}[JDC: or was it depletion of substrate?]} over some short interval of time when the inhibitor is added in different concentrations in the presence of substrate; fitting a curve obtained over a range of inhibitor concentrations yields an observed IC$_{50}$.
 
 A simple model for this competition assay can be created using standard models for competitive inhibition of a substrate $S$ with an inhibitor $I$ to compute a quantity that will be related to this measurement. 
 Here, we assume the total accumulation of product in a fixed assay time will be proportion to the relative enzyme turnover velocity $V_0 / V_\mathrm{max}$, and use an equation derived assuming Michaelis-Menten kinetics,
@@ -260,27 +260,27 @@ Here, we assume the total accumulation of product in a fixed assay time will be 
 where the Michaelis constant $K_{m}$ and substrate concentration $[S]$ for the EphB4 system are pulled directly from the assay methodology description~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010}. 
 In interrogating our model, we will vary the true inhibitor affinity $K_{i}$ to determine how the assay imprecision and inaccuracy depend on true inhibitor affinity.
 Thus the activity, $V_{0}/V_{max}$, depends only on the inhibitor concentration $[I]$, which we compute statistics for exactly as defined for $c_n$ above.
-Then with a simple relation between IC50 and $K_{i}$,
+Then with a simple relation between IC$_{50}$ and $K_{i}$,
 \begin{eqnarray}
-IC50 = K_{i}(1+\frac{[S]}{K_{m}}) \label{equation:IC50}
+IC_{50} &=& K_{i}\left(1+\frac{[S]}{K_{m}}\right) \label{equation:IC50}
 \end{eqnarray} 
-we can also get predictions for IC50 directly from our simple models that include the known bias and variance of volumes dispensed by various dispensing technologies.
+we can also get predictions for IC$_{50}$ directly from our simple models that include the known bias and variance of volumes dispensed by various dispensing technologies.
 
 \subsection*{Advanced liquid handling: Making a dilution series}
 
 Because the affinities and activities of compounds can vary across a dynamic range that spans several orders of magnitude, it is common for assays to utilize a dilution series of some sort to measure the activity and potency of ligands. 
-To create a dilution series, an initial compound stock is diluted into buffer in the first well of the series, and the contents mixed; for each subsequent well, a volume from the previous well combined with buffer and mixed ({\bf Figure~\ref{fig:dilution}}).
-Commonly, each dilution is done in fixed ratios, such as 1:1 or 1:10 of compound:buffer.
+To create a dilution series, an initial compound stock is diluted into buffer in the first well of the series, and the contents mixed; for each subsequent well, a volume from the previous well combined with buffer and mixed (Figure~\ref{fig:dilution}).
+Commonly, each subsequent dilution step uses fixed ratios, such as 1:1 or 1:10 of dilution:buffer.
 
-It is very easy to see how a dilution series can amplify sources of error:
-Because multiple pipetting operations happen each step of the dilution series and the previously prepared dilution in the series is used to prepare the next dilution, the error will grow with the number of dilutions in the series.
+It is easy to see how a dilution series can amplify sources of error:
+Because each dilution step involves multiple pipetting operations, and the previously prepared dilution in the series is used to prepare the next dilution, errors will grow with each dilution in the series.
 As a result, the instrumentation used can have a substantial impact on the results obtained.
 Here we compare an aqueous dilution series made with a tip-based liquid handler (specifically the Tecan Genesis), and a direct-dispensing dilution series made with acoustic dispensing (specifically the Labcyte Echo).
 
-\subsubsection*{Tip-based liquid handling.}
+\subsubsection*{Tip-based liquid handling}
 
 To construct a model of a dilution series we start with our initial well at concentration, $C_\mathrm{initial}$, and then transfer volume, $V_\mathrm{transfer}$, to create $n_\mathrm{dilutions}$ as illustrated in (Figure~\ref{fig:dilution}). 
-We include imprecision and bias to this by using manufacturer-provided values for the Tecan Genesis: the imprecision is stated as 3\% and the typical inaccuracy as 3-5\% for the volumes in question ~\cite{_tecan_2001}. 
+We include imprecision and bias to this by using manufacturer-provided values for the Tecan Genesis: the imprecision is stated as 3\% and the typical inaccuracy as 3-5\% for the volumes in question~\cite{_tecan_2001}. 
 The concentration of each well is determined by the volumes $V_\mathrm{transfer}$ and $V_\mathrm{buffer}$, each of which is defined in our model as randomly drawn from a normal distribution, where the bias and the variance that have been pulled from a linear interpolation of the provided imprecision and inaccuracy, respectively, provided by the manufacturer.
 Then, applying the parametric bootstrapping model, which is simply sampling over this variation with many replicates, we can get a good estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}).
 Further more, as can be scene in the schematic in Figure~\ref{fig:overview}, because the dilution series is created before addition of the compound to the enzyme solution, there is an additional error term added upon transferring the dilution series results into the enzyme solution (in this case 2 $\mu$L into 10 $\mu$L).
@@ -289,27 +289,33 @@ Further more, as can be scene in the schematic in Figure~\ref{fig:overview}, bec
     \includegraphics[width=\columnwidth]{../figures/dilution.pdf}
 
   \caption{{\bf A programmatic tip-based dilution series.}
-  In this dilution series we start with our initial well at concentration, $Cintial$, with initial volume, $Vinitial$. A volume, $Vtransfer$, is then transferred into a volume, $Vbuffer$, of buffer. 
-  In this case $Vtransfer$ and $Vbuffer$ are equal, so the concentration of the second well will be $Cinitial/2$. This transfer is then repeated for all subsequent wells, the number of which is defined by $ndilutions$. 
-  From the last well the volume $Vtransfer$ is removed, so that all wells have the same final volume of $Vtransfer=Vbuffer$.
+  In this dilution series we start with our initial well at concentration, $C_\mathrm{intial}$, with initial volume, $V_\mathrm{initial}$. 
+  A volume of the previous dilution, $V_\mathrm{transfer}$, is then transferred into a volume of buffer, $V_\mathrm{buffer}$. 
+  In the case of a 1:1 dilution series, $V_\mathrm{transfer}$ and $V_\mathrm{buffer}$ are equal, so the intended concentration in the second well will be $C_\mathrm{initial}/2$. 
+  This transfer is then repeated for all subsequent wells to create a total of $n_\mathrm{dilutions}$ dilutions. 
+  For convenience, we assume that a volume $V_\mathrm{transfer}$ is removed from the last well so that all wells have the same final volume of $V_\mathrm{transfer} = V_\mathrm{buffer}$.
   }
   \label{fig:dilution}
 \end{figure}
 
 \subsubsection*{Direct dispensing technologies.}
 
-To construct a model of a dilution series we start with our initial ligand stock in DMSO at concentration, $C0$, and then transfer a volume, $dispense\_volume$, into each well (Figure~\ref{fig:direct_dispense}). 
-We can add imprecision and bias to this by using manufacturer-provided values for the Labcyte Echo: the imprecision is stated as 8\% and the inaccuracy as 10\% for the volumes in question ~\cite{_echo_2011}. 
+To construct a model of a dilution series we start with our initial ligand stock in DMSO at concentration, $C_0$, and then transfer a volume, $dispense\_volume$, into each well (Figure~\ref{fig:direct_dispense}). 
+We can add imprecision and bias to this by using manufacturer-provided values for the Labcyte Echo: the imprecision is stated as 8\% and the inaccuracy as 10\% for the volumes in question~\cite{_echo_2011}. 
 The concentration of each well is determined by the volumes $dispense\_volume$ and $mix\_volume$, each of which is defined in our model as randomly drawn from a normal distribution, where the bias and the variance that have been pulled from a linear interpolation of the provided imprecision and inaccuracy, respectively, provided by the manufacturer.
-Then, applying the parametric bootstrapping model, we can get a good estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}).
-Because direct dispensing technologies dispense directly into the enzyme assay, there is one less set of errors in tip-based pipetting inaccuracies and imprecisions that does not need to be included here.
+\begin{eqnarray}
+\mathrm{[EQUATIONS]}
+\end{eqnarray}
+We can then produce an estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}) by applying our parametric bootstrap model, generating many synthetic replicates of the experiment.
+Because direct dispensing technologies dispense directly into the enzyme assay, rather than creating an intermediate dilution series that is then transferred into the assay wells, direct dispensing experiments include fewer steps (and hence fewer potential inaccuracy- and imprecision-amplifying steps) than the tip-based assays which must create the intermediate dilution series.
 
 \begin{figure}[tb]
     \includegraphics[trim={0 9cm 0 9cm},clip,width=\columnwidth]{../figures/direct_dispense.pdf}
 
   \caption{{\bf A programmatic direct dispense-based dilution series.}
-  With direct dispense, each well is defined individually, not depending on the other, and $C0$ defines the concentration of the ligand stock. The $mix\_volume$ defines the final volume of the enzyme and ligand mix. 
-  The $dispense\_volume$ is the amount of the compound stock in DMSO that is dispensed into the mix\_volume, and is what determines the final concentration of the ligand in the direct dispense assay setup. 
+  With direct dispense, each well is defined individually, not depending on the other, and $C_0$ defines the concentration of the ligand stock. 
+  The $mix\_volume$ defines the final volume of the enzyme and ligand mix. 
+  The $dispense\_volume$ is the amount of the compound stock in DMSO that is dispensed into the $mix\_volume$, and is what determines the final concentration of the ligand in the direct dispense assay setup. 
   To maintain a constant DMSO concentration throughout the assay, in this case 120 nL, a volume, defined by $backfill\_volume$, of pure DMSO is dispensed into the assay.
   }
   \label{fig:direct_dispense}
@@ -317,10 +323,10 @@ Because direct dispensing technologies dispense directly into the enzyme assay, 
 
 \subsubsection*{Fixed tips and the dilution effect.}
 
-Just including accuracy and imprecision, the errors from tip-based vs. acoustic based dispensing look quite similar, and don't seem to explain the discrepencies in the dataset in Ekins. et al. 
+Simply including the computed contributions from inaccuracy and imprecision in our model of the  Ekins.~et al.~dataset~\cite{ekins}, it is easy to see that the imprecision is not nearly large enough to explain the discrepancies between measurements made with the two dispensing technologies~(Figure~\ref{figure:xxx}).
 Another aspect of dispensing with multichannel liquid-handler, specific to liquid-based fixed-tip pipetting, such as the Tecan Genesis has, is the dilution effect. 
-This dilution effect was previously characterized by a couple papers from Bristol Meyers Squibb ~\cite{dong_use_2006}~\cite{gu_dilution_2007}, where they found that the system liquid used to create the pressure differences required for pipetting, can mix with sample when it is being aspirated (Figure~\ref{fig:dilution_effect}). 
-This mix of system liquid and sample dilutes the sample, and the Bristol Meyers Squibb team was able to use a combination of the Artel dye-based Multichannel Verification System (MVS) and gravimentric methods to quantify that this dilution contributes a -6.30\% inaccuracy for a target volume of 20 $\mu$L ~\cite{dong_use_2006}.
+This dilution effect was previously characterized by a couple papers from Bristol Meyers Squibb~\cite{dong_use_2006,gu_dilution_2007}, where they found that the system liquid used to create the pressure differences required for pipetting, can mix with sample when it is being aspirated (Figure~\ref{fig:dilution_effect}). 
+This mix of system liquid and sample dilutes the sample, and the Bristol Meyers Squibb team was able to use a combination of the Artel dye-based Multichannel Verification System (MVS) and gravimentric methods to quantify that this dilution contributes a -6.30\% inaccuracy for a target volume of 20 $\mu$L~\cite{dong_use_2006}.
 This inaccuracy can then be included in our model, using the same method of taking a random sample from a normal distribution and iterating over many replicates, and we can look at the resulting CV and bias seen in volumes, concentrations and quantities, as for the disposable tip model (which won't have this error) and the acoustic-dispensing model (Figure~\ref{fig:volumes-n-concentrations}).
 This extra dilution effect also needs to be incorporated into the transfer of the dilution series into the enzyme assay solution, and it turns out this additional error is non-trivial.
 
@@ -357,10 +363,10 @@ For example the {\bf XXX} used in this example has a fluorescence detection thre
 
 \begin{figure*}[tb]
    % \includegraphics[width=1.0\textwidth]{../figures/acoustic-vs-tips.pdf}
-  {\color{red}[JDC: HAD TO COMMENT OUT BECAUSE IT KEPT CRASHING LATEX]}
+  {\color{red}[JDC: HAD TO COMMENT OUT acoustic-vs-tips FIGURE BECAUSE IT KEPT CRASHING LATEX]}
   
-  \caption{{\bf Comparing modeled errors in pIC50 values from tip-based vs acoustic dispensing.}
-  Using our model we can look at the variance in activity measurements as a function of inhibitor concentration $[I]$ (top), which then directly translates into a distribution of measured $pIC50$ values (middle), from which we can find out the bias and variance, or CV, as a function of pKi seen in these assays (bottom). While using acoustic dispensing methods the CV creeps up as a function of pKi, when a known dilution effect is added to the tip-based dispensing, a large bias is easy to spot.
+  \caption{{\bf Comparing modeled errors in pIC$_{50}$ values from tip-based vs acoustic dispensing.}
+  Using our model we can look at the variance in activity measurements as a function of inhibitor concentration $[I]$ (top), which then directly translates into a distribution of measured pIC$_{50}$ values (middle), from which we can find out the bias and variance, or CV, as a function of pKi seen in these assays (bottom). While using acoustic dispensing methods the CV creeps up as a function of pKi, when a known dilution effect is added to the tip-based dispensing, a large bias is easy to spot.
   }
   \label{fig:acoustic-vs-tips}
 \end{figure*}
@@ -370,17 +376,17 @@ For example the {\bf XXX} used in this example has a fluorescence detection thre
 Plotting the inaccuracies and imprecisions and how they differ for tip-based dispensing vs. direct dispensing is extremely useful, and allows us to understand the errors in our assay results a bit better. 
 It is easy to see that simple difference in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in Ekins et al between tip-based and direct dispensing.
 
-However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC50 shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{fig:IC50_bias}).
+However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC$_{50}$ shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{fig:IC50_bias}).
 
 \begin{figure}[tb]
    % \includegraphics[trim={0 4cm 0 4cm},clip,width=0.5\textwidth]{../figures/compare-pIC50-bias_corrected.pdf}
     \includegraphics[width=\columnwidth]{../figures/compare-pIC50-bias_corrected.pdf}
 
-  \caption{{\bf Adding bias shifts pIC50 values closer to equivalence.}
+  \caption{{\bf Adding bias shifts pIC$_{50}$ values closer to equivalence.}
   Here we see (in red) the original experimental data points with errors bars representing the uncertainty (shown as 95\% confidence intervals) estimated by bootstrapping from our models. 
-  Adding in the bias from our models (in green) shifts the experimental pIC50 values closer to if tip-based assay and acoustic-based assay measurements resulted in the same final measurement. 
+  Adding in the bias from our models (in green) shifts the experimental pIC$_{50}$ values closer to if tip-based assay and acoustic-based assay measurements resulted in the same final measurement. 
   {\color{red}[JDC: Is red without any bias, and green with the bias for the model that accounts for tip dilution?  Or is red the model including bias from the non-tip-dilution model, and green the model including bias from the tip-dilution model?]}
-  While this does not entirely explain all discrepancies between the two sets of data, the model demonstrates that (1) the bias induced by the dilution effect in fixed tips explains much of the pIC50 shift between the two datasets, and (2) there is still a large degree of variation among the measurements not accounted for by simple imprecision in liquid transfers.
+  While this does not entirely explain all discrepancies between the two sets of data, the model demonstrates that (1) the bias induced by the dilution effect in fixed tips explains much of the pIC$_{50}$ shift between the two datasets, and (2) there is still a large degree of variation among the measurements not accounted for by simple imprecision in liquid transfers.
   This demonstrates the power of building simple error models to improve our understanding of experimental data sets.
   }
   \label{fig:IC50_bias}
@@ -405,7 +411,7 @@ Not only is this sort of modeling approach useful for design ahead of time and a
 Understanding these errors, and being certain they are accounted for via clear benchmarks in experimental assays could help ensure the reproducibility of assays in the future, which is currently a topic of great interest. 
 Especially with such a wide ranging set of assays that use dilution series, most notably toward the development of proteins and small molecules to study and treat disease, this is a very important category of experiments to understand how to make more clearly reproducible and interpretable.
 
-While here we have illustrated the importance of modeling to the specific case of liquid handling with fixed tips in the context of measuring IC50 values for EphB4 inhibitors, there are still large discrepancies that have not been explained, and large swaths of systems both biological and mechanical that are still open for further investigation. 
+While here we have illustrated the importance of modeling to the specific case of liquid handling with fixed tips in the context of measuring IC$_{50}$ values for EphB4 inhibitors, there are still large discrepancies that have not been explained, and large swaths of systems both biological and mechanical that are still open for further investigation. 
 As experiments become more automated and analysis becomes more quantitative understanding these errors will be increasingly important both for the consumers (modelers) and producers (experimentalists) of these data.
 
 
