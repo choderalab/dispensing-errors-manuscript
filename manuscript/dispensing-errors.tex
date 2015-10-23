@@ -250,7 +250,7 @@ Next, we will use this method of modeling error and apply it to a specific examp
 
 \subsection*{Modeling an enzymatic reaction}
 
-Our assay measures the accumulation of product {\color{red}[JDC: or was it depletion of substrate?]} over some short interval of time when the inhibitor is added in different concentrations in the presence of substrate; fitting a curve obtained over a range of inhibitor concentrations yields an observed IC$_{50}$.
+Our assay measures the accumulation of product {\color{red}[JDC: or was it depletion of substrate?]} over some short interval of time  {\color{red}[JDC: What interval of time?]} when the inhibitor is added in different concentrations in the presence of substrate; fitting a curve obtained over a range of inhibitor concentrations yields an observed IC$_{50}$.
 
 A simple model for this competition assay can be created using standard models for competitive inhibition of a substrate $S$ with an inhibitor $I$ to compute a quantity that will be related to this measurement. 
 Here, we assume the total accumulation of product in a fixed assay time will be proportion to the relative enzyme turnover velocity $V_0 / V_\mathrm{max}$, and use an equation derived assuming Michaelis-Menten kinetics,
@@ -279,11 +279,16 @@ Here we compare an aqueous dilution series made with a tip-based liquid handler 
 
 \subsubsection*{Tip-based liquid handling}
 
-To construct a model of a dilution series we start with our initial well at concentration, $C_\mathrm{initial}$, and then transfer volume, $V_\mathrm{transfer}$, to create $n_\mathrm{dilutions}$ as illustrated in (Figure~\ref{fig:dilution}). 
-We include imprecision and bias to this by using manufacturer-provided values for the Tecan Genesis: the imprecision is stated as 3\% and the typical inaccuracy as 3-5\% for the volumes in question~\cite{_tecan_2001}. 
-The concentration of each well is determined by the volumes $V_\mathrm{transfer}$ and $V_\mathrm{buffer}$, each of which is defined in our model as randomly drawn from a normal distribution, where the bias and the variance that have been pulled from a linear interpolation of the provided imprecision and inaccuracy, respectively, provided by the manufacturer.
+To create a serial dilution series (Figure~\ref{fig:dilution}), we start with an initial well at concentration $C_\mathrm{initial}$ and sequentially transfer volume $V_\mathrm{transfer}$ into a volume $V_\mathrm{buffer}$ of buffer in the next well and mix, repeating this process $n_\mathrm{dilutions}$-1 times to create a total of $n_\mathrm{dilutions}$ dilutions. 
+To model the impact of imprecision and inaccuracy on this process, we use manufacturer-provided specifications\footnote{While these are often presented as the maximum-allowable imprecision and typical inaccuracy values, we find these are a reasonable starting point for this kind of modeling.} for the Tecan Genesis: the relative imprecision is stated to be 3\% and the inaccuracy as 3-5\% for the volumes in question~\cite{_tecan_2001}. 
+The resulting concentration of each dilution operation is determined by both the concentration $C_{n-1}$ of the previous dilution step, which accumulates error with each dilution $n$, and by the pipetted volumes $V_\mathrm{transfer}$ and $V_\mathrm{buffer}$, each of which is randomly drawn from a normal distribution.
+\begin{eqnarray}
+\color{red}
+\mathrm{[EQUATIONS]}
+\end{eqnarray}
+Here, we estimate the bias and the variance using a linear interpolation of the provided imprecision and inaccuracy values in the manufacturer-provided table. {\color{red}[JDC: Cite?]}
 Then, applying the parametric bootstrapping model, which is simply sampling over this variation with many replicates, we can get a good estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}).
-Further more, as can be scene in the schematic in Figure~\ref{fig:overview}, because the dilution series is created before addition of the compound to the enzyme solution, there is an additional error term added upon transferring the dilution series results into the enzyme solution (in this case 2 $\mu$L into 10 $\mu$L).
+Furthermore, as can be seen in the schematic in Figure~\ref{fig:overview}, because the dilution series is created before addition of the compound to the enzyme solution, there is an additional error term added upon transferring the dilution series results into the enzyme solution (in this case 2 $\mu$L into 10 $\mu$L).
 
 \begin{figure}[tb]
     \includegraphics[width=\columnwidth]{../figures/dilution.pdf}
@@ -298,12 +303,14 @@ Further more, as can be scene in the schematic in Figure~\ref{fig:overview}, bec
   \label{fig:dilution}
 \end{figure}
 
-\subsubsection*{Direct dispensing technologies.}
+\subsubsection*{Direct dispensing technologies}
 
-To construct a model of a dilution series we start with our initial ligand stock in DMSO at concentration, $C_0$, and then transfer a volume, $dispense\_volume$, into each well (Figure~\ref{fig:direct_dispense}). 
-We can add imprecision and bias to this by using manufacturer-provided values for the Labcyte Echo: the imprecision is stated as 8\% and the inaccuracy as 10\% for the volumes in question~\cite{_echo_2011}. 
+To construct a model of a dilution series, we start with our initial ligand stock in DMSO at concentration $C_0$ and transfer a volume $dispense\_volume$ into each well (Figure~\ref{fig:direct_dispense}). 
+We can add imprecision and bias to this by using manufacturer-provided values.
+For the Labcyte Echo, the imprecision is stated as 8\% and the inaccuracy as 10\% for the volumes in question~\cite{_echo_2011}. 
 The concentration of each well is determined by the volumes $dispense\_volume$ and $mix\_volume$, each of which is defined in our model as randomly drawn from a normal distribution, where the bias and the variance that have been pulled from a linear interpolation of the provided imprecision and inaccuracy, respectively, provided by the manufacturer.
 \begin{eqnarray}
+\color{red}
 \mathrm{[EQUATIONS]}
 \end{eqnarray}
 We can then produce an estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}) by applying our parametric bootstrap model, generating many synthetic replicates of the experiment.
@@ -321,12 +328,12 @@ Because direct dispensing technologies dispense directly into the enzyme assay, 
   \label{fig:direct_dispense}
 \end{figure}
 
-\subsubsection*{Fixed tips and the dilution effect.}
+\subsubsection*{Fixed tips and the dilution effect}
 
-Simply including the computed contributions from inaccuracy and imprecision in our model of the  Ekins.~et al.~dataset~\cite{ekins}, it is easy to see that the imprecision is not nearly large enough to explain the discrepancies between measurements made with the two dispensing technologies~(Figure~\ref{figure:xxx}).
+Simply including the computed contributions from inaccuracy and imprecision in our model of the  Ekins.~et al.~dataset~\cite{ekins_dispensing_2013}, it is easy to see that the imprecision is not nearly large enough to explain the discrepancies between measurements made with the two dispensing technologies~(Figure~\ref{fig:overview}).
 Another aspect of dispensing with multichannel liquid-handler, specific to liquid-based fixed-tip pipetting, such as the Tecan Genesis has, is the dilution effect. 
 This dilution effect was previously characterized by a couple papers from Bristol Meyers Squibb~\cite{dong_use_2006,gu_dilution_2007}, where they found that the system liquid used to create the pressure differences required for pipetting, can mix with sample when it is being aspirated (Figure~\ref{fig:dilution_effect}). 
-This mix of system liquid and sample dilutes the sample, and the Bristol Meyers Squibb team was able to use a combination of the Artel dye-based Multichannel Verification System (MVS) and gravimentric methods to quantify that this dilution contributes a -6.30\% inaccuracy for a target volume of 20 $\mu$L~\cite{dong_use_2006}.
+This mix of system liquid and sample dilutes the sample, and the Bristol Meyers Squibb team was able to use a combination of the Artel dye-based Multichannel Verification System (MVS) and gravimetric methods to quantify that this dilution contributes a -6.30\% inaccuracy for a target volume of 20 $\mu$L~\cite{dong_use_2006}.
 This inaccuracy can then be included in our model, using the same method of taking a random sample from a normal distribution and iterating over many replicates, and we can look at the resulting CV and bias seen in volumes, concentrations and quantities, as for the disposable tip model (which won't have this error) and the acoustic-dispensing model (Figure~\ref{fig:volumes-n-concentrations}).
 This extra dilution effect also needs to be incorporated into the transfer of the dilution series into the enzyme assay solution, and it turns out this additional error is non-trivial.
 
