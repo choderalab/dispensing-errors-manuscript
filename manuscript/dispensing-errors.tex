@@ -364,9 +364,11 @@ This extra dilution effect also needs to be incorporated into the transfer of th
 
 \subsection*{Modeling plate reader measurement}
 
-When measuring readouts of fluorescence assays, it is important to take intrinsic error in plate reader measurement into account. All observations have error. 
+When measuring readouts of fluorescence assays, it is important to take the intrinsic error in measurement---as well as the existence of a noise floor, where signals below this threshold will just be seen as background noise---into account.
+All observations have error. 
 Luckily most plate readers already have these stats on hand in their manuals. 
 For example the {\bf XXX} used in this example has a fluorescence detection threshold of {\bf XXX} and an error of {\bf XXX}.
+{\color{red}[JDC: This section needs help!]}
 
 \begin{figure*}[tb]
    % \includegraphics[width=1.0\textwidth]{../figures/acoustic-vs-tips.pdf}
@@ -418,7 +420,7 @@ Not only is this sort of modeling approach useful for design ahead of time and a
 Understanding these errors, and being certain they are accounted for via clear benchmarks in experimental assays could help ensure the reproducibility of assays in the future, which is currently a topic of great interest. 
 Especially with such a wide ranging set of assays that use dilution series, most notably toward the development of proteins and small molecules to study and treat disease, this is a very important category of experiments to understand how to make more clearly reproducible and interpretable.
 
-While here we have illustrated the importance of modeling to the specific case of liquid handling with fixed tips in the context of measuring IC$_{50}$ values for EphB4 inhibitors, there are still large discrepancies that have not been explained, and large swaths of systems both biological and mechanical that are still open for further investigation. 
+While here we have illustrated the importance of modeling to the specific case of liquid handling with fixed tips in the context of measuring IC$_{50}$ values for EphB4 inhibitors, there are still large discrepancies that have not been explained, and large swaths of systems {\color{red}[JDC: ``Swaths of systems''?  Are you talking about other possible sources of error that could be accounted for?]} both biological and mechanical that are still open for further investigation. 
 As experiments become more automated and analysis becomes more quantitative understanding these errors will be increasingly important both for the consumers (modelers) and producers (experimentalists) of these data.
 
 
