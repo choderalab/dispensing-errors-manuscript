@@ -250,21 +250,18 @@ Next, we will use this method of modeling error and apply it to a specific examp
 
 \subsection*{Modeling an enzymatic reaction}
 
-Our assay measures the accumulation of product {\color{red}[JDC: or was it depletion of substrate?]} over some short interval of time  {\color{red}[JDC: What interval of time?]} when the inhibitor is added in different concentrations in the presence of substrate; fitting a curve obtained over a range of inhibitor concentrations yields an observed IC$_{50}$.
+The EphB4 assay~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} measures the accumulation of product {\color{red}[JDC: or was it depletion of substrate?]} over some short interval of time  {\color{red}[JDC: What interval of time?]} when the inhibitor is added in different concentrations in the presence of substrate; fitting a curve obtained over a range of inhibitor concentrations yields an observed IC$_{50}$.
 
 A simple model for this competition assay can be created using standard models for competitive inhibition of a substrate $S$ with an inhibitor $I$ to compute a quantity that will be related to this measurement. 
 Here, we assume the total accumulation of product in a fixed assay time will be proportion to the relative enzyme turnover velocity $V_0 / V_\mathrm{max}$, and use an equation derived assuming Michaelis-Menten kinetics,
 \begin{eqnarray}
-\frac{V_{0}}{V_\mathrm{max}} = \frac{[S]}{K_{m}(1+\frac{[I]}{K_{i}})+[S]} \label{equation:activity} ,
+\frac{V_{0}}{V_\mathrm{max}} = \frac{[S]}{K_{m}(1+\frac{[I]}{K_{i}})+[S]} \label{equation:competitive-inhibition} ,
 \end{eqnarray}
 where the Michaelis constant $K_{m}$ and substrate concentration $[S]$ for the EphB4 system are pulled directly from the assay methodology description~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010}. 
 In interrogating our model, we will vary the true inhibitor affinity $K_{i}$ to determine how the assay imprecision and inaccuracy depend on true inhibitor affinity.
 Thus the activity, $V_{0}/V_{max}$, depends only on the inhibitor concentration $[I]$, which we compute statistics for exactly as defined for $c_n$ above.
-Then with a simple relation between IC$_{50}$ and $K_{i}$,
-\begin{eqnarray}
-IC_{50} &=& K_{i}\left(1+\frac{[S]}{K_{m}}\right) \label{equation:IC50}
-\end{eqnarray} 
-we can also get predictions for IC$_{50}$ directly from our simple models that include the known bias and variance of volumes dispensed by various dispensing technologies.
+
+{\color{red}[JDC: Should we be more explicit that what is observed---product accumulation?---is modeled by the velocity times time, $V_0 t$, assuming that there is an excess of substrate, and that we just report this relative to the uninhibited enzyme---$(V_0 t) / (V_\mathrm{max} t) = V_0 / V_\mathrm{max}$?]}
 
 \subsection*{Advanced liquid handling: Making a dilution series}
 
@@ -280,12 +277,13 @@ Here we compare an aqueous dilution series made with a tip-based liquid handler 
 \subsubsection*{Tip-based liquid handling}
 
 To create a serial dilution series (Figure~\ref{fig:dilution}), we start with an initial well at concentration $C_\mathrm{initial}$ and sequentially transfer volume $V_\mathrm{transfer}$ into a volume $V_\mathrm{buffer}$ of buffer in the next well and mix, repeating this process $n_\mathrm{dilutions}$-1 times to create a total of $n_\mathrm{dilutions}$ dilutions. 
-To model the impact of imprecision and inaccuracy on this process, we use manufacturer-provided specifications\footnote{While these are often presented as the maximum-allowable imprecision and typical inaccuracy values, we find these are a reasonable starting point for this kind of modeling.} for the Tecan Genesis: the relative imprecision is stated to be 3\% and the inaccuracy as 3-5\% for the volumes in question~\cite{_tecan_2001}. 
+To model the impact of imprecision and inaccuracy on this process, we use manufacturer-provided specifications\footnote{While manufacturer-provided specifications for imprecision and inaccuracy are often presented as the maximum-allowable values, we find these are a reasonable starting point for this kind of modeling.} for the Tecan Genesis: the relative imprecision is stated to be 3\% and the inaccuracy as 3-5\% for the volumes in question~\cite{_tecan_2001}. 
 The resulting concentration of each dilution operation is determined by both the concentration $C_{n-1}$ of the previous dilution step, which accumulates error with each dilution $n$, and by the pipetted volumes $V_\mathrm{transfer}$ and $V_\mathrm{buffer}$, each of which is randomly drawn from a normal distribution.
 \begin{eqnarray}
 \color{red}
 \mathrm{[EQUATIONS]}
 \end{eqnarray}
+{\color{red}[JDC: We should express what a step of the dilution series looks like in terms of the equations for drawing random numbers as in the above sections.]}
 Here, we estimate the bias and the variance using a linear interpolation of the provided imprecision and inaccuracy values in the manufacturer-provided table. {\color{red}[JDC: Cite?]}
 Then, applying the parametric bootstrapping model, which is simply sampling over this variation with many replicates, we can get a good estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}).
 Furthermore, as can be seen in the schematic in Figure~\ref{fig:overview}, because the dilution series is created before addition of the compound to the enzyme solution, there is an additional error term added upon transferring the dilution series results into the enzyme solution (in this case 2 $\mu$L into 10 $\mu$L).
@@ -313,6 +311,7 @@ The concentration of each well is determined by the volumes $dispense\_volume$ a
 \color{red}
 \mathrm{[EQUATIONS]}
 \end{eqnarray}
+{\color{red}[JDC: We should express what a step of the dilution series looks like in terms of the equations for drawing random numbers as in the above sections.]}
 We can then produce an estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}) by applying our parametric bootstrap model, generating many synthetic replicates of the experiment.
 Because direct dispensing technologies dispense directly into the enzyme assay, rather than creating an intermediate dilution series that is then transferred into the assay wells, direct dispensing experiments include fewer steps (and hence fewer potential inaccuracy- and imprecision-amplifying steps) than the tip-based assays which must create the intermediate dilution series.
 
@@ -345,7 +344,7 @@ This extra dilution effect also needs to be incorporated into the transfer of th
   Automated liquid handlers with fixed tips utilizing liquid-displacement pipetting tecnhnology use a washing cycle in which system liquid (generally water or buffer) is used to purge samples from the tips in between liquid transfer steps.
   Aspirated sample can be diluted by the system liquid (light purple) when some residual system liquid remains wetting the inside walls of the tip after purging.
   This residual system liquid and is mixed with the sample (blue) as it sample aspirated, creating a mixture of system liquid and sample (red) that then dilutes the sample when it is dispensed. 
-  While the use of an air gap (white) reduces this dilution effect, it is still a known problem in fixed tip liquid-based automated liquid handling technologies, requiring more complex liquid-handling strategies to eliminate it~\cite{gu_dilution_2007}. 
+  While the use of an air gap (white) reduces the magnitude of this dilution effect, it is still a known problem in fixed tip liquid-based automated liquid handling technologies, requiring more complex liquid-handling strategies to eliminate it~\cite{gu_dilution_2007}. 
   Diagram adapted from Ref.~\cite{gu_dilution_2007}. 
   }
   \label{fig:dilution_effect}
@@ -368,7 +367,7 @@ When measuring readouts of fluorescence assays, it is important to take the intr
 All observations have error. 
 Luckily most plate readers already have these stats on hand in their manuals. 
 For example the {\bf XXX} used in this example has a fluorescence detection threshold of {\bf XXX} and an error of {\bf XXX}.
-{\color{red}[JDC: This section needs help!]}
+{\color{red}[JDC: This section needs help!  The two most important things are (1) there is a lower limit to observable fluorescence, and (2) some noise should be added.  Do we want to just talk about this but leave out the effects, or do we want to try to incorporate this here and regenerate the figures?]}
 
 \begin{figure*}[tb]
    % \includegraphics[width=1.0\textwidth]{../figures/acoustic-vs-tips.pdf}
@@ -380,12 +379,30 @@ For example the {\bf XXX} used in this example has a fluorescence detection thre
   \label{fig:acoustic-vs-tips}
 \end{figure*}
 
+\subsection*{Fitting the assay readout to obtain an IC$_{50}$}
+
+While the IC$_{50}$ reported in the EphB4 assay~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} in principle represents the stated concentration of inhibitor required to inhibit enzyme activity by half, this value is estimated in practice by numerically fitting a model of inhibition to the measured assay readout (in this case, fluorescence) across the whole range of concentrations measured using a method such as least-squared (the topic of another article in this series~\cite{jones_fitting_2015}).
+
+To mimic the approach used in fitting the assay data, we use a nonlinear least-squares approach (based on the simple {\tt curve\_fit} function from {\tt scipy.optimize}) to fit the competitive inhibition model (Eq.~\ref{equation:competitive-inhibition}) to obtain a $K_i$ and then compute the IC$_{50}$ from this fit value.
+We can then use a simple relation between IC$_{50}$ and $K_{i}$ to compute the reported assay readout,
+\begin{eqnarray}
+\mathrm{IC}_{50} &=& K_{i}\left(1+\frac{[S]}{K_{m}}\right) \label{equation:IC50} .
+\end{eqnarray} 
+Finally, the reported results are actually $p$IC$_{50}$ values, which are defined by 
+\begin{eqnarray}
+p\mathrm{IC}_{50} &=& \log_{10} \mathrm{IC}_{50} \label{equation:pIC50}
+\end{eqnarray}
+Note that no complicated manipulation of these equations is required.
+As can be seen in the companion IPython notebook for this article, we simply call {\tt curve\_fit} to obtain a $K_i$ for each experimental replicate, and then store the $p$IC$_{50}$ obtained from use of Eqs.~\ref{equation:IC50} and \ref{equation:pIC50} above.
+
 \subsection*{Imprecision is insufficient to explain the Ekins discrepancy}
 
-Plotting the inaccuracies and imprecisions and how they differ for tip-based dispensing vs. direct dispensing is extremely useful, and allows us to understand the errors in our assay results a bit better. 
-It is easy to see that simple difference in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in Ekins et al between tip-based and direct dispensing.
+Plotting the inaccuracies and imprecisions and how they differ for tip-based dispensing \emph{vs} direct dispensing is extremely useful, and allows us to better understand the errors in our assay results. 
+It is easy to see that simple differences in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in Ekins et al.~\cite{ekins_dispensing_2013} between tip-based and direct dispensing.
 
 However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC$_{50}$ shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{fig:IC50_bias}).
+
+{\color{red}[JDC: This section seems anemic. I think we should either move it entirely to be a part of the Discussion or somehow elaborate on this here.]}
 
 \begin{figure}[tb]
    % \includegraphics[trim={0 4cm 0 4cm},clip,width=0.5\textwidth]{../figures/compare-pIC50-bias_corrected.pdf}
@@ -394,7 +411,7 @@ However, if we incorporate the final component of error in tip-based dispensing,
   \caption{{\bf Adding bias shifts pIC$_{50}$ values closer to equivalence.}
   Here we see (in red) the original experimental data points with errors bars representing the uncertainty (shown as 95\% confidence intervals) estimated by bootstrapping from our models. 
   Adding in the bias from our models (in green) shifts the experimental pIC$_{50}$ values closer to if tip-based assay and acoustic-based assay measurements resulted in the same final measurement. 
-  {\color{red}[JDC: Is red without any bias, and green with the bias for the model that accounts for tip dilution?  Or is red the model including bias from the non-tip-dilution model, and green the model including bias from the tip-dilution model?]}
+  {\color{red}[JDC: Is red without any bias, and green with the bias for the model that accounts for tip dilution?  Or is red the model including bias from the non-tip-dilution model, and green the model including bias from the tip-dilution model?  Should we show all three?  No bias, bias correction without dilution, bias correction with dilution?]}
   While this does not entirely explain all discrepancies between the two sets of data, the model demonstrates that (1) the bias induced by the dilution effect in fixed tips explains much of the pIC$_{50}$ shift between the two datasets, and (2) there is still a large degree of variation among the measurements not accounted for by simple imprecision in liquid transfers.
   This demonstrates the power of building simple error models to improve our understanding of experimental data sets.
   }
@@ -407,13 +424,15 @@ However, if we incorporate the final component of error in tip-based dispensing,
 \section{Discussion}
 
 Serial dilutions are commonly used in the process of determining biologically and clinically relevant values such as inhibition concentrations (IC$_{ 50}$)  and dissociation constants (K$_{d}$). 
-While high-throughput automation methods can improve the reproducibility of these measurements over manual pipetting, even robotic liquid handlers are victim to systematic error. 
-Here, we have demonstrated how a simple model {\color{red} [which, in addition to blank blank, other resources for modeling error]} that allowed us to estimate the imprecision and inaccuracy of the measured IC$_{50}$ values, as well as identify the difficulty in creating an accurate dilution series as the major contribution to discrepancies in measurements between fixed pipette tip and direct dispensing technologies. 
-We hope this will be a useful tool for experimental and computational chemists to understand common sources of error within assays that use dilution series and how to model and correct for them.
+While high-throughput automation methods can improve the reproducibility of these measurements over manual pipetting, even robotic liquid handlers are victim to the accumulation of both random and systematic error. 
 
-This however, is just one example of what can generally be done if this model is pursued for other times of experiments relevant to computational modelers.
-Ideally, experimentalists should verify ahead of time via this or a similar approach that their assay appropriately discriminates among the properties of the molecules in question given the expected range of IC$_{ 50}$s or K$_{d}$s to be probed, combined with the errors already known to be intrinsic to the experiment. 
-This kind of modeling will allow for assays to even be fine tuned to make sure the data is appropriate to the question at hand. 
+Here, we have demonstrated how a simple model based on the bootstrap principle, in which nothing more than the manufacturer-provided imprecision and inaccuracy values and a description of the protocol were used to \emph{simulate} virtual replicates of the experiment for a variety of simulated compound affinities, allowed us to estimate the imprecision and inaccuracy of measured IC$_{50}$s, as well as identify the difficulty in creating an accurate dilution series using a fix-tip dispenseras the major contribution to discrepancies in measurements between fixed pipette tip and direct dispensing technologies. 
+In addition to providing some estimate for the random error in measured affinities, the computed bias could even be used to \emph{correct} for the bias introduced by this process after the fact. 
+This approach can be a useful general tool for both experimental and computational chemists to understand common sources of error within assays that use dilution series and how to model and correct for them.
+
+This assay is just one example of the large class of assays for be done if this model is pursued for other types of experiments relevant to computational modelers.
+Instead of simply relying on intuition or historically successful protocol designs, experimentalists could use bootstrap simulation models during assay planning stages to verify that the proposed assay protocol is capable of appropriately discriminating among the properties of the molecules in question given the expected range of IC$_{ 50}$s or K$_{d}$s to be probed, once known errors are accounted for.
+Since the model is quantitative, tinkering with the assay protocol could allow the experimentalist to optimize the protocol to make sure the data is appropriate to the question at hand. 
 For example, in our own laboratory, it has informed the decision to use only direct dispensing technologies for a our fluorescent ligand-binding assays.
 
 Not only is this sort of modeling approach useful for design ahead of time and analysis after the fact of experiments, but it can be extremely useful in determining the right tests and controls to use to be sure errors and biases are properly taken into account in general. If one is not certain about the primary sources of error in an experiment, one is arguably not certain about the results of the experiment in general. 
