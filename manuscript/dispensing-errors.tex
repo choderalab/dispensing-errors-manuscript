@@ -78,7 +78,7 @@ Understanding discrepancies between assays using different dispensing technologi
 All experimental assay data contains error, but the magnitude, type, and primary origin of this error is often not obvious.
 Here, we describe a simple set of assay modeling techniques based on the bootstrap principle that allow sources of error and bias to be simulated and propagated into assay results.
 We demonstrate how deceptively simple operations---such as the creation of a dilution series with a robotic liquid handler---can significantly amplify imprecision and even contribute substantially to bias.
-To illustrate these techniques, we review an example of how choice of dispensing technology can impact assay measurements, and show how the primary contributions to discrepancies between assays can be easily understood and potentially corrected for.
+To illustrate these techniques, we review an example of how the choice of dispensing technology can impact assay measurements, and show how the primary contributions to discrepancies between assays can be easily understood and potentially corrected for.
 These simple modeling techniques---illustrated with an accompanying IPython notebook---can allow modelers to understand the expected error and bias in experimental datasets, and even help experimentalists design assays to more effectively reach accuracy and imprecision goals.
 
 \end{abstract}
@@ -163,7 +163,7 @@ For addition or subtraction of two independent quantities, this rule gives a sim
 f(x,y) &=& x \pm y \nonumber \\
 \delta^2 f &=& \sigma^2_x + \sigma^2_y 
 \end{eqnarray}
-For more complex functions of the data, however, even the simple form of Eq.~\ref{equation:error-propagation} for just two variables is sufficiently complicated to struggle to apply it.
+For more complex functions of the data, however, even the simple form of Eq.~\ref{equation:error-propagation} for just two variables is a struggle to apply.
 
 Instead, we adopt a different approach based on the \emph{bootstrap principle}~\cite{shalizi_simple_????}.
 \emph{Bootstrapping} allows you to approximate the sampling distribution by simulating from a good estimate (or simulacrum) of the real process.
@@ -268,7 +268,7 @@ To create a dilution series, an initial compound stock is diluted into buffer in
 Commonly, each subsequent dilution step uses fixed ratios, such as 1:1 or 1:10 of dilution:buffer.
 
 It is easy to see how a dilution series can amplify sources of error:
-Because each dilution step involves multiple pipetting operations, and the previously prepared dilution in the series is used to prepare the next dilution, errors will grow with each dilution in the series.
+because each dilution step involves multiple pipetting operations, and the previously prepared dilution in the series is used to prepare the next dilution, errors will grow with each dilution in the series.
 As a result, the instrumentation used can have a substantial impact on the results obtained.
 Here we compare an aqueous dilution series made with a tip-based liquid handler (specifically the Tecan Genesis), and a direct-dispensing dilution series made with acoustic dispensing (specifically the Labcyte Echo).
 
@@ -327,11 +327,11 @@ Because direct dispensing technologies dispense directly into the enzyme assay, 
 
 \subsubsection*{Fixed tips and the dilution effect}
 
-Simply including the computed contributions from inaccuracy and imprecision in our model of the  Ekins.~et al.~dataset~\cite{ekins_dispensing_2013}, it is easy to see that the imprecision is not nearly large enough to explain the discrepancies between measurements made with the two dispensing technologies~(Figure~\ref{fig:overview}).
+Simply including the computed contributions from inaccuracy and imprecision in our model of the  Ekins.~et al.~dataset~\cite{ekins_dispensing_2013}, it is easy to see that the imprecision is not nearly large enough to explain the discrepancies between measurements made with the two dispensing technologies~(Figure~\ref{fig:IC50_bias}).
 Another aspect of dispensing with multichannel liquid-handler, specific to liquid-based fixed-tip pipetting, such as the Tecan Genesis has, is the dilution effect. 
 This dilution effect was previously characterized by two papers from Bristol Myers Squibb~\cite{dong_use_2006,gu_dilution_2007}, where they found that the system liquid used to create the pressure differences required for pipetting, can mix with sample when it is being aspirated (Figure~\ref{fig:dilution_effect}). 
 This mix of system liquid and sample dilutes the sample, and the Bristol Myers Squibb team was able to use a combination of the Artel dye-based Multichannel Verification System (MVS) and gravimetric methods to quantify that this dilution contributes a -6.30\% inaccuracy for a target volume of 20 $\mu$L~\cite{dong_use_2006}.
-This inaccuracy can then be included in our model, using the same method of taking a random sample from a normal distribution and iterating over many replicates, and we can look at the resulting CV and bias seen in volumes, concentrations and quantities, as for the disposable tip model (which won't have this error) and the acoustic-dispensing model (Figure~\ref{fig:volumes-n-concentrations}).
+This inaccuracy can then be included in an expanded version of our original bootstrap model, and we can look at the resulting CV and bias seen in volumes, concentrations and quantities, as for the disposable tip model (which won't have this error) and the acoustic-dispensing model (Figure~\ref{fig:volumes-n-concentrations}).
 This extra dilution effect also needs to be incorporated into the transfer of the dilution series into the enzyme assay solution, and it turns out this additional error is non-trivial.
 
 \begin{figure}[tb]
