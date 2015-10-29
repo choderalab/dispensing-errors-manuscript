@@ -406,10 +406,10 @@ However, if we incorporate the final component of error in tip-based dispensing,
     \includegraphics[width=\columnwidth]{../figures/compare-pIC50-bias_corrected.pdf}
 
   \caption{{\bf Adding bias shifts pIC$_{50}$ values closer to equivalence.}
-  Here we see (in red) the original experimental data points with errors bars representing the uncertainty (shown as 95\% confidence intervals) estimated by bootstrapping from our models. 
-  Adding in the bias from our models (in green) shifts the experimental pIC$_{50}$ values closer to if tip-based assay and acoustic-based assay measurements resulted in the same final measurement. 
-  {\color{red}[JDC: Is red without any bias, and green with the bias for the model that accounts for tip dilution?  Or is red the model including bias from the non-tip-dilution model, and green the model including bias from the tip-dilution model?  Should we show all three?  No bias, bias correction without dilution, bias correction with dilution?]}
-  While this does not entirely explain all discrepancies between the two sets of data, the model demonstrates that (1) the bias induced by the dilution effect in fixed tips explains much of the pIC$_{50}$ shift between the two datasets, and (2) there is still a large degree of variation among the measurements not accounted for by simple imprecision in liquid transfers.
+  Here we see (in red) the original experimental pIC50 values from tips with dilution effect plotted against values from acoustic dispensing with errors bars representing the uncertainty (shown as 95\% confidence intervals) estimated by bootstrapping from our models. 
+  Adding in the bias from our bootstrapped models (in green) shifts the experimental pIC$_{50}$ values closer to if tip-based assay and acoustic-based assay measurements resulted in the same final measurement. 
+  While this does not entirely explain all discrepancies between the two sets of data, it shifts the root mean square error between the tip-based and acoustic-based dispensing methods from 1.56 to 0.86 pIC50 units.
+  The model also demonstrates that (1) the bias induced by the fixed tips explains much of the pIC$_{50}$ shift between the two datasets, and (2) there is still a large degree of variation among the measurements not accounted for by simple imprecision in liquid transfers.
   This demonstrates the power of building simple error models to improve our understanding of experimental data sets.
   }
   \label{fig:IC50_bias}
