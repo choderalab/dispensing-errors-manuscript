@@ -29,6 +29,12 @@
 \usepackage{listings} % For code examples
 \usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
 
+% Break URLs in bibliography correctly
+%\usepackage{biblatex}
+%\usepackage{url}
+%\setcounter{biburllcpenalty}{7000}
+%\setcounter{biburlucpenalty}{8000}
+
 \usepackage{amsmath}
 \usepackage{amssymb}
 %\usepackage[mathbf,mathcal]{euler}
@@ -37,7 +43,10 @@
 \usepackage{dcolumn}
 \usepackage{boxedminipage}
 \usepackage{verbatim}
-\usepackage[colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
+\usepackage{url}
+\def\UrlBreaks{\do\/\do-}
+\usepackage{breakurl}
+\usepackage[breaklinks,colorlinks=true,citecolor=blue,linkcolor=blue]{hyperref}
 \usepackage[group-separator={,}]{siunitx}
 
 %Strikethrough
@@ -453,17 +462,16 @@ The authors are grateful to Anthony Nichols (OpenEye) and Martin Stahl (Roche) f
 The authors are especially grateful to Cosma Shalizi for presenting a clear and lucid overview of the bootstrap principle to this audience, and we hope this contribution can further aid readers in the community in employing these principles in their work.
 The authors further acknowledge Adrienne Chow and Anthony Lozada of Tecan US for a great deal of assistance in understanding the nature of operation and origin of errors in automated liquid handling equipment.
 The authors thank Paul Czodrowski (Merck Darmstadt) for introducing us to IPython notebooks as a means of interactive knowledge transfer.
-JDC and SMH acknowledge support from the Sloan Kettering Institute, a Louis V.~Gerstner Young Investigator Award, and NIH grant {\color{red}XXXXX}.
-SE acknowledges Joe Olechno and Antony Williams for extensive discussions on the topic, as well as the many scientists that responded to the various blog posts.
+JDC and SMH acknowledge support from the Sloan Kettering Institute, a Louis V.~Gerstner Young Investigator Award, and NIH grant P30 CA008748.
+SE acknowledges Joe Olechno and Antony Williams for extensive discussions on the topic, as well as the many scientists that responded to the various blog posts mentioned herein.
 
-%\begin{itemize}
-%  \item Cosma Shalizi for his excellent GRC talk on the bootstrap principle
-%  \item Funding sources (SKI, NIH core grant for JDC)
-%  \item Adrienne Chow, Anthony Lozada, and Tecan?
-%  \item Terry Stouch (JCAMD, for tireless encouragement)
-%  \item Anthony Nicholls (statistics of drug discovery GRC)
-%  \item Paul Czodrowski (for introducing us to IPython notebooks)
-%\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% CONFLICTS OF INTEREST
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Conflicts of interest}
+\label{section:conflicts-of-interest}
+
+The authors acknowledge no conflicts of interest, but wish to disclose that JDC is on the Scientific Advisory Board of Schr\"{o}dinger and SE is an employee of Collaborative Drug Discovery.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % BIBLIOGRAPHY
