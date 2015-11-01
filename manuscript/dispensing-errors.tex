@@ -236,38 +236,50 @@ which we represent here as a percent, rather than a fraction.
 \subsection*{Simple liquid handling: Mixing solutions}
 
 Consider the simplest kind of liquid transfer operation, in which we use some sort of pipetting instrument (handheld or automated) to combine two solutions.
-For simplicity, we presume we combine a volume $V$ of compound stock solution of known true concentration $C$ with a quantity of buffer of volume $W$.
-We presume, again for simplicity, that these operations are free of bias, but have associated imprecisions $\sigma_V$ and $\sigma_W$. 
+For simplicity, we presume we combine a volume $v_\mathrm{stock}$ of compound stock solution of known true concentration $c_0$ with a quantity of buffer of volume $v_\mathrm{buffer}$.
+We presume, again for simplicity, that these operations are free of bias, but have associated imprecisions $\sigma_\mathrm{stock}$ and $\sigma_\mathrm{buffer}$. 
 These imprecisions might come from stated manufacturer specifications in the absence of other calibration information.
 
-To simulate this process, we simply simulate a number of realizations $n = 1, \ldots, N$, where we again assume a normal distribution for the sources of uncertainty,
+To simulate this process using the bootstrap principle, we simply simulate a number of realizations $n = 1, \ldots, N$, where we again assume a normal distribution for the sources of uncertainty, in this case neglecting any bias and only accounting for imprecision,
 \begin{eqnarray}
-v_n &\sim& \mathcal{N}(V, \sigma_V^2) \nonumber \\
-w_n &\sim& \mathcal{N}(W, \sigma_W^2) \nonumber \\
-c_n &=& C / (v_n + w_n)
+v_{\mathrm{stock},n} &\sim& \mathcal{N}(v_\mathrm{stock}, \sigma_\mathrm{stock}^2) \nonumber \\
+v_{\mathrm{buffer},n} &\sim& \mathcal{N}(v_\mathrm{buffer}, \sigma_\mathrm{stock}^2) \nonumber \\
+c_n &=& c_0 / (v_{\mathrm{stock},n} + w_{\mathrm{buffer},n})
 \end{eqnarray}
 and then compute statistics for the $\{c_n\}$, $n = 1,\ldots,N$ that are produced by this process.
-To compute the bias, we know that we \emph{expect} the resulting concentration $c = C/ (V + W)$.
+For example, to compute the bias and CV in the final solution concentration, we compute
+\begin{eqnarray}
+\mathrm{bias} &=& \mathrm{mean} \{ c_n- c \} \\
+CV &=& \frac{\mathrm{std}\{ c_n \}}{c}
+\end{eqnarray}
+Both quantities are generally expressed as relative quantities, often as percentage; we do this throughout the accompanying IPython notebook.
+\begin{eqnarray}
+\mathrm{relative\:bias\:\%} &=& \frac{\mathrm{mean} \{ c_n- c \}}{c} \cdot 100 \: \% \\
+CV\:\% &=& \frac{\mathrm{std}\{ c_n \}}{c} \cdot 100 \: \%
+\end{eqnarray}
 
-We can further extend this model to include uncertainty $\sigma_C$ in the stock concentration $C$, and begin to see how powerful and modular the bootstrap scheme is.
+We can further extend this model to include uncertainty $\sigma_c$ in the stock concentration $c_0$, and begin to see how powerful and modular the bootstrap scheme is.
 In this new model, each simulation realization $n$ consists of
 \begin{eqnarray}
-C_n &\sim& \mathcal{N}(C, \sigma_C^2) \nonumber \\
-v_n &\sim& \mathcal{N}(V, \sigma_V^2) \nonumber \\
-w_n &\sim& \mathcal{N}(W, \sigma_W^2) \nonumber \\
-c_n &=& C_n / (v_n + w_n)
+c_n &\sim& \mathcal{N}(c_0, \sigma_c^2) \nonumber \label{equation:stock-concentration-uncertainty-simple} \\
+v_{\mathrm{stock},n} &\sim& \mathcal{N}(v_\mathrm{stock}, \sigma_\mathrm{stock}^2) \nonumber \\
+v_{\mathrm{buffer},n} &\sim& \mathcal{N}(v_\mathrm{buffer}, \sigma_\mathrm{stock}^2) \nonumber \\
+c_n &=& c_n / (v_{\mathrm{stock},n} + w_{\mathrm{buffer},n})
 \end{eqnarray}
-All we had to do was add one additional step to our bootstrap simulation scheme in which the stock concentration $C_n$ is drawn from a normal distribution with each bootstrap realization.
+All we had to do was add one additional step to our bootstrap simulation scheme (Eq.~\ref{equation:stock-concentration-uncertainty-simple}) in which the stock concentration $c_n$ is drawn from a normal distribution with each bootstrap realization.
 The model can be expanded indefinitely with additional independent measurements or random variables in the same simple way.
 
-Below, we exploit this modularity to design a simple scheme to simulate an entire assay without being overwhelmed by complexity.
-All of the errors we discuss arise  from the transfer and mixing of volumes of solutions with different concentrations of compound as described above.
-While the completeness of mixing can itself be a source of error in certain assays---a surprising amount of effort is required to ensure thorough mixing~\cite{walling_mixing_2007,weiss_modeling_2002,mitre_turbo-mixing_2007}---we have chosen not to explicitly include this incomplete mixing effect in our model, but it could similarly be added within this framework.
-Next, we will use this method of modeling error and apply it to a specific example from the literature, looking at IC$_{50}$s for compounds targeting the EphB4 receptor~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010}, breaking down how errors differ depending on the dispensing technology under otherwise identical conditions.
+Below, we exploit this modularity to design a simple scheme to simulate a real assay---the measurement of pIC$_{50}$s for compounds targeting the EphB4 receptor~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010}---without being overwhelmed by complexity.
+This assay is particularly interesting because data exists for the same assay performed using two \emph{different} dispensing protocols that led to highly discrepant assay pIC$_{50}$ data, allowing us to illustrate how different sources of random error arising from different dispensing technologies can impact an otherwise identical assay.
+We consider only errors that arise from the transfer and mixing of volumes of solutions with different concentrations of compound, using the same strategy to model the more complex liquid handling operations in the assay.
+To more clearly illustrate the impact of imprecision and inaccuracy of dispensing technologies, we neglect considerations of the completeness of mixing, which can itself be a large source of error in certain assays\footnote{A surprising amount of effort is required to ensure thorough mixing of two solutions, especially in the preparation of dilution series~\cite{walling_mixing_2007,weiss_modeling_2002,mitre_turbo-mixing_2007}. We have chosen not to explicitly include this effect in our model, but it could similarly be added within this framework given some elementary data quantifying the bias induced by incomplete mixing.}.
 
 \subsection*{Modeling an enzymatic reaction}
 
-The EphB4 assay~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} measures the accumulation of phosphorylated substrate over some short interval of time when the inhibitor is added in different concentrations in the presence of substrate; fitting a curve obtained over a range of inhibitor concentrations yields an observed IC$_{50}$.
+The EphB4 assay we will model~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} measures the accumulation of phosphorylated substrate in the presence of different inhibitor concentrations in the presence of substrate.
+The reaction is allowed to progress for a fixed period of time and then stopped by the addition of a chelating agent that scavenges cofactor ions required for catalysis.
+A fluorescence readout measures the accumulation of phosphorylated substrate peptide.
+Fitting a binding model over the range of assayed inhibitor concentrations yields an observed pIC$_{50}$.
 
 A simple model for this competition assay can be created using standard models for competitive inhibition of a substrate $S$ with an inhibitor $I$ to compute a quantity that will be related to this measurement. 
 Here, we assume the total accumulation of product in a fixed assay time will be proportion to the relative enzyme turnover velocity $V_0 / V_\mathrm{max}$, and use an equation derived assuming Michaelis-Menten kinetics,
