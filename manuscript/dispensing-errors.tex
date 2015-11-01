@@ -281,15 +281,16 @@ The reaction is allowed to progress for a fixed period of time and then stopped 
 A fluorescence readout measures the accumulation of phosphorylated substrate peptide.
 Fitting a binding model over the range of assayed inhibitor concentrations yields an observed pIC$_{50}$.
 
-A simple model for this competition assay can be created using standard models for competitive inhibition of a substrate $S$ with an inhibitor $I$ to compute a quantity that will be related to this measurement. 
+A simple model for this competition assay can be created using standard models for competitive inhibition of a substrate $S$ with an inhibitor $I$ to compute a quantity that will be proportional to the measured substrate accumulation 
 Here, we assume the total accumulation of product in a fixed assay time will be proportion to the relative enzyme turnover velocity $V_0 / V_\mathrm{max}$, and use an equation derived assuming Michaelis-Menten kinetics,
 \begin{eqnarray}
 \frac{V_{0}}{V_\mathrm{max}} = \frac{[S]}{K_{m}(1+\frac{[I]}{K_{i}})+[S]} \label{equation:competitive-inhibition} ,
 \end{eqnarray}
 where the Michaelis constant $K_{m}$ and substrate concentration $[S]$ for the EphB4 system are pulled directly from the assay methodology description~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010}.
-Note that what is observed in the experiment is actually product accumulation, which is modeled by the velocity times time, $V_0 t$, assuming that there is an excess of substrate, and here we just report this relative to the uninhibited enzyme---$(V_0 t) / (V_\mathrm{max} t) = V_0 / V_\mathrm{max}$.
+Note that what is observed in the experiment is actually product accumulation, which is modeled by the velocity times time, $V_0 t$, assuming that there is an excess of substrate, and here we just report this relative to the uninhibited enzyme---$(V_0 t) / (V_\mathrm{max} t) = V_0 / V_\mathrm{max}$---this will be a good approximation in the case where substrate is in excess such that substrate depletion is negligible.
 In interrogating our model, we will vary the true inhibitor affinity $K_{i}$ to determine how the assay imprecision and inaccuracy depend on true inhibitor affinity.
-Thus the activity, $V_{0}/V_{max}$, depends only on the inhibitor concentration $[I]$, which we compute statistics for exactly as defined for $c_n$ above.
+Thus the activity, $V_{0}/V_{max}$, depends only on the true inhibitor concentration $[I]$ in the assay well.
+As we shall see, we use the same bootstrap scheme to model this true inhibitor concentration and how it relates to the concentration we \emph{indended} to end up in the assay well.
 
 \subsection*{Advanced liquid handling: Making a dilution series}
 
