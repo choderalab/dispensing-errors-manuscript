@@ -65,7 +65,7 @@
 \begin{document}
 
 %% TITLE %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{Modeling experimental error in assays:\\
+\title{Modeling error in experimental assays using the bootstrap principle:\\
 Understanding discrepancies between assays using different dispensing technologies}
 
 \author{Sonya M. Hanson}
@@ -362,8 +362,13 @@ This extra dilution effect also needs to be incorporated into the transfer of th
 \begin{figure*}[tb]
     \includegraphics[width=1.0\textwidth]{../figures/volumes-n-concentrations.pdf}
 
-  \caption{{\bf Comparing modeled errors in volume, concentration, and quantity for tip-based vs acoustic dispensing.}
-  Using our model we can look at the variance (top) and bias (middle) in volume, concentration, and quantity as a function of the dilution.
+  \caption{{\bf Modeled accumulation of random and systematic error in creating dilution series with fixed tips and acoustic dispensing.}
+  The model predicts how errors in compound concentration, well volume, and compound quantity accumulate for a dilution series prepared using fixed tips neglecting dilution effects (\emph{left}) or including dilution effects (\emph{middle}) compared with an acoustic direct-dispensing process (\emph{right}).
+  Imprecision and inaccuracy parameters appropriate for a Tecan Genesis (fixed tips dispensing) or LabCyte Echo (acoustic dispensing) were used, and assume that the initial compound stocks had negligible concentration error; see text for more details.
+  The top panels show the average relative random error via the coefficient of variation (CV) expressed as a percentage of concentration, volume, or quantity, while the bottom panels depict the relative bias, also expressed as a percentage.
+  For tip-based dispensing, relative random concentration error (CV) accumulates with dilution number, while for acoustic dispensing, this is constant over all dilutions.
+  When the dilution effect is included for fixed tips, there is significant bias accumulation over the dilution series.
+  {\color{red}[JDC: We seem to use both {\tt moles} and {\tt quantity} here. Let's standardize on {\tt quantity}.  I've fixed the IPython notebooks, but this figure needs to be regenerated.]}
   }
   \label{fig:volumes-n-concentrations}
 \end{figure*}
