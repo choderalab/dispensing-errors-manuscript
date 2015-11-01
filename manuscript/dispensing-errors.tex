@@ -284,7 +284,7 @@ Here we compare an aqueous dilution series made with a tip-based liquid handler 
 
 \subsubsection*{Tip-based liquid handling}
 
-To create a serial dilution series (Figure~\ref{fig:dilution}), we start with an initial well at concentration $C_\mathrm{initial}$ and sequentially transfer volume $V_\mathrm{transfer}$ into a volume $V_\mathrm{buffer}$ of buffer in the next well and mix, repeating this process $n_\mathrm{dilutions}$-1 times to create a total of $n_\mathrm{dilutions}$ dilutions. 
+To create a serial dilution series (Figure~\ref{fig:dilution}), we start with an initial well at concentration $C_\mathrm{initial}$ and sequentially transfer volume $V_\mathrm{transfer}$ into a volume $V_\mathrm{buffer}$ of buffer in the next well and mix, repeating this process $(n_\mathrm{dilutions}~-~1)$ times to create a total of $n_\mathrm{dilutions}$ dilutions. 
 To model the impact of imprecision and inaccuracy on this process, we use manufacturer-provided specifications\footnote{While manufacturer-provided specifications for imprecision and inaccuracy are often presented as the maximum-allowable values, we find these are a reasonable starting point for this kind of modeling.} for the Tecan Genesis: the relative imprecision is stated to be 3\% and the inaccuracy as 3-5\% for the volumes in question~\cite{_tecan_2001}. 
 The resulting concentration of each dilution operation is determined by both the concentration $C_{n-1}$ of the previous dilution step, which accumulates error with each dilution $n$, and by the pipetted volumes $V_\mathrm{transfer}$ and $V_\mathrm{buffer}$, each of which is randomly drawn from a normal distribution.
 \begin{eqnarray}
@@ -299,12 +299,11 @@ Furthermore, as can be seen in the schematic in Figure~\ref{fig:overview}, becau
 \begin{figure}[tb]
     \includegraphics[width=\columnwidth]{../figures/dilution.pdf}
 
-  \caption{{\bf A programmatic tip-based dilution series.}
-  In this dilution series we start with our initial well at concentration, $C_\mathrm{intial}$, with initial volume, $V_\mathrm{initial}$. 
-  A volume of the previous dilution, $V_\mathrm{transfer}$, is then transferred into a volume of buffer, $V_\mathrm{buffer}$. 
+  \caption{{\bf Preparation of a serial dilution series with a fixed-tip liquid handler.}
+  Starting with an initial concentration $C_\mathrm{intial}$ and initial volume $V_\mathrm{initial}$ in the first well, a volume $V_\mathrm{transfer}$ is transferred from each well into the next well, in which a volume of buffer, $V_\mathrm{buffer}$, has already been pipetted. 
   In the case of a 1:1 dilution series, $V_\mathrm{transfer}$ and $V_\mathrm{buffer}$ are equal, so the intended concentration in the second well will be $C_\mathrm{initial}/2$. 
-  This transfer is then repeated for all subsequent wells to create a total of $n_\mathrm{dilutions}$ dilutions. 
-  For convenience, we assume that a volume $V_\mathrm{transfer}$ is removed from the last well so that all wells have the same final volume of $V_\mathrm{transfer} = V_\mathrm{buffer}$.
+  This transfer is repeated for all subsequent wells to create a total of $n_\mathrm{dilutions}$ dilutions. 
+  For convenience, we assume that a volume $V_\mathrm{transfer}$ is removed from the last well so that all wells have the same final volume of $V_\mathrm{transfer} = V_\mathrm{buffer}$, and that the error in the initial concentration ($C_\mathrm{initial}$) is negligible.
   }
   \label{fig:dilution}
 \end{figure}
