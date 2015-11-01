@@ -70,8 +70,10 @@ Understanding discrepancies between assays using different dispensing technologi
 
 \author{Sonya M. Hanson}
   \affiliation{Computational Biology Program, Sloan Kettering Institute, Memorial Sloan Kettering Cancer Center, New York, NY 10065, United States}
+ \email{sonya.hanson@choderalab.org}
 \author{Sean Ekins}
   \affiliation{Collaborations in Chemistry, Fuquay-Varina, NC 27526, United States}
+   \email{https://about.me/Sean_Ekins}
 \author{John D. Chodera}
  \thanks{Corresponding author}
  \email{john.chodera@choderalab.org}
@@ -100,24 +102,23 @@ These simple modeling techniques---illustrated with an accompanying IPython note
 \section{Introduction}
 \label{section:introduction}
 
-Measuring the activity and potency of ligands---whether in biophysical or cell-based assays---is an important tool in the understanding of biological processes.
+Measuring the activity and potency of compounds---whether in biophysical or cell-based assays---is an important tool in the understanding of biological processes.
 However, understanding assay data for the purpose of optimizing small molecules for use as chemical probes or potential therapeutics is complicated by the fact that all assay data are contaminated with error from numerous sources.
 
 Often, the dominant contributions to assay error are simply not known.
 This is unsurprising, given the number and variety of potential contributing factors.
 Even for what might be considered a straightforward assay involving fluorescent measurements of a ligand binding to a protein target, this might include (but is by no means limited to): compound impurities and degradation~\cite{kozikowski_effect_2003,kozikowski_effect_2003-1,cheng_studies_2003,waybright_overcoming_2009}, imprecise compound dispensing  ~\cite{harris_gradient_2010,grant_achieving_2009}, unmonitored water absorption by DMSO stocks ~\cite{waybright_overcoming_2009}, the effect of DMSO on protein stability~\cite{tjernberg_dmso-related_2005}, intrinsic compound fluorescence~\cite{simeonov_fluorescence_2008,baell_new_2010}, compound insolubility~\cite{di_biological_2006} or aggregation~\cite{mcgovern_common_2002,mcgovern_kinase_2003,feng_high-throughput_2005,feng_synergy_2006,baell_new_2010}, variability in protein concentration or quality, pipetting errors, and inherent noise in any fluorescence measurement---not to mention stray lab coat fibers as fluorescent contaminants~\cite{busch_does_2015}. 
 Under ideal circumstances, control experiments would be performed to measure the magnitude of these effects, and data quality tests would either reject flawed data or ensure that all contributions to error have been carefully accounted for in producing an assessment of error and confidence for each assayed value.
+Multiple independent replicates of the experiment would ideally be performed to verify the true uncertainty and replicability of the assay data\footnote{Care must be taken to distinguish between fully independent replicates and partial replicates that only repeat part of the experiment (for example, repeated measurements performed using the same stock solutions), since partial measurements can often underestimate true error by orders of magnitude~\cite{chodera_entropy-enthalpy_2013}.}.
 
-Unfortunately, by the time the data reach the hands of a computational chemist (or other data consumer), the opportunity to perform these careful control experiments has long passed.
-In the worst case, the communicated assay data may not contain any estimate of error at all. 
-Even when error has been estimated, it is often not based on a holistic picture of specific information known about the assay.
-% JDC: I might tinker with the next few sentences to make it clear that this "analysis of heterogeneous public data" is a prior of last resort.
-One approach that has been useful is aggregating many datasets to give a crude estimate of the general reliability of a similar set of assays by quantifying the variation in measurements of a single quantity~\cite{kramer_experimental_2012,kalliokoski_comparability_2013}. 
-Care must be taken to distinguish between fully independent replicates and partial replicates that only repeat part of the experiment (for example, repeated measurements performed using the same stock solutions), since partial measurements can often underestimate true error by orders of magnitude~\cite{chodera_entropy-enthalpy_2013}.
-Alternatively, when multiple independent measurements are not available, the knowledge of how a particular assay was conducted can inform the construction of an assay-specific model incorporating some of the dominant contributions to error in a manner that can be highly informative.
+Unfortunately, by the time the data reach the hands of a computational chemist (or other data consumer), the opportunity to perform these careful control experiments has usually long passed.
+In the worst case, the communicated assay data may not contain any estimate of error at all.
+Even when error has been estimated, it is often not based on a holistic picture of specific information known about the assay, but may instead reflect historical estimates of error or statistics for a limited panel of control measurements.
+As a last resort, one can turn to large-scale analyses that examine the general reliability of datasets across many assay types~\cite{kramer_experimental_2012,kalliokoski_comparability_2013}, but this is to be avoided unless absolutely necessary.
 
-Here, we review some common sources of error in experimental assays, and describe a set of simple modeling concepts based on the bootstrap principle.
-Using only the assay protocol and basic specifications of the imprecision and inaccuracy of various operations such as weighing and volume transfers, we show how to construct and simulate a simple model of the assay that incorporates these important (often dominant) sources of error. 
+When multiple independent measurements are not available, but knowledge of how a particular assay was conducted \emph{is} available, this knowledge can inform the construction of an assay-specific model incorporating some of the dominant contributions to error in a manner that can still be highly informative.
+Using the \emph{bootstrap principle}---where we construct a simple computational replica of the real experiment and simulate virtual realizations of the experiment to understand the nature of the error in the experimental data---we often do a good job of accounting for dominant sources of error.
+Using only the assay protocol and basic specifications of the imprecision and inaccuracy of various operations such as weighing and volume transfers, we show how to construct and simulate a simple assay model that incorporates these important (often dominant) sources of error. 
 This approach, while simple, provides a powerful tool to understand how assay error depends on both the assay protocol and the imprecision and inaccuracy of basic operations, as well as the true value of the quantity being measured (such as compound affinity). 
 This strategy is not limited to computational chemists and consumers of assay data---it can be also used to help optimize assay formats before an experiment is performed, help troubleshoot problematic assays after the fact, or ensure that all major sources of error are accounted for by checking that variation among control measurements match expectations.
 
@@ -130,8 +131,8 @@ Hosts of potential reasons were speculated, including sticky compounds absorbed 
 %We make use of this real-world example to illustrate some of the basic concepts behind modeling the most common sources of error in assays.
 For simplicity, we ask whether the simplest contributions to assay error---imprecision and bias in material transfer operations and imprecision in measurement---might account for some component of the discrepancy between assay techniques.
 We make use of basic information---the assay protocol as described (with some additional inferences based on fundamental concepts such as compound solubility limits) and manufacturer specifications for imprecision and bias---to construct a model of each dispensing process to determine the overall inaccuracy and imprecision of the assay as a function of true compound affinity, and identify the steps that contribute the most to these assay data errors.
-To better illustrate these techniques, we also provide an annotated IPython notebook [\url{http://choderalab.org/dispensing-errors-manuscript}] that includes all of the computations described here in detail.
-Readers are encouraged to download these notebooks and explore them to see how different assay configurations affect assay error, and potentially customize the notebooks for their own scenarios.
+To better illustrate these techniques, we also provide an annotated IPython notebook\footnote{The IPython notebook accompanying this article is available online at: \url{http://choderalab.org/dispensing-errors-manuscript} {\color{red}[JDC: Do we want this at {\tt choderalab.org} or {\tt github.com}?]}} that includes all of the computations described here in detail.
+Readers are encouraged to download these notebooks and explore them to see how different assay configurations affect assay error, and customize the notebooks for their own scenarios.
 
 \begin{figure*}[tb]
    \includegraphics[trim={0 15cm 0 8cm},clip,width=0.75\textwidth]{../figures/Fig1-4.pdf}
@@ -151,7 +152,7 @@ Readers are encouraged to download these notebooks and explore them to see how d
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Experimental error}
 
-Overall experimental error can be broken into two components: The \emph{imprecision} (quantified by standard deviation or variance), which characterizes the random component of the error that causes different replicates of the same assay to give slightly different results, and the \emph{inaccuracy} (quantified by bias), which is the deviation of the average over many replicates from the true value of the quantity being measured.
+Experimental error can be broken into two components: The \emph{imprecision} (quantified by standard deviation or variance), which characterizes the random component of the error that causes different replicates of the same assay to give slightly different results, and the \emph{inaccuracy} (quantified by bias), which is the deviation of the average over many replicates from the true value of the quantity being measured.
 
 There are a variety of sources of experimental error. 
 Random variation in the quantity of liquid delivered by a pipette, random errors in the reported mass of a dry compound, or random errors in the measured fluorescence of a well will all contribute to the imprecision of an assay measurement.
@@ -393,19 +394,19 @@ For example the Perkin Elmer EnVision plate reader used in this example has a fl
 
 \subsection*{Fitting the assay readout to obtain an IC$_{50}$}
 
-While the IC$_{50}$ reported in the EphB4 assay~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} in principle represents the stated concentration of inhibitor required to inhibit enzyme activity by half, this value is estimated in practice by numerically fitting a model of inhibition to the measured assay readout (in this case, fluorescence) across the whole range of concentrations measured using a method such as least-squared (the topic of another article in this series~\cite{jones_fitting_2015}).
+While the IC$_{50}$ reported in the EphB4 assay~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} in principle represents the stated concentration of compound required to inhibit enzyme activity by half, this value is estimated in practice by numerically fitting a model of inhibition to the measured assay readout (in this case, fluorescence) across the whole range of concentrations measured using a method such as least-squared (the topic of another article in this series~\cite{jones_fitting_2015}).
 
 To mimic the approach used in fitting the assay data, we use a nonlinear least-squares approach (based on the simple {\tt curve\_fit} function from {\tt scipy.optimize}) to fit the competitive inhibition model (Eq.~\ref{equation:competitive-inhibition}) to obtain a $K_i$ and then compute the IC$_{50}$ from this fit value.
 We can then use a simple relation between IC$_{50}$ and $K_{i}$ to compute the reported assay readout,
 \begin{eqnarray}
 \mathrm{IC}_{50} &=& K_{i}\left(1+\frac{[S]}{K_{m}}\right) \label{equation:IC50} .
 \end{eqnarray} 
-Finally, the reported results are actually $p$IC$_{50}$ values, which are defined by 
+The reported results are not IC$_{50}$ values but $p$IC$_{50}$ values, 
 \begin{eqnarray}
-p\mathrm{IC}_{50} &=& \log_{10} \mathrm{IC}_{50} \label{equation:pIC50}
+p\mathrm{IC}_{50} &=& \log_{10} \mathrm{IC}_{50} \label{equation:pIC50} .
 \end{eqnarray}
 Note that no complicated manipulation of these equations is required.
-As can be seen in the companion IPython notebook for this article, we simply call {\tt curve\_fit} to obtain a $K_i$ for each experimental replicate, and then store the $p$IC$_{50}$ obtained from use of Eqs.~\ref{equation:IC50} and \ref{equation:pIC50} above.
+As can be seen in the companion IPython notebook, we can simply use the {\tt curve\_fit} function to obtain a $K_i$ for each bootstrap replicate, and then store the $p$IC$_{50}$ obtained from the use of Eqs.~\ref{equation:IC50} and \ref{equation:pIC50} above.
 
 \subsection*{Imprecision is insufficient to explain the tips vs acoustic discrepancy}
 
