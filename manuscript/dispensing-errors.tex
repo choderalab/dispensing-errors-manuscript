@@ -300,6 +300,7 @@ Furthermore, as can be seen in the schematic in Figure~\ref{fig:overview}, becau
     \includegraphics[width=\columnwidth]{../figures/dilution.pdf}
 
   \caption{{\bf Preparation of a serial dilution series with a fixed-tip liquid handler.}
+  To create a dilution series with a fixed-tip liquid handler, a protocol similar to the preparation of a dilution series by hand pipetting is followed.
   Starting with an initial concentration $C_\mathrm{intial}$ and initial volume $V_\mathrm{initial}$ in the first well, a volume $V_\mathrm{transfer}$ is transferred from each well into the next well, in which a volume of buffer, $V_\mathrm{buffer}$, has already been pipetted. 
   In the case of a 1:1 dilution series, $V_\mathrm{transfer}$ and $V_\mathrm{buffer}$ are equal, so the intended concentration in the second well will be $C_\mathrm{initial}/2$. 
   This transfer is repeated for all subsequent wells to create a total of $n_\mathrm{dilutions}$ dilutions. 
@@ -325,11 +326,11 @@ Because direct dispensing technologies dispense directly into the enzyme assay, 
 \begin{figure}[tb]
     \includegraphics[trim={0 9cm 0 9cm},clip,width=\columnwidth]{../figures/direct_dispense.pdf}
 
-  \caption{{\bf A programmatic direct dispense-based dilution series.}
-  With direct dispense, each well is defined individually, not depending on the other, and $C_0$ defines the concentration of the ligand stock. 
-  The $mix\_volume$ defines the final volume of the enzyme and ligand mix. 
-  The $dispense\_volume$ is the amount of the compound stock in DMSO that is dispensed into the $mix\_volume$, and is what determines the final concentration of the ligand in the direct dispense assay setup. 
-  To maintain a constant DMSO concentration throughout the assay, in this case 120 nL, a volume, defined by $backfill\_volume$, of pure DMSO is dispensed into the assay.
+  \caption{{\bf Preparation of a dilution series using a direct-dispense technology.}
+  With a direct-dispense liquid handler, instead of first preparing a set of compound solutions at different concentrations via serial dilution, the intended quantity of compound can be dispensed into the assay plates directly without the need for creating an intermediate serial dilution.
+  We model this process by considering the process of dispensing into each well independently.
+  A volume $dispense\_volume$ of compound stocks in DMSO at concentration $C_0$ is dispensed directly into an assay plate, which then has a volume $mix\_volume$ of enzyme assay mix added.
+  To maintain a constant DMSO concentration throughout the assay---in this case 120 nL--a volume, defined by $backfill\_volume$, of pure DMSO is also dispensed into the assay plate.
   }
   \label{fig:direct_dispense}
 \end{figure}
