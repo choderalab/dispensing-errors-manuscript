@@ -243,7 +243,7 @@ These imprecisions might come from stated manufacturer specifications in the abs
 To simulate this process using the bootstrap principle, we simply simulate a number of realizations $n = 1, \ldots, N$, where we again assume a normal distribution for the sources of uncertainty, in this case neglecting any bias and only accounting for imprecision,
 \begin{eqnarray}
 v_{\mathrm{stock},n} &\sim& \mathcal{N}(v_\mathrm{stock}, \sigma_\mathrm{stock}^2) \nonumber \\
-v_{\mathrm{buffer},n} &\sim& \mathcal{N}(v_\mathrm{buffer}, \sigma_\mathrm{stock}^2) \nonumber \\
+v_{\mathrm{buffer},n} &\sim& \mathcal{N}(v_\mathrm{buffer}, \sigma_\mathrm{buffer}^2) \nonumber \\
 c_n &=& c_0 / (v_{\mathrm{stock},n} + w_{\mathrm{buffer},n})
 \end{eqnarray}
 and then compute statistics for the $\{c_n\}$, $n = 1,\ldots,N$ that are produced by this process.
@@ -263,7 +263,7 @@ In this new model, each simulation realization $n$ consists of
 \begin{eqnarray}
 c_n &\sim& \mathcal{N}(c_0, \sigma_c^2) \nonumber \label{equation:stock-concentration-uncertainty-simple} \\
 v_{\mathrm{stock},n} &\sim& \mathcal{N}(v_\mathrm{stock}, \sigma_\mathrm{stock}^2) \nonumber \\
-v_{\mathrm{buffer},n} &\sim& \mathcal{N}(v_\mathrm{buffer}, \sigma_\mathrm{stock}^2) \nonumber \\
+v_{\mathrm{buffer},n} &\sim& \mathcal{N}(v_\mathrm{buffer}, \sigma_\mathrm{buffer}^2) \nonumber \\
 c_n &=& c_n / (v_{\mathrm{stock},n} + w_{\mathrm{buffer},n})
 \end{eqnarray}
 All we had to do was add one additional step to our bootstrap simulation scheme (Eq.~\ref{equation:stock-concentration-uncertainty-simple}) in which the stock concentration $c_n$ is drawn from a normal distribution with each bootstrap realization.
@@ -276,12 +276,12 @@ To more clearly illustrate the impact of imprecision and inaccuracy of dispensin
 
 \subsection*{Modeling an enzymatic reaction}
 
-The EphB4 assay we will model~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} measures the accumulation of phosphorylated substrate in the presence of different inhibitor concentrations in the presence of substrate.
+The EphB4 assay we are modeling~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} measures the accumulation of phosphorylated substrate in the presence of different inhibitor concentrations.
 The reaction is allowed to progress for a fixed period of time and then stopped by the addition of a chelating agent that scavenges cofactor ions required for catalysis.
 A fluorescence readout measures the accumulation of phosphorylated substrate peptide.
 Fitting a binding model over the range of assayed inhibitor concentrations yields an observed pIC$_{50}$.
 
-A simple model for this competition assay can be created using standard models for competitive inhibition of a substrate $S$ with an inhibitor $I$ to compute a quantity that will be proportional to the measured substrate accumulation 
+A simple model for this competition assay can be created using standard models for competitive inhibition of a substrate $S$ with an inhibitor $I$ to compute a quantity that will be proportional to the measured substrate accumulation. 
 Here, we assume the total accumulation of product in a fixed assay time will be proportion to the relative enzyme turnover velocity $V_0 / V_\mathrm{max}$, and use an equation derived assuming Michaelis-Menten kinetics,
 \begin{eqnarray}
 \frac{V_{0}}{V_\mathrm{max}} = \frac{[S]}{K_{m}(1+\frac{[I]}{K_{i}})+[S]} \label{equation:competitive-inhibition} ,
@@ -290,11 +290,11 @@ where the Michaelis constant $K_{m}$ and substrate concentration $[S]$ for the E
 Note that what is observed in the experiment is actually product accumulation, which is modeled by the velocity times time, $V_0 t$, assuming that there is an excess of substrate, and here we just report this relative to the uninhibited enzyme---$(V_0 t) / (V_\mathrm{max} t) = V_0 / V_\mathrm{max}$---this will be a good approximation in the case where substrate is in excess such that substrate depletion is negligible.
 In interrogating our model, we will vary the true inhibitor affinity $K_{i}$ to determine how the assay imprecision and inaccuracy depend on true inhibitor affinity.
 Thus the activity, $V_{0}/V_{max}$, depends only on the true inhibitor concentration $[I]$ in the assay well.
-As we shall see, we use the same bootstrap scheme to model this true inhibitor concentration and how it relates to the concentration we \emph{indended} to end up in the assay well.
+As we shall see, we use the same bootstrap scheme to model this true inhibitor concentration and how it relates to the concentration that was originally \emph{intended}.
 
 \subsection*{Advanced liquid handling: Making a dilution series}
 
-Because the affinities and activities of compounds can vary across a dynamic range that spans several orders of magnitude, it is common for assays to utilize a dilution series of some sort to measure the activity and potency of ligands. 
+Because the affinities and activities of compounds can vary across a dynamic range that spans several orders of magnitude, it is common for assays to use a dilution series to measure the activity and potency of ligands. 
 To create a dilution series, an initial compound stock is diluted into buffer in the first well of the series, and the contents mixed; for each subsequent well, a volume from the previous well combined with buffer and mixed (Figure~\ref{fig:dilution}).
 Commonly, each subsequent dilution step uses fixed ratios, such as 1:1 or 1:10 of dilution:buffer.
 
@@ -307,12 +307,13 @@ Here we compare an aqueous dilution series made with a tip-based liquid handler 
 
 To create a serial dilution series (Figure~\ref{fig:dilution}), we start with an initial well at concentration $C_\mathrm{initial}$ and sequentially transfer volume $V_\mathrm{transfer}$ into a volume $V_\mathrm{buffer}$ of buffer in the next well and mix, repeating this process $(n_\mathrm{dilutions}~-~1)$ times to create a total of $n_\mathrm{dilutions}$ dilutions. 
 To model the impact of imprecision and inaccuracy on this process, we use manufacturer-provided specifications\footnote{While manufacturer-provided specifications for imprecision and inaccuracy are often presented as the maximum-allowable values, we find these are a reasonable starting point for this kind of modeling.} for the Tecan Genesis: the relative imprecision is stated to be 3\% and the inaccuracy as 3-5\% for the volumes in question~\cite{_tecan_2001}. 
-The resulting concentration of each dilution operation is determined by both the concentration $C_{n-1}$ of the previous dilution step, which accumulates error with each dilution $n$, and by the pipetted volumes $V_\mathrm{transfer}$ and $V_\mathrm{buffer}$, each of which is randomly drawn from a normal distribution.
+The resulting concentration of each dilution operation is determined by both the concentration $C_{n-1}$ of the previous dilution step, which accumulates error with each dilution $n$, and by the pipetted volumes $V_\mathrm{transfer}$ and $V_\mathrm{buffer}$, each of which is randomly drawn from a normal distribution, as described by the equations below:
 \begin{eqnarray}
-\color{red}
-\mathrm{[EQUATIONS]}
+C_{initial} &\sim& \mathcal{N}(C_{initial}, \sigma_c^2) \nonumber \\
+V_{transfer} &\sim& \mathcal{N}(V_\mathrm{transfer}, \sigma_\mathrm{transfer}^2) \nonumber \\
+V_{buffer} &\sim& \mathcal{N}(V_\mathrm{buffer}, \sigma_\mathrm{buffer}^2) \nonumber \\
+C_n &=& (C_{n-1} \times V_{transfer}) / (V_{transfer} + V_{buffer})
 \end{eqnarray}
-{\color{red}[JDC: We should express what a step of the dilution series looks like in terms of the equations for drawing random numbers as in the above sections.]}
 Here, we estimate the bias and the variance using a linear interpolation of the provided imprecision and inaccuracy values in the manufacturer-provided table~\cite{_tecan_2001}.
 Then, applying the parametric bootstrapping model, which is simply sampling over this variation with many replicates, we can get a good estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}).
 Furthermore, as can be seen in the schematic in Figure~\ref{fig:overview}, because the dilution series is created before addition of the compound to the enzyme solution, there is an additional error term added upon transferring the dilution series results into the enzyme solution (in this case 2 $\mu$L into 10 $\mu$L).
@@ -332,15 +333,19 @@ Furthermore, as can be seen in the schematic in Figure~\ref{fig:overview}, becau
 
 \subsubsection*{Direct dispensing technologies}
 
-To construct a model of a dilution series, we start with our initial ligand stock in DMSO at concentration $C_0$ and transfer a volume $dispense\_volume$ into each well (Figure~\ref{fig:direct_dispense}). 
+To construct a model of a dilution series with direct dispensing technologies, we start with our initial ligand stock in DMSO at concentration $C_0$ and transfer a volume $dispense\_volume$ into each well (Figure~\ref{fig:direct_dispense}). 
 We can add imprecision and bias to this by using manufacturer-provided values.
 For the Labcyte Echo, the imprecision is stated as 8\% and the inaccuracy as 10\% for the volumes in question~\cite{_echo_2011}. 
-The concentration of each well is determined by the volumes $dispense\_volume$ and $mix\_volume$, each of which is defined in our model as randomly drawn from a normal distribution, where the bias and the variance that have been pulled from a linear interpolation of the provided imprecision and inaccuracy, respectively, provided by the manufacturer.
+The concentration of each well is determined by the volumes $dispense\_volume$ and $mix\_volume$, as described in the equations below:
 \begin{eqnarray}
-\color{red}
-\mathrm{[EQUATIONS]}
+C0 &\sim& \mathcal{N}(C0, \sigma_c^2) \nonumber \\
+dispense\_volume &\sim& \mathcal{N}(dispense\_volume, \sigma_v^2) \nonumber \\
+backfill\_volume &\sim& \mathcal{N}(backfill\_volume, \sigma_v^2) \nonumber \\
+mix\_volume &\sim& \mathcal{N}(mix\_volume, \sigma_v^2) \nonumber \\
+C_n = (C0 &\times& dispense\_volume) / \nonumber \\
+(dispense\_volume &+& backfill\_volume \nonumber \\
+&+& mix\_volume)
 \end{eqnarray}
-{\color{red}[JDC: We should express what a step of the dilution series looks like in terms of the equations for drawing random numbers as in the above sections.]}
 We can then produce an estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}) by applying our parametric bootstrap model, generating many synthetic replicates of the experiment.
 Because direct dispensing technologies dispense directly into the enzyme assay, rather than creating an intermediate dilution series that is then transferred into the assay wells, direct dispensing experiments include fewer steps (and hence fewer potential inaccuracy- and imprecision-amplifying steps) than the tip-based assays which must create the intermediate dilution series.
 
