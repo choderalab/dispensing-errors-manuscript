@@ -17,6 +17,9 @@
 \usepackage[T1]{fontenc}
 %\usepackage[font=sf,justification=justified]{caption}
 \usepackage[font=sf]{floatrow}
+% Change math font
+\usepackage{sansmath}
+\sansmath
 
 % Rework captions to use sans serif font.
 \makeatletter
@@ -317,12 +320,12 @@ Fitting a binding model to the fluorescence readout over the range of assayed in
 A simple model of inhibitor binding and product accumulation for this competition assay can be created using standard models for competitive inhibition of a substrate $S$ with an inhibitor $I$. 
 Here, we assume that in excess of substrate, te total accumulation of product in a fixed assay time will be proportional to the relative enzyme turnover velocity times time, $V_0 t$, and use an equation derived assuming Michaelis-Menten kinetics,
 \begin{eqnarray}
-V_{0} t &=& \frac{V_\mathrm{max} [S] t}{K_{m}\left(1+\frac{[I]}{K_{i}}\right)+[S]} ,
+V_{0} t &=& \frac{V_\mathrm{max} [S] t}{K_{m}\left(1+[I]/K_{i}\right)+[S]} ,
 \end{eqnarray}
 where the Michaelis constant $K_{m}$ and substrate concentration $[S]$ for the EphB4 system are pulled directly from the assay methodology description~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010}.
 To simplify our modeling, we divide by the constants $V_\mathrm{max} t$, and work with the simpler ratio,
 \begin{eqnarray}
-\frac{V_{0}}{V_\mathrm{max}} &=& \frac{[S]}{K_{m}\left(1+\frac{[I]}{K_{i}}\right)+[S]} \label{equation:competitive-inhibition} ,
+\frac{V_{0}}{V_\mathrm{max}} &=& \frac{[S]}{K_{m}\left(1+[I]/K_{i}\right)+[S]} \label{equation:competitive-inhibition} ,
 \end{eqnarray}
 In interrogating our model, we will vary the true inhibitor affinity $K_{i}$ to determine how the assay imprecision and inaccuracy depend on true inhibitor affinity.
 %For a given $K_i$ and $V_\mathrm{max}$, the relative activity, $V_{0}/V_{max}$, will primarily depend true inhibitor concentration $[I]$ in the assay well
@@ -364,7 +367,8 @@ c_m^{(n)} &=& c_{m-1}^{(n)} / v_{\mathrm{tot}, m}
 \end{eqnarray}
 where the last four steps are computed for dilution $m = 1, \ldots, (n_\mathrm{dilutions}-1)$.
 
-In the accompanying IPython notebook model of the EphB4 assay, we estimate the appropriate coefficient of variation (CV) and relative bias (RB) for the liquid handling instrument using a linear interpolation over the range of volumes in a manufacturer-provided table~\cite{_tecan_2001}.
+In the accompanying IPython notebook model of the EphB4 assay, we model the dilution as stated to start from $c_0 = $10 mM DMSO stocks~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010} serially 1:2 diluted with 5\% DMSO for a total of $n_\mathrm{dilutions} = 12$ dilutions (to fill one column of a plate) with $v_\mathrm{transfer} = v_\mathrm{buffer} = 50 \: \mu\mathrm{L}$, which produces a range of concentrations from 800 nM to 1.7 mM\footnote{We note that real assays may encounter solubility issues with such high compound concentrations, and that the nonideal nature of water:DMSO solutions means that serial dilution of DMSO stocks will not always guarantee all dilutions will readily keep compound soluble.  Here, we also presume the DMSO and EDTA control wells are not used in fitting to obtain $p$IC$_{50}$ values.}.
+We estimate the appropriate coefficient of variation (CV) and relative bias (RB) for the Tecan Genesis liquid handling instrument used in this assay using a linear interpolation over the range of volumes in a manufacturer-provided table~\cite{_tecan_2001}.
 Sampling over many bootstrap replicates, we are then able to estimate the CV and RB in the resulting solution concentrations for the dilution series.
 Figure~\ref{fig:volumes-n-concentrations} (left panel) shows the estimated CV and RB for the resulting concentrations in the dilution series.
 While the CV for the volume is relatively constant since we are always combining only two transferred aliquots of liquid, the CV for both the concentration and the total quantity of compound per well grow monotonically with each subsequent dilution.
@@ -393,19 +397,19 @@ In the case of direct dispensing using a technology such as acoustic droplet eje
 To construct a model for this process, we transfer a volume $v_\mathrm{dispense}$ of ligand stock in DMSO at concentration $c_0$ into each well already containing assay mix at volume $v_\mathrm{mix}$, and backfill a volume $v_\mathrm{backfill}$ with DMSO to ensure each well has the same intended volume and DMSO concentration (Figure~\ref{fig:direct_dispense}). 
 We again incorporate the effects of imprecision and bias using manufacturer-provided values;
 for the Labcyte Echo, the relative imprecision (CV) is stated as 8\% and the relative inaccuracy (RB) as 10\% for the volumes in question~\cite{_echo_2011}.
+In this model, we presume that the assay mix volume, $v_\mathrm{mix}$, is pipetted without error, such that the entire error comes from the Echo dispensing,
 \begin{eqnarray}
 c_0^{(n)} &\sim& \mathcal{N}(c_0, \sigma_c^2) \nonumber \label{equation:stock-concentration-uncertainty-simple} \\
-b_\mathrm{acoustic}^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
-\sigma_\mathrm{dispense} &=& v_\mathrm{dispense} \cdot \mathrm{CV}_\mathrm{acoustic} \nonumber \\
-\sigma_\mathrm{backfill} &=& v_\mathrm{backfill} \cdot \mathrm{CV}_\mathrm{acoustic} \nonumber \\
-\sigma_\mathrm{mix} &=& v_\mathrm{mix} \cdot \mathrm{CV}_\mathrm{tips} \nonumber \\
-v_\mathrm{dispense}^{(n)} &\sim& \mathcal{N}(v_\mathrm{dispense} (1 + b_\mathrm{acoustic}^{(n)}) , \sigma_\mathrm{dispense}^2) \nonumber \\
-v_\mathrm{backfill}^{(n)} &\sim& \mathcal{N}(v_\mathrm{backfill} (1 + b_\mathrm{acoustic}^{(n)}), \sigma_\mathrm{backfill}^2) \nonumber \\
-v_\mathrm{mix}^{(n)} &\sim& \mathcal{N}(v_\mathrm{mix} (1 + b_\mathrm{tips}^{(n)}), \sigma_\mathrm{mix}^2) \nonumber \\
-v_\mathrm{tot}^{(n)} &\sim& v_\mathrm{dispense}^{(n)} + v_\mathrm{backfill}^{(n)} + v_\mathrm{mix}^{(n)} \nonumber \\
-c_m^{(n)} &=& c_{m-1}^{(n)} / v_\mathrm{tot}^{(n)}
+b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
+\sigma_\mathrm{dispense} &=& v_\mathrm{dispense} \cdot \mathrm{CV} \nonumber \\
+\sigma_\mathrm{backfill} &=& v_\mathrm{backfill} \cdot \mathrm{CV} \nonumber \\
+v_\mathrm{dispense}^{(n)} &\sim& \mathcal{N}(v_\mathrm{dispense} (1 + b^{(n)}) , \sigma_\mathrm{dispense}^2) \nonumber \\
+v_\mathrm{backfill}^{(n)} &\sim& \mathcal{N}(v_\mathrm{backfill} (1 + b^{(n)}), \sigma_\mathrm{backfill}^2) \nonumber \\
+v_\mathrm{tot}^{(n)} &=& v_\mathrm{dispense}^{(n)} + v_\mathrm{backfill}^{(n)} + v_\mathrm{mix} \nonumber \\
+c_m^{(n)} &=& c_{m-1}^{(n)} / v_\mathrm{tot}^{(n)} .
 \end{eqnarray}
-{\color{red}[JDC: Fix assay mix dispense model---should be via tips.]}
+Since the maximum specified backfilled volume was 120 nL, we presume that $v_\mathrm{dispense}$ consisted of 8 dilutions ranging from 15 nL to 120 nL. 
+Note that this produces a much narrow dynamic range than the dilution series experiment, with the minimum ideal assay concentration being 12.5 $\mu$M assuming a 10 mM DMSO stock solution concentration $c_0$.
 We can then produce an estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}, middle panels) by generating many synthetic replicates of the experiment.
 Because direct dispensing technologies can dispense directly into the assay plate, rather than creating an intermediate dilution series that is then transferred into the assay wells, direct dispensing experiments can utilize fewer steps (and hence fewer potential inaccuracy- and imprecision-amplifying steps) than the tip-based assays that are dependent on the creation of an intermediate dilution series.
 
