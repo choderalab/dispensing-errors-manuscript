@@ -363,7 +363,7 @@ b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
 v_{\mathrm{transfer},m}^{(n)} &\sim& \mathcal{N}(v_\mathrm{transfer} (1 + b^{(n)}) , \sigma_\mathrm{transfer}^2) \nonumber \\
 v_{\mathrm{buffer},m}^{(n)} &\sim& \mathcal{N}(v_\mathrm{buffer} (1 + b^{(n)}), \sigma_\mathrm{buffer}^2) \nonumber \\
 v_{\mathrm{tot}, m}^{(n)} &=& v_{\mathrm{transfer}, m}^{(n)} + v_{\mathrm{buffer}, m}^{(n)} \nonumber \\
-c_m^{(n)} &=& c_{m-1}^{(n)} / v_{\mathrm{tot}, m}
+c_m^{(n)} &=& c_{m-1}^{(n)} / v_{\mathrm{tot}, m}^{(n)}
 \end{eqnarray}
 where the last four steps are computed for dilution $m = 1, \ldots, (n_\mathrm{dilutions}-1)$.
 
@@ -393,8 +393,9 @@ This situation may be different, of course, if the \emph{same} miscalibrated ins
 
 \subsubsection*{Direct dispensing technologies}
 
-In the case of direct dispensing using a technology such as acoustic droplet ejection, we eliminate the need to prepare an intermediate dilution series, instead adding nanoliter-scale quantities of the stock solution directly into the assay plate.
-To construct a model for this process, we transfer a volume $v_\mathrm{dispense}$ of ligand stock in DMSO at concentration $c_0$ into each well already containing assay mix at volume $v_\mathrm{mix}$, and backfill a volume $v_\mathrm{backfill}$ with DMSO to ensure each well has the same intended volume and DMSO concentration (Figure~\ref{fig:direct_dispense}). 
+Using a direct dispensing technology such as acoustic droplet ejection (ADE), we can eliminate the need to prepare an intermediate dilution series, instead adding small quantities of the compound DMSO stock solution directly into the assay plate.
+For the LabCyte Echo used in the Eph4B assay, the smallest volume dispensed is 2.5 nL droplets; other instruments such as the HP D300/D300e can dispense quantities as small as 11 pL.
+To construct a model for a direct dispensing process, we transfer a volume $v_\mathrm{dispense}$ of ligand stock in DMSO at concentration $c_0$ into each well already containing assay mix at volume $v_\mathrm{mix}$, and backfill a volume $v_\mathrm{backfill}$ with DMSO to ensure each well has the same intended volume and DMSO concentration (Figure~\ref{fig:direct_dispense}). 
 We again incorporate the effects of imprecision and bias using manufacturer-provided values;
 for the Labcyte Echo, the relative imprecision (CV) is stated as 8\% and the relative inaccuracy (RB) as 10\% for the volumes in question~\cite{_echo_2011}.
 In this model, we presume that the assay mix volume, $v_\mathrm{mix}$, is pipetted without error, such that the entire error comes from the Echo dispensing,
