@@ -402,21 +402,23 @@ Once the dilution series has been prepared, the assay is conducted in 12 $\mu$L 
 
 Using a direct dispensing technology such as acoustic droplet ejection (ADE), we can eliminate the need to prepare an intermediate dilution series, instead adding small quantities of the compound DMSO stock solution directly into the assay plate.
 For the LabCyte Echo used in the Eph4B assay, the smallest volume dispensed is 2.5 nL droplets; other instruments such as the HP D300/D300e can dispense quantities as small as 11 pL.
-To construct a model for a direct dispensing process, we transfer a volume $v_\mathrm{dispense}$ of ligand stock in DMSO at concentration $c_0$ into each well already containing assay mix at volume $v_\mathrm{mix}$, and backfill a volume $v_\mathrm{backfill}$ with DMSO to ensure each well has the same intended volume and DMSO concentration (Figure~\ref{fig:direct_dispense}). 
+To construct a model for a direct dispensing process, we transfer a volume $v_\mathrm{dispense}$ of ligand stock in DMSO at concentration $c_0$ into each well already containing assay mix at volume $v_\mathrm{mix}$ (presumed to be pipetted by the Tecan Genesis), and backfill a volume $v_\mathrm{backfill}$ with DMSO to ensure each well has the same intended volume and DMSO concentration (Figure~\ref{fig:direct_dispense}). 
 We again incorporate the effects of imprecision and bias using manufacturer-provided values;
-for the Labcyte Echo, the relative imprecision (CV) is stated as 8\% and the relative inaccuracy (RB) as 10\% for the volumes in question~\cite{_echo_2011}.
-In this model, we presume that the assay mix volume, $v_\mathrm{mix}$, is pipetted without error, such that the entire error comes from the Echo dispensing,
+for the Labcyte Echo, the relative imprecision (CV) is stated as 8\% and the relative inaccuracy (RB) as 10\% for the volumes in question~\cite{_echo_2011},
 \begin{eqnarray}
-b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
-\sigma_\mathrm{dispense} &=& v_\mathrm{dispense} \cdot \mathrm{CV} \nonumber \\
-\sigma_\mathrm{backfill} &=& v_\mathrm{backfill} \cdot \mathrm{CV} \nonumber \\
-v_\mathrm{dispense}^{(n)} &\sim& \mathcal{N}(v_\mathrm{dispense} (1 + b^{(n)}) , \sigma_\mathrm{dispense}^2) \nonumber \\
-v_\mathrm{backfill}^{(n)} &\sim& \mathcal{N}(v_\mathrm{backfill} (1 + b^{(n)}), \sigma_\mathrm{backfill}^2) \nonumber \\
-v_\mathrm{assay}^{(n)} &=& v_\mathrm{dispense}^{(n)} + v_\mathrm{backfill}^{(n)} + v_\mathrm{mix} \nonumber \\
+b_\mathrm{Echo}^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}_\mathrm{Echo}^2) \nonumber \\
+b_\mathrm{Genesis}^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}_\mathrm{Genesis}^2) \nonumber \\
+\sigma_\mathrm{dispense} &=& v_\mathrm{dispense} \cdot \mathrm{CV}_\mathrm{Echo} \nonumber \\
+\sigma_\mathrm{backfill} &=& v_\mathrm{backfill} \cdot \mathrm{CV}_\mathrm{Echo} \nonumber \\
+\sigma_\mathrm{mix} &=& v_\mathrm{mix} \cdot \mathrm{CV}_\mathrm{Genesis} \nonumber \\
+v_\mathrm{dispense}^{(n)} &\sim& \mathcal{N}(v_\mathrm{dispense} (1 + b_\mathrm{Echo}^{(n)}) , \sigma_\mathrm{dispense}^2) \nonumber \\
+v_\mathrm{backfill}^{(n)} &\sim& \mathcal{N}(v_\mathrm{backfill} (1 + b_\mathrm{Echo}^{(n)}), \sigma_\mathrm{backfill}^2) \nonumber \\
+v_\mathrm{mix}^{(n)} &\sim& \mathcal{N}(v_\mathrm{mix} (1 + b_\mathrm{Genesis}^{(n)}), \sigma_\mathrm{mix}^2) \nonumber \\
+v_\mathrm{assay}^{(n)} &=& v_\mathrm{dispense}^{(n)} + v_\mathrm{backfill}^{(n)} + v_\mathrm{mix}^{(n)} \nonumber \\
 c_m^{(n)} &=& c_\mathrm{stock} / v_\mathrm{assay}^{(n)} \:\: . \label{equation:stock-concentration-uncertainty-simple}
 \end{eqnarray}
-Since the maximum specified backfilled volume was 120 nL, we presume that $v_\mathrm{dispense}$ consisted of 8 dilutions ranging from 15 nL to 120 nL. 
-Note that this produces a much narrow dynamic range than the dilution series experiment, with the minimum ideal assay concentration being 12.5 $\mu$M assuming a 10 mM DMSO stock solution concentration $c_\mathrm{stock}$.
+Since the maximum specified backfilled volume was 120 nL, we presume that $v_\mathrm{dispense}$ consisted of 8 dilutions ranging from 2.5 nL (the minimum volume the Echo can dispense) to 120 nL in a roughly logarithmic series. 
+Note that this produces a much narrower dynamic range than the dilution series experiment, with the minimum assay intended concentration being 2.5 $\mu$M assuming a 10 mM DMSO stock solution concentration $c_\mathrm{stock}$.
 We can then produce an estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}, middle panels) by generating many synthetic replicates of the experiment.
 Because direct dispensing technologies can dispense directly into the assay plate, rather than creating an intermediate dilution series that is then transferred into the assay wells, direct dispensing experiments can utilize fewer steps (and hence fewer potential inaccuracy- and imprecision-amplifying steps) than the tip-based assays that are dependent on the creation of an intermediate dilution series.
 
@@ -441,15 +443,15 @@ This effect was previously characterized in work from Bristol Myers Squibb~\cite
 While the instrument can be calibrated to dispense volume without bias, the concentration of the dispensed solution can be measurably diluted.
 
 To quantify this effect, the Bristol Myers Squibb team used both an Artel dye-based Multichannel Verification System (MVS) and gravimetric methods, concluding that this dilution effect contributes a -6.30\% inaccuracy for a target volume of 20 $\mu$L~\cite{dong_use_2006}.
-We can expand our bootstrap model to include this effect with a simple modification to the concentration of dilution solution $m$,
+We can expand our bootstrap model of dilution with fixed tips (Eq.~\ref{equation:stock-concentration-uncertainty-simple}) to include this effect with a simple modification to the concentration of dilution solution $m$,
 \begin{eqnarray}
-c_m^{(n)} &=& (1 + d) \, c_{m-1}^{(n)} / v_{\mathrm{tot},m}^{(n)}
+c_m^{(n)} &=& (1 + d) \, c_{m-1}^{(n)} / v_{\mathrm{intermediate},m}^{(n)}
 \end{eqnarray}
 where the factor $d = -0.0630$ accounts for the dilution effect.
 The resulting CV and RB in volumes, concentrations, and quantities (Figure~\ref{fig:volumes-n-concentrations}, middle) indicate a significant accumulation of bias.
 This is especially striking when considered alongside the corresponding values for disposable tips (Figure~\ref{fig:volumes-n-concentrations}, left)---which lack the dilution effect---and the acoustic-dispensing model (Figure~\ref{fig:volumes-n-concentrations}, right), both of which are essentially free of bias when the average over many random instrument recalibrations is considered.
 
-This dilution effect also needs to be incorporated into the transfer of the dilution series into the enzyme assay solution, and it turns out this additional error is non-trivial.
+This dilution effect also must be incorporated into the transfer of the diluted compound solutions into the enzyme assay mix, further adding to the overall bias of the assay results from the fixed-tips instrument. 
 
 \begin{figure}[tb]
    % \includegraphics[width=0.325\textwidth]{../figures/dilution_effect.pdf}
@@ -472,9 +474,10 @@ This dilution effect also needs to be incorporated into the transfer of the dilu
   \caption{{\bf Modeled accumulation of random and systematic error in creating dilution series with fixed tips and acoustic dispensing.}
   The model predicts how errors in compound concentration, well volume, and compound quantity accumulate for a dilution series prepared using fixed tips neglecting dilution effects (\emph{left}) or including dilution effects (\emph{middle}) compared with an acoustic direct-dispensing process (\emph{right}).
   Imprecision and inaccuracy parameters appropriate for a Tecan Genesis (fixed tips dispensing) or Labcyte Echo (acoustic dispensing) were used, and assume that the initial compound stocks had negligible concentration error; see text for more details.
-  The top panels show the average relative random error via the coefficient of variation (CV) expressed as a percentage of concentration, volume, or quantity, while the bottom panels depict the relative bias, also expressed as a percentage.
+  The top panels show the average relative random error via the coefficient of variation (CV) of concentration, volume, or quantity, while the bottom panels depict the relative bias (RB); both quantities are expressed as a percentage.
   For tip-based dispensing, relative random concentration error (CV) accumulates with dilution number, while for acoustic dispensing, this is constant over all dilutions.
   When the dilution effect is included for fixed tips, there is significant bias accumulation over the dilution series.
+  Note that the CV and RB shown for acoustic dispensing are for the final assay solutions, since no intermediate dilution series is created.
   }
   \label{fig:volumes-n-concentrations}
 \end{figure*}
@@ -528,14 +531,18 @@ Repeating this process for a variety of true compound affinities allows the impr
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
 
+\subsection*{Imprecision is greater for direct dispensing with the Echo}
+
+
+
 \subsection*{Imprecision is insufficient to explain the tips vs acoustic discrepancy}
 
-Examining the inaccuracy and imprecision in the dilution series (Fig.~\ref{fig:volumes-n-concentrations}) and measured $p$IC$_{50}$s (Fig.~\ref{fig:acoustic-vs-tips}) for each dispensing technology can prove highly valuable.
+Examining the inaccuracy and imprecision in the dilution series or final assay solutions (Fig.~\ref{fig:volumes-n-concentrations}) and measured $p$IC$_{50}$s (Fig.~\ref{fig:acoustic-vs-tips}) for each dispensing technology can prove highly valuable.
 These analyses can help us better understand the errors in assay results.
 It is easy to see that simple differences in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in the data originally from AstraZeneca~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} between tip-based and direct dispensing.
 
 However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC$_{50}$ shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{fig:IC50_bias}).
-{\color{red}[JDC: Tighten.]}
+While not sufficient to explain the entirety of the discrepancy, this effect could be a significant contribution to the discrepancy
 
 \subsection*{The problem with serial dilutions}
 
