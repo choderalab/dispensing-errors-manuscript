@@ -260,7 +260,7 @@ We can then compute statistics over the bootstrap replicates of the resulting so
 
 \subsubsection*{Relative imprecision}
 
-Manufacturer specifications often provide the imprecision in relative terms as a coefficient of variation (CV), from which we can compute the imprecision $\sigma$ in terms of transfer volume $v$ via $\sigma = \mathrm{CV} \cdot v$,
+Manufacturer specifications\footnote{While manufacturer-provided specifications for imprecision and inaccuracy are often presented as the maximum-allowable values, we find these are a reasonable starting point for this kind of modeling.} often provide the imprecision in relative terms as a coefficient of variation (CV), from which we can compute the imprecision $\sigma$ in terms of transfer volume $v$ via $\sigma = \mathrm{CV} \cdot v$,
 \begin{eqnarray}
 \sigma_\mathrm{stock} &=& v_\mathrm{stock} \cdot \mathrm{CV} \nonumber \\
 \sigma_\mathrm{buffer} &=& v_\mathrm{buffer} \cdot \mathrm{CV} \nonumber \\
@@ -350,9 +350,9 @@ Here, we compare an aqueous dilution series made with a liquid handler that make
 
 \subsubsection*{Tip-based liquid handling}
 
-To create a serial dilution series (Figure~\ref{fig:dilution}), we sequentially dilute a solution volume $v_\mathrm{transfer}$ with a volume $v_\mathrm{buffer}$ of buffer, repeating this process to create a total of $n_\mathrm{dilutions}$ solutions. 
-We presume the first well in the series has concentration $c_0$, which may come from dilution an initial stock solution into a volume of buffer.
-To model the impact of imprecision and inaccuracy on this process, we use manufacturer-provided specifications\footnote{While manufacturer-provided specifications for imprecision and inaccuracy are often presented as the maximum-allowable values, we find these are a reasonable starting point for this kind of modeling.} for the Tecan Genesis: the relative imprecision is stated to be 3\% and the inaccuracy as 3-5\% for the volumes in question~\cite{_tecan_2001}. 
+To create a serial dilution series (Figure~\ref{fig:dilution}), we first transfer an aliquot of compound in DMSO stock solution to the first well, mixing it with buffer, to prepare the desired initial concentration $c_0$ at volume $v_\mathrm{intermediate}$ for the dilution series.
+Next, we sequentially dilute a volume $v_\mathrm{transfer}$ of this solution with a volume $v_\mathrm{buffer}$ of buffer, repeating this process to create a total of $n_\mathrm{dilutions}$ solutions. 
+To model the impact of imprecision and inaccuracy on the serial dilution process, we again use manufacturer-provided specifications for the Tecan Genesis: the relative imprecision is stated to be 3\% and the inaccuracy as 3-5\% for the volumes in question~\cite{_tecan_2001}. 
 The resulting concentration $c_m$ of each dilution $m$ is determined by both the previous concentration $c_{m-1}$  and by the pipetted volumes $v_\mathrm{transfer}$ and $v_\mathrm{buffer}$, each of which is randomly drawn from a normal distribution.
 Putting this together in the same manner as for the simple mixing of solutions, we have
 \begin{eqnarray}
@@ -362,12 +362,16 @@ b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
 \sigma_\mathrm{buffer} &=& v_\mathrm{buffer} \cdot \mathrm{CV} \nonumber \\
 v_{\mathrm{transfer},m}^{(n)} &\sim& \mathcal{N}(v_\mathrm{transfer} (1 + b^{(n)}) , \sigma_\mathrm{transfer}^2) \nonumber \\
 v_{\mathrm{buffer},m}^{(n)} &\sim& \mathcal{N}(v_\mathrm{buffer} (1 + b^{(n)}), \sigma_\mathrm{buffer}^2) \nonumber \\
-v_{\mathrm{tot}, m}^{(n)} &=& v_{\mathrm{transfer}, m}^{(n)} + v_{\mathrm{buffer}, m}^{(n)} \nonumber \\
-c_m^{(n)} &=& c_{m-1}^{(n)} / v_{\mathrm{tot}, m}^{(n)} \:\: , \label{equation:stock-concentration-uncertainty-simple}
+v_{\mathrm{intermediate}, m}^{(n)} &=& v_{\mathrm{transfer}, m}^{(n)} + v_{\mathrm{buffer}, m}^{(n)}  \nonumber \\
+v_{\mathrm{final}, (m-1)}^{(n)} &\sim& v_{\mathrm{intermediate}, (m-1)} - v_{\mathrm{transfer}, m} \nonumber \\
+c_m^{(n)} &=& c_{m-1}^{(n)} / v_{\mathrm{intermediate}, m} \:\: , \label{equation:stock-concentration-uncertainty-simple}
 \end{eqnarray}
-where the last four steps are computed for dilution $m = 1, \ldots, (n_\mathrm{dilutions}-1)$.
+where the last five steps are computed for dilution $m = 1, \ldots, (n_\mathrm{dilutions}-1)$.
+In the companion notebook, we make comparisons easier by also removing a final volume $v_\mathrm{transfer}$ from the last well so all wells have the same intended final volume.
 
-In the accompanying IPython notebook model of the EphB4 assay, we model the dilution as stated to start from $c_0 = $10 mM DMSO stocks~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010} serially 1:2 diluted with 5\% DMSO for a total of $n_\mathrm{dilutions} = 12$ dilutions (to fill one column of a plate) with $v_\mathrm{transfer} = v_\mathrm{buffer} = 50 \: \mu\mathrm{L}$, which produces a range of concentrations from 800 nM to 1.7 mM\footnote{We note that real assays may encounter solubility issues with such high compound concentrations, and that the nonideal nature of water:DMSO solutions means that serial dilution of DMSO stocks will not always guarantee all dilutions will readily keep compound soluble.  Here, we also presume the DMSO and EDTA control wells are not used in fitting to obtain $p$IC$_{50}$ values.}.
+In the Eph4B protocol~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010}, the initial dilution step from 10 mM DMSO stocks is not specified, so we choose initial concentration $c_0$ = 600 $\mu$M in order to match the maximum assay concentration used in the direct dispense version of the assay (described in the next section).
+We presume an initial working volume of $v_\mathrm{intermediate}$ = 100 $\mu$L, and model this dispensing process using Eq.~\ref{equation:relative-inaccuracy-mixing}.
+We presume this solution is then serially 1:2 diluted with 5\% DMSO for a total of $n_\mathrm{dilutions}$ = 8 dilutions (to fill one column of a plate) with $v_\mathrm{transfer} = v_\mathrm{buffer} = 50 \: \mu\mathrm{L}$, which after dilution into the assay plate will produce a range of assay concentrations from 800 nM to 100 $\mu$M\footnote{We note that real assays may encounter solubility issues with such high compound concentrations, and that the nonideal nature of water:DMSO solutions means that serial dilution of DMSO stocks will not always guarantee all dilutions will readily keep compound soluble.  Here, we also presume the DMSO and EDTA control wells are not used in fitting to obtain $p$IC$_{50}$ values.}.
 We estimate the appropriate coefficient of variation (CV) and relative bias (RB) for the Tecan Genesis liquid handling instrument used in this assay using a linear interpolation over the range of volumes in a manufacturer-provided table~\cite{_tecan_2001}.
 Sampling over many bootstrap replicates, we are then able to estimate the CV and RB in the resulting solution concentrations for the dilution series.
 Figure~\ref{fig:volumes-n-concentrations} (left panel) shows the estimated CV and RB for the resulting concentrations in the dilution series.
@@ -389,7 +393,7 @@ Once the dilution series has been prepared, the assay is conducted in 12 $\mu$L 
   In the case of a 1:2 dilution series, $v_\mathrm{transfer}$ and $v_\mathrm{buffer}$ are equal, so the intended concentration in the second well will be $c_0/2$. 
   This transfer is repeated for all subsequent wells to create a total of $n_\mathrm{dilutions}$ dilutions. 
   For convenience, we assume that a volume $v_\mathrm{transfer}$ is removed from the last well so that all wells have the same final volume of $v_\mathrm{transfer} = v_\mathrm{buffer}$, and that the error in the initial concentration ($c_0$) is negligible.
-  {\color{red}[JDC: Can you change {\tt Vinitial} to $V_\mathrm{tot}$ and {\tt Cinitial} to $C_0$?]}
+  {\color{red}[JDC: Can you change {\tt Vinitial} to $V_\mathrm{intermediate}$ and {\tt Cinitial} to $C_0$?]}
   }
   \label{fig:dilution}
 \end{figure}
@@ -408,11 +412,11 @@ b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
 \sigma_\mathrm{backfill} &=& v_\mathrm{backfill} \cdot \mathrm{CV} \nonumber \\
 v_\mathrm{dispense}^{(n)} &\sim& \mathcal{N}(v_\mathrm{dispense} (1 + b^{(n)}) , \sigma_\mathrm{dispense}^2) \nonumber \\
 v_\mathrm{backfill}^{(n)} &\sim& \mathcal{N}(v_\mathrm{backfill} (1 + b^{(n)}), \sigma_\mathrm{backfill}^2) \nonumber \\
-v_\mathrm{tot}^{(n)} &=& v_\mathrm{dispense}^{(n)} + v_\mathrm{backfill}^{(n)} + v_\mathrm{mix} \nonumber \\
-c_m^{(n)} &=& c_{m-1}^{(n)} / v_\mathrm{tot}^{(n)} \:\: . \label{equation:stock-concentration-uncertainty-simple}
+v_\mathrm{assay}^{(n)} &=& v_\mathrm{dispense}^{(n)} + v_\mathrm{backfill}^{(n)} + v_\mathrm{mix} \nonumber \\
+c_m^{(n)} &=& c_\mathrm{stock} / v_\mathrm{assay}^{(n)} \:\: . \label{equation:stock-concentration-uncertainty-simple}
 \end{eqnarray}
 Since the maximum specified backfilled volume was 120 nL, we presume that $v_\mathrm{dispense}$ consisted of 8 dilutions ranging from 15 nL to 120 nL. 
-Note that this produces a much narrow dynamic range than the dilution series experiment, with the minimum ideal assay concentration being 12.5 $\mu$M assuming a 10 mM DMSO stock solution concentration $c_0$.
+Note that this produces a much narrow dynamic range than the dilution series experiment, with the minimum ideal assay concentration being 12.5 $\mu$M assuming a 10 mM DMSO stock solution concentration $c_\mathrm{stock}$.
 We can then produce an estimate for the errors in volumes and concentrations (Figure~\ref{fig:volumes-n-concentrations}, middle panels) by generating many synthetic replicates of the experiment.
 Because direct dispensing technologies can dispense directly into the assay plate, rather than creating an intermediate dilution series that is then transferred into the assay wells, direct dispensing experiments can utilize fewer steps (and hence fewer potential inaccuracy- and imprecision-amplifying steps) than the tip-based assays that are dependent on the creation of an intermediate dilution series.
 
@@ -424,7 +428,7 @@ Because direct dispensing technologies can dispense directly into the assay plat
   We model this process by considering the process of dispensing into each well independently.
   A volume $v_\mathrm{dispense}$ of compound stock in DMSO at concentration $c_0$ is dispensed directly into an assay plate containing a volume $v_\mathrm{mix}$ of assay mix.
   To maintain a constant DMSO concentration throughout the assay---in this case of the Eph4B assay, 120 nL---a volume $v_\mathrm{backfill}$ of pure DMSO is also dispensed via acoustic ejection.
-  {\color{red}[JDC: Fix figure labels to match text and caption: {\tt mix\_volume} to $v_\mathrm{mix}$, {\tt backfill\_volume} to $v_\mathrm{backfill}$, and {\tt dispense\_volume} to $v_\mathrm{dispense}$.]}
+  {\color{red}[JDC: Fix figure labels to match text and caption: {\tt mix\_volume} to $v_\mathrm{mix}$, {\tt backfill\_volume} to $v_\mathrm{backfill}$, {\tt C0} to $c_\mathrm{stock}$, and {\tt dispense\_volume} to $v_\mathrm{dispense}$.]}
   }
   \label{fig:direct_dispense}
 \end{figure}
