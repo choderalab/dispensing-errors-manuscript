@@ -94,7 +94,6 @@ Here, we describe a simple set of assay modeling techniques based on the bootstr
 We demonstrate how deceptively simple operations---such as the creation of a dilution series with a robotic liquid handler---can significantly amplify imprecision and even contribute substantially to bias.
 To illustrate these techniques, we review an example of how the choice of dispensing technology can impact assay measurements, and show how the primary contributions to discrepancies between assays can be easily understood and potentially corrected for.
 These simple modeling techniques---illustrated with an accompanying IPython notebook---can allow modelers to understand the expected error and bias in experimental datasets, and even help experimentalists design assays to more effectively reach accuracy and imprecision goals.
-
 \end{abstract}
 
 \maketitle
@@ -143,7 +142,7 @@ Interested readers are encouraged to download these notebooks and explore them t
   Two different assay protocols---utilizing different dispensing technologies---were used to perform the same assay~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010}.
   In the case of tip-based dispensing, a Tecan Genesis liquid handler was used to create a serial dilution of test compounds using fixed washable tips, and a small quantity of each dilution was pipetted into the enzyme assay mixture prior to detection.
   In the case of acoustic dispensing (sometimes called acoustic droplet ejection), instead of creating a serial dilution, a Labcyte Echo was used to directly dispense nanoliter quantities of compound stock into the enzyme assay mixture prior to detection.
-  The detection phase measured product accumulation after a fixed amount of time using a fluorescence readout, and the resulting data were fit to obtain $p$IC$_{50}$ estimates.
+  The detection phase measured product accumulation after a fixed amount of time (here, detection of accumulated phosphorylated substrate peptide using AlphaScreen), and the resulting data were fit to obtain $p$IC$_{50}$ estimates.
   Ekins et al.~\citep{ekins_dispensing_2013} noted that the resulting $p$IC$_{50}$ data between tip-based dispensing and acoustic dispensing were highly discrepant, as shown in the central figure where the two sets of assay data are plotted against each other.
    }
   \label{fig:overview}
@@ -158,9 +157,9 @@ Interested readers are encouraged to download these notebooks and explore them t
 Experimental error can be broken into two components: The \emph{imprecision} (quantified by standard deviation or variance), which characterizes the random component of the error that causes different replicates of the same assay to give slightly different results, and the \emph{inaccuracy} (quantified by bias), which is the deviation of the average over many replicates from the true value of the quantity being measured.
 
 There are a wide variety of sources that contribute to experimental error. 
-Variation in the quantity of liquid delivered by a pipette, errors in the reported mass of a dry compound, or noise in the measured fluorescence of a well will all contribute to the error of an assay measurement.
+Variation in the quantity of liquid delivered by a pipette, errors in the reported mass of a dry compound, or noise in the measured detection readout of a well will all contribute to the error of an assay measurement.
 If the average (mean) of these is the true or desired quantity, then these variations all contribute to imprecision.
-If not----such as when a calibration error leads to a systematic deviation in the volume delivered by a pipette, the mass measured by a balance, or the average fluorescence measured by a plate reader---the transfers or measurements will also contribute to inaccuracy or bias.
+If not----such as when a calibration error leads to a systematic deviation in the volume delivered by a pipette, the mass measured by a balance, or the average signal measured by a plate reader---the transfers or measurements will also contribute to inaccuracy or bias.
 We elaborate on these concepts and how to quantify them below.
 
 \section*{Modeling experimental error}
@@ -277,7 +276,7 @@ We remind the reader that a CV specified as a \% (CV\% or \%CV) should be divide
 Similarly, the expected inaccuracy might also be stated in terms of a relative percentage of the volume being transferred.
 The inaccuracy behaves differently from the imprecision in that the inaccuracy will \emph{bias} the transferred volumes in a consistent way throughout the whole experiment.
 To model bias, we draw a single random bias for the instrument from a normal distribution, and assume all subsequent operations with this instrument are biased in the same relative way.
-We presume the relative bias (RB)---expressed as a fraction, rather than a percent---is given as RB:
+We presume the relative bias (RB)---expressed as a fraction, rather than a percent---is given as RB, and draw a specific instrumental bias $b^{(n)}$ for each bootstrap replicate of the experiment, simulating the effect of many replications of the experiment where the instrument is randomly recalibrated,
 \begin{eqnarray}
 b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
 \sigma_\mathrm{stock} &=& v_\mathrm{stock} \cdot \mathrm{CV} \nonumber \\
@@ -285,13 +284,14 @@ b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
 v_\mathrm{stock}^{(n)} &\sim& \mathcal{N}(v_\mathrm{stock} (1 + b^{(n)}) , \sigma_\mathrm{stock}^2) \nonumber \\
 v_\mathrm{buffer}^{(n)} &\sim& \mathcal{N}(v_\mathrm{buffer} (1 + b^{(n)}), \sigma_\mathrm{buffer}^2) \nonumber \\
 v_\mathrm{tot}^{(n)} &=& v_\mathrm{stock}^{(n)} + v_\mathrm{buffer}^{(n)} \nonumber \\
-c^{(n)} &=& c_0 / v_\mathrm{tot}^{(n)} .
+c^{(n)} &=& c_0 / v_\mathrm{tot}^{(n)} \:\: . \label{equation:relative-inaccuracy-mixing}
 \end{eqnarray}
+Obviously, if the instrument is never recalibrated, the bias will be the \emph{same} over many realizations of the experiment, but we presume that a calibration process is repeated frequently enough that its effect can be incorporated as a random effect over many replicates of the assay over a long timespan.
 
 \subsubsection*{Uncertainty in initial concentration}
 
-We can further extend this model to include uncertainty $\sigma_c$ in the stock concentration $c_0$ (where the concentration may be stated $c_0 \pm \sigma_c$), and begin to see how powerful and modular the bootstrap scheme is.
-In this new model, each simulation realization $n$ consists of
+We could further extend this model to include uncertainty $\sigma_c$ in the stock concentration $c_0$ (where the concentration may be stated $c_0 \pm \sigma_c$), and begin to see how powerful and modular the bootstrap scheme is.
+In this new model, each simulation realization $n$ includes one additional initial step,
 \begin{eqnarray}
 c_0^{(n)} &\sim& \mathcal{N}(c_0, \sigma_c^2) \nonumber \label{equation:stock-concentration-uncertainty-simple} \\
 b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
@@ -300,22 +300,22 @@ b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
 v_\mathrm{stock}^{(n)} &\sim& \mathcal{N}(v_\mathrm{stock} (1 + b^{(n)}) , \sigma_\mathrm{stock}^2) \nonumber \\
 v_\mathrm{buffer}^{(n)} &\sim& \mathcal{N}(v_\mathrm{buffer} (1 + b^{(n)}), \sigma_\mathrm{buffer}^2) \nonumber \\
 v_\mathrm{tot}^{(n)} &=& v_\mathrm{stock}^{(n)} + v_\mathrm{buffer}^{(n)} \nonumber \\
-c^{(n)} &=& c_0^{(n)} / v_\mathrm{tot}^{(n)} .
+c^{(n)} &=& c_0^{(n)} / v_\mathrm{tot}^{(n)} \:\: .
 \end{eqnarray}
-All we had to do was add one additional step to our bootstrap simulation scheme (Eq.~\ref{equation:stock-concentration-uncertainty-simple}) in which the stock concentration $c_0^{(n)}$ is independently drawn from a normal distribution with each bootstrap realization $n$.
+All we had to do was add one additional step to our bootstrap simulation scheme (Eq.~\ref{equation:relative-inaccuracy-mixing}) in which the stock concentration $c_0^{(n)}$ is independently drawn from a normal distribution with each bootstrap realization $n$.
 The model can be expanded indefinitely with additional independent measurements or random variables in the same simple way.
 
-Below, we exploit this modularity to design a simple scheme to model a real assay---the measurement of $p$IC$_{50}$s for compounds targeting the EphB4 receptor~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010}---without being overwhelmed by complexity.
+Below, we exploit the modularity of bootstrap simulations to design a simple scheme to model a real assay---the measurement of $p$IC$_{50}$s for compounds targeting the EphB4 receptor~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010}---without being overwhelmed by complexity.
 This assay is particularly interesting because data exists for the same assay performed using two \emph{different} dispensing protocols that led to highly discrepant assay $p$IC$_{50}$ data, allowing us to examine how different sources of error arising from different dispensing technologies can impact an otherwise identical assay.
 We consider only errors that arise from the transfer and mixing of volumes of solutions with different concentrations of compound, using the same basic strategy seen here to model the mixing of two solutions applied to the complex liquid handling operations in the assay.
 To more clearly illustrate the impact of imprecision and inaccuracy of dispensing technologies, we neglect considerations of the completeness of mixing, which can itself be a large source of error in certain assays\footnote{A surprising amount of effort is required to ensure thorough mixing of two solutions, especially in the preparation of dilution series~\cite{walling_mixing_2007,weiss_modeling_2002,mitre_turbo-mixing_2007}. We have chosen not to explicitly include this effect in our model, but it could similarly be added within this framework given some elementary data quantifying the bias induced by incomplete mixing.}.
 
 \subsection*{Modeling an enzymatic reaction and detection of product accumulation}
 
-The EphB4 assay we consider here~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010}, illustrated schematically in Figure~\ref{fig:overview}, measures the rate of accumulation of phosphorylated substrate in the presence of different inhibitor concentrations.
-After mixing the enzyme with substrate and inhibitor, the reaction is allowed to progress for a fixed period of time and then stopped by the addition of a chelating agent that scavenges cofactor ions required for catalysis.
-A fluorescence readout measures the accumulation of phosphorylated substrate peptide.
-Fitting a binding model to the fluorescence readout over the range of assayed inhibitor concentrations yields an observed $p$IC$_{50}$.
+The EphB4 assay we consider here~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010}, illustrated schematically in Figure~\ref{fig:overview}, measures the rate of substrate phosphorylation in the presence of different inhibitor concentrations.
+After mixing the enzyme with substrate and inhibitor, the reaction is allowed to progress for one hour before being quenched by the addition of a quench buffer containing EDTA.
+The assay readout (in this case, AlphaScreen) measures the accumulation of phosphorylated substrate peptide.
+Fitting a binding model to the assay readout over the range of assayed inhibitor concentrations yields an observed $p$IC$_{50}$.
 
 A simple model of inhibitor binding and product accumulation for this competition assay can be created using standard models for competitive inhibition of a substrate $S$ with an inhibitor $I$. 
 Here, we assume that in excess of substrate, te total accumulation of product in a fixed assay time will be proportional to the relative enzyme turnover velocity times time, $V_0 t$, and use an equation derived assuming Michaelis-Menten kinetics,
@@ -331,10 +331,10 @@ In interrogating our model, we will vary the true inhibitor affinity $K_{i}$ to 
 %For a given $K_i$ and $V_\mathrm{max}$, the relative activity, $V_{0}/V_{max}$, will primarily depend true inhibitor concentration $[I]$ in the assay well
 %As we shall see, we use the same bootstrap scheme to model this true inhibitor concentrations in the assay wells and how they relate to the concentrations that were \emph{intended} from an error-free execution of the protocol.
 
-In reality, fluorescence detection of accumulated product will also introduce uncertainty.
-First, there is a minimal detectable signal below which the signal cannot be quantified---all that is observed is a random background fluorescence signal or ``noise floor''.
-Second, any fluorescence measurement will be contaminated with noise, though changes to the measurement protocol---such as using more excitation light flashes per well\footnote{Recall that the error of an average over $N$ flashes diminishes as $N^{-1/2}$.}---can affect this noise.
-While simple calibration experiments can often furnish all of the necessary parameters for a useful fluorescence error model---such as measuring the background fluorescence signal and the fluorescence relative to a standard like fluorescein, in addition to consulting manufacturer specifications---we omit these effects to focus on the potential for the discrepancy between liquid handling technologies to explain the difference in assay results.
+In reality, detection of accumulated product will also introduce uncertainty.
+First, there is a minimal detectable signal below which the signal cannot be accurately quantified---below this threshold, a random background signal or ``noise floor'' is observed.
+Second, any measurement will be contaminated with noise, though changes to the measurement protocol---such as collecting more illumination data at the expense of longer measurement times---can affect this noise.
+While simple calibration experiments can often furnish all of the necessary parameters for a useful detection error model---such as measuring the background signal and signal relative to a standard for which manufacturer specifications are available---we omit these effects to focus on the potential for the discrepancy between liquid handling technologies to explain the difference in assay results.
 
 \subsection*{Advanced liquid handling: Making a dilution series}
 
@@ -351,19 +351,19 @@ Here, we compare an aqueous dilution series made with a liquid handler that make
 \subsubsection*{Tip-based liquid handling}
 
 To create a serial dilution series (Figure~\ref{fig:dilution}), we sequentially dilute a solution volume $v_\mathrm{transfer}$ with a volume $v_\mathrm{buffer}$ of buffer, repeating this process to create a total of $n_\mathrm{dilutions}$ solutions. 
-We presume the first well in the series has concentration $c_0$.
+We presume the first well in the series has concentration $c_0$, which may come from dilution an initial stock solution into a volume of buffer.
 To model the impact of imprecision and inaccuracy on this process, we use manufacturer-provided specifications\footnote{While manufacturer-provided specifications for imprecision and inaccuracy are often presented as the maximum-allowable values, we find these are a reasonable starting point for this kind of modeling.} for the Tecan Genesis: the relative imprecision is stated to be 3\% and the inaccuracy as 3-5\% for the volumes in question~\cite{_tecan_2001}. 
-The resulting concentration $c_n$ of each dilution is determined by both the previous concentration $c_{n-1}$  and by the pipetted volumes $v_\mathrm{transfer}$ and $v_\mathrm{buffer}$, each of which is randomly drawn from a normal distribution.
+The resulting concentration $c_m$ of each dilution $m$ is determined by both the previous concentration $c_{m-1}$  and by the pipetted volumes $v_\mathrm{transfer}$ and $v_\mathrm{buffer}$, each of which is randomly drawn from a normal distribution.
 Putting this together in the same manner as for the simple mixing of solutions, we have
 \begin{eqnarray}
-c_0^{(n)} &\sim& \mathcal{N}(c_0, \sigma_c^2) \nonumber \label{equation:stock-concentration-uncertainty-simple} \\
+%c_0^{(n)} &\sim& \mathcal{N}(c_0, \sigma_c^2) \nonumber  \\
 b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
 \sigma_\mathrm{transfer} &=& v_\mathrm{transfer} \cdot \mathrm{CV} \nonumber \\
 \sigma_\mathrm{buffer} &=& v_\mathrm{buffer} \cdot \mathrm{CV} \nonumber \\
 v_{\mathrm{transfer},m}^{(n)} &\sim& \mathcal{N}(v_\mathrm{transfer} (1 + b^{(n)}) , \sigma_\mathrm{transfer}^2) \nonumber \\
 v_{\mathrm{buffer},m}^{(n)} &\sim& \mathcal{N}(v_\mathrm{buffer} (1 + b^{(n)}), \sigma_\mathrm{buffer}^2) \nonumber \\
 v_{\mathrm{tot}, m}^{(n)} &=& v_{\mathrm{transfer}, m}^{(n)} + v_{\mathrm{buffer}, m}^{(n)} \nonumber \\
-c_m^{(n)} &=& c_{m-1}^{(n)} / v_{\mathrm{tot}, m}^{(n)}
+c_m^{(n)} &=& c_{m-1}^{(n)} / v_{\mathrm{tot}, m}^{(n)} \:\: , \label{equation:stock-concentration-uncertainty-simple}
 \end{eqnarray}
 where the last four steps are computed for dilution $m = 1, \ldots, (n_\mathrm{dilutions}-1)$.
 
@@ -387,6 +387,7 @@ This situation may be different, of course, if the \emph{same} miscalibrated ins
   In the case of a 1:2 dilution series, $v_\mathrm{transfer}$ and $v_\mathrm{buffer}$ are equal, so the intended concentration in the second well will be $c_0/2$. 
   This transfer is repeated for all subsequent wells to create a total of $n_\mathrm{dilutions}$ dilutions. 
   For convenience, we assume that a volume $v_\mathrm{transfer}$ is removed from the last well so that all wells have the same final volume of $v_\mathrm{transfer} = v_\mathrm{buffer}$, and that the error in the initial concentration ($c_0$) is negligible.
+  {\color{red}[JDC: Can you change {\tt Vinitial} to $V_\mathrm{tot}$ and {\tt Cinitial} to $C_0$?]}
   }
   \label{fig:dilution}
 \end{figure}
@@ -400,14 +401,13 @@ We again incorporate the effects of imprecision and bias using manufacturer-prov
 for the Labcyte Echo, the relative imprecision (CV) is stated as 8\% and the relative inaccuracy (RB) as 10\% for the volumes in question~\cite{_echo_2011}.
 In this model, we presume that the assay mix volume, $v_\mathrm{mix}$, is pipetted without error, such that the entire error comes from the Echo dispensing,
 \begin{eqnarray}
-c_0^{(n)} &\sim& \mathcal{N}(c_0, \sigma_c^2) \nonumber \label{equation:stock-concentration-uncertainty-simple} \\
 b^{(n)} &\sim& \mathcal{N}(0, \mathrm{RB}^2) \nonumber \\
 \sigma_\mathrm{dispense} &=& v_\mathrm{dispense} \cdot \mathrm{CV} \nonumber \\
 \sigma_\mathrm{backfill} &=& v_\mathrm{backfill} \cdot \mathrm{CV} \nonumber \\
 v_\mathrm{dispense}^{(n)} &\sim& \mathcal{N}(v_\mathrm{dispense} (1 + b^{(n)}) , \sigma_\mathrm{dispense}^2) \nonumber \\
 v_\mathrm{backfill}^{(n)} &\sim& \mathcal{N}(v_\mathrm{backfill} (1 + b^{(n)}), \sigma_\mathrm{backfill}^2) \nonumber \\
 v_\mathrm{tot}^{(n)} &=& v_\mathrm{dispense}^{(n)} + v_\mathrm{backfill}^{(n)} + v_\mathrm{mix} \nonumber \\
-c_m^{(n)} &=& c_{m-1}^{(n)} / v_\mathrm{tot}^{(n)} .
+c_m^{(n)} &=& c_{m-1}^{(n)} / v_\mathrm{tot}^{(n)} \:\: . \label{equation:stock-concentration-uncertainty-simple}
 \end{eqnarray}
 Since the maximum specified backfilled volume was 120 nL, we presume that $v_\mathrm{dispense}$ consisted of 8 dilutions ranging from 15 nL to 120 nL. 
 Note that this produces a much narrow dynamic range than the dilution series experiment, with the minimum ideal assay concentration being 12.5 $\mu$M assuming a 10 mM DMSO stock solution concentration $c_0$.
@@ -422,7 +422,7 @@ Because direct dispensing technologies can dispense directly into the assay plat
   We model this process by considering the process of dispensing into each well independently.
   A volume $v_\mathrm{dispense}$ of compound stock in DMSO at concentration $c_0$ is dispensed directly into an assay plate containing a volume $v_\mathrm{mix}$ of assay mix.
   To maintain a constant DMSO concentration throughout the assay---in this case of the Eph4B assay, 120 nL---a volume $v_\mathrm{backfill}$ of pure DMSO is also dispensed via acoustic ejection.
-  {\color{red}[JDC: Fix figure labels to match text and caption.]}
+  {\color{red}[JDC: Fix figure labels to match text and caption: {\tt mix\_volume} to $v_\mathrm{mix}$, {\tt backfill\_volume} to $v_\mathrm{backfill}$, and {\tt dispense\_volume} to $v_\mathrm{dispense}$.]}
   }
   \label{fig:direct_dispense}
 \end{figure}
@@ -439,7 +439,7 @@ We can expand our bootstrap model to include this effect with a simple modificat
 \begin{eqnarray}
 c_m^{(n)} &=& (1 + d) \, c_{m-1}^{(n)} / v_{\mathrm{tot},m}^{(n)}
 \end{eqnarray}
-where $d = -0.0630$ accounts for the dilution effect.
+where the factor $d = -0.0630$ accounts for the dilution effect.
 The resulting CV and RB in volumes, concentrations, and quantities (Figure~\ref{fig:volumes-n-concentrations}, middle) indicate a significant accumulation of bias.
 This is especially striking when considered alongside the corresponding values for disposable tips (Figure~\ref{fig:volumes-n-concentrations}, left)---which lack the dilution effect---and the acoustic-dispensing model (Figure~\ref{fig:volumes-n-concentrations}, right), both of which are essentially free of bias when the average over many random instrument recalibrations is considered.
 
@@ -488,7 +488,7 @@ This dilution effect also needs to be incorporated into the transfer of the dilu
 
 \subsection*{Fitting the assay readout to obtain $p$IC$_{50}$ data}
 
-While the IC$_{50}$ reported in the EphB4 assay~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} in principle represents the stated concentration of compound required to inhibit enzyme activity by half, this value is estimated in practice by numerically fitting a model of inhibition to the measured assay readout (in this case, fluorescence) across the whole range of concentrations measured using a method such as least-squared (the topic of another article in this series~\cite{jones_fitting_2015}).
+While the IC$_{50}$ reported in the EphB4 assay~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} in principle represents the stated concentration of compound required to inhibit enzyme activity by half, this value is estimated in practice by numerically fitting a model of inhibition to the measured assay readout across the whole range of concentrations measured using a method such as least-squared (the topic of another article in this series~\cite{jones_fitting_2015}).
 
 To mimic the approach used in fitting the assay data, we use a nonlinear least-squares approach (based on the simple {\tt curve\_fit} function from {\tt scipy.optimize}) to fit $V_0 / V_\mathrm{max}$ computed from the competitive inhibition model (Eq.~\ref{equation:competitive-inhibition}, shown in Fig.~\ref{fig:acoustic-vs-tips}, top panels) using the true assay well concentrations to obtain a $K_i$ and then compute the IC$_{50}$ from this fit value.
 We can then use a simple relation between IC$_{50}$ and $K_{i}$ to compute the reported assay readout,
@@ -536,7 +536,7 @@ However, if we incorporate the final component of error in tip-based dispensing,
 Serial dilutions are commonly used in the process of determining biologically and clinically relevant values such as inhibition concentrations (IC$_{ 50}$)  and dissociation constants (K$_{d}$). 
 While high-throughput automation methods can improve the reproducibility of these measurements over manual pipetting, even robotic liquid handlers are victim to the accumulation of both random and systematic error.
 Since the AstraZeneca dataset~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010} and the related analysis by Ekins et al.~\cite{ekins_dispensing_2013}, several studies have posited that acoustic dispensing results in fewer false positives and negatives than tip-based dispensing and that this phenomenon is not isolated to EphB4 receptor inhibitors~\cite{wingfield_impact_2012,olechno_direct_2013,olechno_sound_2013,olechno_improving_2006}. 
-Here, we have shed some light on why this might be with some simple modeling, available for extended use through the accompanying I'dPython notebook.
+Here, we have shed some light on why this might be with some simple modeling, available for extended use through the accompanying IPython notebook.
 
 \subsection*{The power of bootstrapping}
 
