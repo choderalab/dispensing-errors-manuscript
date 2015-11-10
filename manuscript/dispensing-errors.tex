@@ -340,8 +340,7 @@ While simple calibration experiments can often furnish all of the necessary para
 
 Because the affinities and activities of compounds can vary across a dynamic range that spans several orders of magnitude, it is common for assays to use a dilution series to measure the activity and potency of ligands. 
 To create a dilution series, an initial compound stock is diluted into buffer in the first well of the series, and the contents mixed; for each subsequent well, a volume from the previous well is transferred into a well containing only buffer, and mixed (Figure~\ref{fig:dilution}).
-Commonly, each subsequent dilution step uses fixed ratios, such as 1:2 or 1:10 of solute solution to total volume.
-(Note that a 1:2 dilution refers to combining one part solute solution with one part diluent.)
+Commonly, each subsequent dilution step uses fixed ratios, such as 1:2 or 1:10 of solute solution to total volume\footnote{Note that a 1:2 dilution refers to combining one part solute solution with one part diluent.}.
 
 It is easy to see how the creation of a dilution series by pipetting can amplify errors:
 because each dilution step involves multiple pipetting operations, and the previous dilution in the series is used to prepare the next dilution, errors will generally grow with each step.
@@ -371,7 +370,7 @@ In the companion notebook, we make comparisons easier by also removing a final v
 
 In the EphB4 protocol~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010}, the initial dilution step from 10 mM DMSO stocks is not specified, so we choose initial concentration $c_0$ = 600 $\mu$M in order to match the maximum assay concentration used in the direct dispense version of the assay (described in the next section).
 We presume an initial working volume of $v_\mathrm{intermediate}$ = 100 $\mu$L, and model this dispensing process using Eq.~\ref{equation:relative-inaccuracy-mixing}.
-We presume this solution is then serially 1:2 diluted with 5\% DMSO for a total of $n_\mathrm{dilutions}$ = 8 dilutions (to fill one column of a plate) with $v_\mathrm{transfer} = v_\mathrm{buffer} = 50 \: \mu\mathrm{L}$, which after dilution into the assay plate will produce a range of assay concentrations from 800 nM to 100 $\mu$M\footnote{We note that real assays may encounter solubility issues with such high compound concentrations, and that the nonideal nature of water:DMSO solutions means that serial dilution of DMSO stocks will not always guarantee all dilutions will readily keep compound soluble.  Here, we also presume the DMSO and EDTA control wells are not used in fitting to obtain $p$IC$_{50}$ values.}.
+We presume this solution is then serially 1:2 diluted with 5\% DMSO for a total of $n_\mathrm{dilutions}$ = 8 dilutions\footnote{The published protocol~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010} does not specify how many dilutions were used, so for illustrative purposes, we selected $n_\mathrm{dilutions} = 8$.} with $v_\mathrm{transfer} = v_\mathrm{buffer} = 50 \: \mu\mathrm{L}$, which after dilution into the assay plate will produce a range of assay concentrations from 800 nM to 100 $\mu$M\footnote{We note that real assays may encounter solubility issues with such high compound concentrations, and that the nonideal nature of water:DMSO solutions means that serial dilution of DMSO stocks will not always guarantee all dilutions will readily keep compound soluble.  Here, we also presume the DMSO and EDTA control wells are not used in fitting to obtain $p$IC$_{50}$ values.}.
 We estimate the appropriate coefficient of variation (CV) and relative bias (RB) for the Tecan Genesis liquid handling instrument used in this assay using a linear interpolation over the range of volumes in a manufacturer-provided table~\cite{_tecan_2001}.
 Sampling over many bootstrap replicates, we are then able to estimate the CV and RB in the resulting solution concentrations for the dilution series.
 Figure~\ref{fig:volumes-n-concentrations} (left panel) shows the estimated CV and RB for the resulting concentrations in the dilution series.
@@ -379,10 +378,8 @@ While the CV for the volume is relatively constant since we are always combining
 On the other hand, because the bias is assumed to be zero on average, the average dilution series bias over many bootstrap replicates with randomly calibrated instruments will be free of bias.
 This situation may be different, of course, if the \emph{same} miscalibrated instrument is used repeatedly without frequent recalibration.
 
-Once the dilution series has been prepared, the assay is conducted in 12 $\mu$L volumes containing 2 $\mu$L of the diluted compound in buffer combined with 10 $\mu$L of assay mix (which contains EphB4, substrate peptide, and cofactors), which is easily modeled using the scheme for modeling the mixing of two solutions (Eq.~\ref{equation:relative-inaccuracy-mixing}).
-
-% JDC: Relocate this?
-%Furthermore, as can be seen in the schematic in Figure~\ref{fig:overview}, because the dilution series is created before addition of the compound to the enzyme solution, there is an additional error term added upon transferring the dilution series results into the enzyme solution (in this case 2 $\mu$L into 10 $\mu$L).
+Once the dilution series has been prepared, the assay is performed in a 384-well plate, with each well containing 2 $\mu$L of the diluted compound in buffer combined with 10 $\mu$L of assay mix (which contains EphB4, substrate peptide, and cofactors) for a total assay volume of 12 $\mu$L.
+This liquid transfer step is easily modeled using the steps for modeling the mixing of two solutions in Eq.~\ref{equation:relative-inaccuracy-mixing}.
 
 \begin{figure}[tb]
     \includegraphics[width=\columnwidth]{../figures/dilution.pdf}
@@ -400,7 +397,7 @@ Once the dilution series has been prepared, the assay is conducted in 12 $\mu$L 
 \subsubsection*{Direct dispensing technologies}
 
 Using a direct dispensing technology such as acoustic droplet ejection (ADE), we can eliminate the need to prepare an intermediate dilution series, instead adding small quantities of the compound DMSO stock solution directly into the assay plate.
-For the LabCyte Echo used in the EphB4 assay, the smallest volume dispensed is 2.5 nL droplets; other instruments such as the HP D300/D300e can dispense quantities as small as 11 pL.
+For the LabCyte Echo used in the EphB4 assay, the smallest volume dispensed is 2.5 nL droplets; other instruments such as the HP D300/D300e can dispense quantities as small as 11 pL using inkjet technology.
 To construct a model for a direct dispensing process, we transfer a volume $v_\mathrm{dispense}$ of ligand stock in DMSO at concentration $c_0$ into each well already containing assay mix at volume $v_\mathrm{mix}$ (presumed to be pipetted by the Tecan Genesis), and backfill a volume $v_\mathrm{backfill}$ with DMSO to ensure each well has the same intended volume and DMSO concentration (Figure~\ref{fig:direct_dispense}). 
 We again incorporate the effects of imprecision and bias using manufacturer-provided values;
 for the Labcyte Echo, the relative imprecision (CV) is stated as 8\% and the relative inaccuracy (RB) as 10\% for the volumes in question~\cite{_echo_2011},
@@ -437,19 +434,19 @@ Because direct dispensing technologies can dispense directly into the assay plat
 
 Simply including the computed contributions from inaccuracy and imprecision in our model of the  Ekins~et al.~dataset~\cite{ekins_dispensing_2013}, it is easy to see that the imprecision is not nearly large enough to explain the discrepancies between measurements made with the two dispensing technologies~(Figure~\ref{fig:IC50_bias}).
 Multichannel liquid-handlers such as the Tecan Genesis that utilize liquid-displacement pipetting with fixed tips actually have a nonzero bias in liquid transfer operations due to a dilution effect. 
-This effect was previously characterized in work from Bristol Myers Squibb~\cite{dong_use_2006,gu_dilution_2007}, where it was found that residual system liquid---the liquid used to create the pressure differences required for pipetting---can cling to the interior of the tips after washing and mix with sample when it is being aspirated (Figure~\ref{fig:dilution_effect}). 
+This effect was previously characterized in work from Bristol Myers Squibb (BMS)~\cite{dong_use_2006,gu_dilution_2007}, where it was found that residual system liquid---the liquid used to create the pressure differences required for pipetting---can cling to the interior of the tips after washing and mix with sample when it is being aspirated (Figure~\ref{fig:dilution_effect}). 
 While the instrument can be calibrated to dispense volume without bias, the concentration of the dispensed solution can be measurably diluted.
 
-To quantify this effect, the Bristol Myers Squibb team used both an Artel dye-based Multichannel Verification System (MVS) and gravimetric methods, concluding that this dilution effect contributes a -6.30\% inaccuracy for a target volume of 20 $\mu$L~\cite{dong_use_2006}.
+To quantify this effect, the BMS team used both an Artel dye-based Multichannel Verification System (MVS) and gravimetric methods, concluding that this dilution effect contributes a -6.30\% inaccuracy for a target volume of 20 $\mu$L~\cite{dong_use_2006}.
 We can expand our bootstrap model of dilution with fixed tips (Eq.~\ref{equation:stock-concentration-uncertainty-simple}) to include this effect with a simple modification to the concentration of dilution solution $m$,
 \begin{eqnarray}
 c_m^{(n)} &=& (1 + d) \, c_{m-1}^{(n)} / v_{\mathrm{intermediate},m}^{(n)}
 \end{eqnarray}
-where the factor $d = -0.0630$ accounts for the dilution effect.
+where the factor $d = -0.0630$ accounts for the -6.30\% dilution effect.
 The resulting CV and RB in volumes, concentrations, and quantities (Figure~\ref{fig:volumes-n-concentrations}, middle) indicate a significant accumulation of bias.
 This is especially striking when considered alongside the corresponding values for disposable tips (Figure~\ref{fig:volumes-n-concentrations}, left)---which lack the dilution effect---and the acoustic-dispensing model (Figure~\ref{fig:volumes-n-concentrations}, right), both of which are essentially free of bias when the average over many random instrument recalibrations is considered.
 
-This dilution effect also must be incorporated into the transfer of the diluted compound solutions into the enzyme assay mix, further adding to the overall bias of the assay results from the fixed-tips instrument. 
+This dilution effect also must be incorporated into the transfer of the diluted compound solutions (2 $\mu$L) into the enzyme assay mix (10 $\mu$L) to prepare the final 12 $\mu$L assay volume, further adding to the overall bias of the assay results from the fixed-tips instrument. 
 
 \begin{figure}[tb]
    % \includegraphics[width=0.325\textwidth]{../figures/dilution_effect.pdf}
@@ -487,7 +484,7 @@ This dilution effect also must be incorporated into the transfer of the diluted 
   \emph{Top row:} Bootstrap simulation of the entire assay yields a distribution of $V_0/V_\mathrm{max}$ (proportional to measured product accumulation) vs ideal inhibitor concentration $[I]$ curves for many synthetic bootstrap replicates of the assay.  
   Here, the inhibitor is modeled to have a true $K_i$ of 1 nM (p$K_i = -9$).
   \emph{Middle row:} For the same inhibitor, we obtain a distribution of measured $p$IC$_{50}$ values from fitting the Using our model we can look at the variance in activity measurements as a function of inhibitor concentration $[I]$ (top), which then directly translates into a distribution of measured $p$IC$_{50}$ values.
-  \emph{Bottom row:} Scaning across a range of true compound affinities, we can repeat the bootstrap sampling procedure and analyze the distribution of measured $p$IC$_{50}$ values to obtain estimates of the relative bias (red) and CV (black).
+  \emph{Bottom row:} Scaning across a range of true compound affinities, we can repeat the bootstrap sampling procedure and analyze the distribution of measured $p$IC$_{50}$ values to obtain estimates of the relative bias (red) and CV (black) for the resulting measured $p$IC$_{50}$s.
   For all methods, the CV increases for weaker affinities; for tip-based dispensing using fixed tips and incorporating the dilution effect, a significant bias is notable.
   }
   \label{fig:acoustic-vs-tips}
@@ -524,40 +521,68 @@ Repeating this process for a variety of true compound affinities allows the impr
   \label{fig:IC50_bias}
 \end{figure}
 
+
+\begin{figure}[tb]
+   % \includegraphics[trim={0 4cm 0 4cm},clip,width=0.5\textwidth]{../figures/compare-pIC50-bias_corrected.pdf}
+    \includegraphics[width=\columnwidth]{../figures/dilute-bias-pIC50-8-16-32.pdf}
+
+  \caption{{\bf Bias in measured $p$IC$_{50}$ depends on number of wells in dilution series when using fixed washable tips.}
+  If the dilution series is extended beyond 8 wells to instead span 16 or 32 wells, the bias effect in the measured $p$IC$_{50}$ increases as the cumulative effect of the dilution effect illustrated in Fig.~\ref{fig:dilution_effect} shifts the apparent affinity of the compound.
+  Because the dilution bias is greater for lower compound concentrations, this effect is more drastic for compounds with high affinity.
+  }
+  \label{fig:bias_vs_nwells}
+\end{figure}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % DISCUSSION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Discussion}
 
+\subsection*{Use of fixed washable tips can cause significant accumulation of bias due to dilution effects}
+
+The most striking feature of Fig.~\ref{fig:volumes-n-concentrations} is the significant accumulation of bias in the preparation of a dilution series using fixed washable tips (Fig.~\ref{fig:volumes-n-concentrations}, bottom middle panel).
+Even for an 8-point dilution series, the relative bias (RB) is almost -50\% in the final well of the dilution series.
+As a result, the measured $p$IC$_{50}$ values also contain significant bias toward weaker affinities (Fig.~\ref{fig:acoustic-vs-tips}, bottom middle panel) by about 0.25 log$_{10}$ units for a large range of compound affinities.
+At weaker compound affinities, this effect is diminished by virtue of the fact that the first few wells of the dilution series have a much smaller RB (Fig.~\ref{fig:volumes-n-concentrations}, bottom middle panel).
+
+This cumulative dilution effect becomes more drastic if the dilution series is extended beyond 8 points.
+If instead a dilution series is created across 16 or 32 wells and assayed, the RB in the final well of the dilution series can reach nearly -100\% (see accompanying IPython notebook for 32-well dilution series).
+As a result, the bias in the measured $p$IC$_{50}$ as a function of true $pK_i$ also grows significantly for these larger dilution series (Fig.~\ref{fig:bias_vs_nwells}).
+
 \subsection*{Imprecision is greater for direct dispensing with the Echo}
 
+As evident from the top panels of Fig.~\ref{fig:volumes-n-concentrations}, the CV for concentrations in the assay volume for direct acoustic dispensing (right) is significantly higher than the CV of the dilution series prepared with tips (left and middle).
+This effect manifests itself in the CV of measured $p$IC$_{50}$ values as a higher imprecision (Fig.~\ref{fig:acoustic-vs-tips}, bottom panels), where the CV for acoustic dispensing is nearly twice that of tip-based dispensing.
+Despite the increased CV, there are still numerous advantages to the use of direct dispensing technology: 
+Here, we have ignored a number of difficulties in the creation of a dilution series beyond this dilution effect, including the difficulty of attaining good mixing~\cite{walling_mixing_2007,weiss_modeling_2002,mitre_turbo-mixing_2007}, the time required to prepare the serial dilution series (during which evaporation may be problematic), and a host of other issues.
 
+\subsection*{Imprecision is insufficient to explain the discrepancy betweenn assay technologies}
 
-\subsection*{Imprecision is insufficient to explain the tips vs acoustic discrepancy}
+Fig.~\ref{fig:IC50_bias} depicts the reported assay results~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} augmented with error bars and corrected for bias using models appropriate for disposable tips (blue circles) or fixed washable tips (green circles) that include the dilution effect described in Fig.~\ref{fig:dilution_effect}.
+Perfect concordance of measured $p$IC$_{50}$s between assay technologies would mean all points fall on the black diagonal line.
+We can see that simply adding the imprecision in a model with fixed tips (Fig.~\ref{fig:dilution_effect}, blue circles, horizontal and vertical bars denote 95\% confidence intervals) is insufficient to explain the departure of the dataset from this diagonal concordance line.
 
-Examining the inaccuracy and imprecision in the dilution series or final assay solutions (Fig.~\ref{fig:volumes-n-concentrations}) and measured $p$IC$_{50}$s (Fig.~\ref{fig:acoustic-vs-tips}) for each dispensing technology can prove highly valuable.
-These analyses can help us better understand the errors in assay results.
-It is easy to see that simple differences in these values, even when including the compounded error of the dilution series, does not give us much insight into the striking differences seen in the data originally from AstraZeneca~\cite{ekins_dispensing_2013,barlaam_novel_2009,barlaam_pyrimidine_2010} between tip-based and direct dispensing.
+When the tip dilution effect for washable tips is incorporated (Fig.~\ref{fig:dilution_effect}, green circles), there is a substantial shift toward higher concordance.
+If, instead of an 8-point dilution series, a 16- or 32-point dilution series was used, this shift toward concordance is even larger (Fig.~\ref{fig:bias_vs_nwells}).
+While this effect may explain of a substantial component of the discrepancy between assay technologies, there is no doubt a significant discrepancy remains.
 
-However, if we incorporate the final component of error in tip-based dispensing, the dilution effect, we can see that correcting for this bias in plotting IC$_{50}$ shifts tip-based values more toward direct-dispensing derived values (Figure~\ref{fig:IC50_bias}).
-While not sufficient to explain the entirety of the discrepancy, this effect could be a significant contribution to the discrepancy
-
-\subsection*{The problem with serial dilutions}
+\subsection*{Other contributions to the discrepancy are likely relevant}
 
 Serial dilutions are commonly used in the process of determining biologically and clinically relevant values such as inhibition concentrations (IC$_{ 50}$)  and dissociation constants (K$_{d}$). 
 While high-throughput automation methods can improve the reproducibility of these measurements over manual pipetting, even robotic liquid handlers are victim to the accumulation of both random and systematic error.
 Since the AstraZeneca dataset~\cite{barlaam_novel_2009,barlaam_pyrimidine_2010} and the related analysis by Ekins et al.~\cite{ekins_dispensing_2013}, several studies have posited that acoustic dispensing results in fewer false positives and negatives than tip-based dispensing and that this phenomenon is not isolated to EphB4 receptor inhibitors~\cite{wingfield_impact_2012,olechno_direct_2013,olechno_sound_2013,olechno_improving_2006}. 
-Here, we have shed some light on why this might be with some simple modeling, available for extended use through the accompanying IPython notebook.
+%Here, we have shed some light on why this might be with some simple modeling, available for extended use through the accompanying IPython notebook.
 
 \subsection*{The power of bootstrapping}
 
 We have demonstrated how a simple model based on the bootstrap principle, in which nothing more than the manufacturer-provided imprecision and inaccuracy values and a description of the experimental protocol were used to \emph{simulate} virtual replicates of the experiment for a variety of simulated compound affinities allowed us to estimate the imprecision and inaccuracy of measured $p$IC$_{50}$s.
-It also identified the difficulty in creating an accurate dilution series using a fix-tip dispenser, with the major contribution to discrepancies in measurements between fixed pipette tip and direct dispensing technologies being the dilution effect. 
-In addition to providing some estimate for the random error in measured affinities, the computed bias could even be used to \emph{correct} for the bias introduced by this process after the fact, however we recommend that steps are taken to minimize this bias before the assay is even performed. 
-This approach can be a useful general tool for both experimental and computational chemists to understand common sources of error within assays that use dilution series and how to model and correct for them.
+It also identified the difficulty in creating an accurate dilution series using washable fixed tips, with the corresponding dilution effect being a significant contribution to discrepancies in measurements between fixed pipette tips and direct dispensing technologies. 
+In addition to providing some estimate for the random error in measured affinities, the computed bias can even be used to \emph{correct} for the bias introduced by this process after the fact, though it is always safer to take steps to minimize this bias before the assay is performed. 
 
-This assay is just one example of a large class of assays and this model can be used as a template for other types of experiments relevant to computational modelers.
-Instead of simply relying on intuition or historically successful protocol designs, experimentalists could use bootstrap simulation models during assay planning stages to verify that the proposed assay protocol is capable of appropriately discriminating among the properties of the molecules in question given the expected range of IC$_{ 50}$s or K$_{d}$s to be probed, once known errors are accounted for.
+The EphB4 assay considered here is just one example of a large class of assays involving dilution or direct dispensing of query compounds followed by detection of some readout.
+The corresponding bootstrap model can be used as a template for other types of experiments relevant to computational modelers.
+
+This approach can be a useful general tool for both experimental and computational chemists to understand common sources of error within assays that use dilution series and how to model and correct for them.
+Instead of simply relying on intuition or historically successful protocol designs, experimentalists could use bootstrap simulation models during assay planning stages to verify that the proposed assay protocol is capable of appropriately discriminating among the properties of the molecules in question given the expected range of IC$_{ 50}$ or K$_{i}$ to be probed, once known errors are accounted for.
 Since the model is quantitative, adjusting the parameters in the assay protocol could allow the experimentalist to optimize the protocol to make sure the data is appropriate to the question at hand. 
 For example, in our own laboratory, it has informed the decision to use only direct dispensing technologies---in particular the HP D300~\cite{jones_alternative_2013}---for fluorescent ligand-binding assays that require preparation of a range of compound concentrations.
 
@@ -575,7 +600,7 @@ As experiments become more automated and analysis becomes more quantitative, und
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Acknowledgments}
 \label{section:acknowledgments}
-The authors are grateful to Anthony Nichols (OpenEye) and Martin Stahl (Roche) for organizing the excellent 2013 Computer-Aided Drug Discovery Gordon Research Conference on the topic of ``The Statistics of Drug Discovery'', as well as Terry Stouch, for inspiring many of the ideas in this work.
+The authors are grateful to Anthony Nichols (OpenEye) and Martin Stahl (Roche) for organizing the excellent 2013 Computer-Aided Drug Discovery Gordon Research Conference on the topic of ``The Statistics of Drug Discovery'', as well as Terry Stouch for both his infinite patience and inspiring many of the ideas in this work.
 The authors are especially grateful to Cosma Shalizi for presenting a clear and lucid overview of the bootstrap principle to this audience, and we hope this contribution can further aid readers in the community in employing these principles in their work.
 The authors further acknowledge Adrienne Chow and Anthony Lozada of Tecan US for a great deal of assistance in understanding the nature of operation and origin of errors in automated liquid handling equipment.
 The authors thank Paul Czodrowski (Merck Darmstadt) for introducing us to IPython notebooks as a means of interactive knowledge transfer.
