@@ -7,7 +7,7 @@ conda install --yes seaborn ipython
 ```
 
 ## Manifest
-* `echo-vs-tips.ipynb` - main notebook 
+* `echo-vs-tips.ipynb` - main notebook (Click on it, and it will automagically render in browser.)
 
 HTML versions of notebook:
 * `echo-vs-tips.html`
