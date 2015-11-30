@@ -515,9 +515,10 @@ Repeating this process for a variety of true compound affinities allows the impr
     \includegraphics[width=\columnwidth]{../figures/compare-pIC50-bias_corrected-box.pdf}
 
   \caption{{\bf Adding bias shifts $p$IC$_{50}$ values closer to equivalence.}
-  The original experimental pIC50 values obtained using from fixed tips (red) are plotted against $p$IC$_{50}$ values from acoustic dispensing, with errors bars representing the uncertainty (shown as 95\% confidence intervals) estimated by bootstrapping from our models. 
+  The original experimental pIC50 values obtained using from fixed tips (red) are plotted against $p$IC$_{50}$ values from acoustic dispensing, with errors bars representing the uncertainty (shown as 95\% confidence intervals) estimated by bootstrapping from our models.
+  Since the bias is relatively sensitive to pIC50 value, here it is determined by including both the experimental value and the estimated bias.
   Incorporating the dilution effect from tip-based dispensing (green) shifts the experimental $p$IC$_{50}$ values closer to concordance between tip-based and acoustic-based measurements. 
-  While this does not entirely explain all discrepancies between the two sets of data, it shifts the root mean square error between the tip-based and acoustic-based dispensing methods from 1.56 to 1.40 pIC50 units.
+  While this does not entirely explain all discrepancies between the two sets of data, it shifts the root mean square error between the tip-based and acoustic-based dispensing methods from 1.56 to 1.38 pIC50 units.
   The model also demonstrates that (1) the bias induced by the fixed tips explains much of the $p$IC$_{50}$ shift between the two datasets, and (2) there is still a large degree of variation among the measurements not accounted for by simple imprecision in liquid transfers.
   This demonstrates the power of building simple error models to improve our understanding of experimental data sets.
   Grey box indicates portion of graph shown in Fig.~\ref{fig:bias_vs_nwells}.
@@ -548,7 +549,8 @@ Repeating this process for a variety of true compound affinities allows the impr
   \caption{{\bf Bias in measured $p$IC$_{50}$ depends on number of wells in dilution series when using fixed washable tips.}
   (a) If the dilution series is extended beyond 8 wells (yellow) to instead span 16 (green) or 32 (blue) wells, the bias effect in the measured $p$IC$_{50}$ increases as the cumulative effect of the dilution effect illustrated in Fig.~\ref{fig:dilution_effect} shifts the apparent affinity of the compound.
   Because the dilution bias is greater for lower compound concentrations, this effect is more drastic for compounds with high affinity.
-  (b) Applying these biases to the pIC50 from the sample dataset shows the bias is higher when 8 wells compared to 32 wells are used for the dilution series at pIC50 $\approx$ -6.0, while the bias is higher for 32 wells at pIC50 $\approx$ -7.5 pIC50, as measured by tips.
+  (b) Applying these biases to the pIC50 from the sample dataset shows the bias increases with both the 16 (green) and 32 (blue) well dilution series, shifting the points even further toward the line of ideal equivalence of the two types of liquid handling. 
+  Note these points overlap exactly.
   }
   \label{fig:bias_vs_nwells}
 \end{figure}
@@ -584,7 +586,7 @@ We can see that simply adding the imprecision in a model with fixed tips (Fig.~\
 
 When the tip dilution effect for washable tips is incorporated (Fig.~\ref{fig:dilution_effect}, green circles), there is a substantial shift toward higher concordance.
 If, instead of an 8-point dilution series, a 16- or 32-point dilution series was used, this shift toward concordance is even larger (Fig.~\ref{fig:bias_vs_nwells}).
-While this effect may explain of a substantial component of the divergence between assay technologies, there is no doubt a significant discrepancy remains.
+While this effect may explain a substantial component of the divergence between assay technologies, there is no doubt a significant discrepancy remains.
 
 \subsection*{Other contributions to the discrepancy are likely relevant}
 
