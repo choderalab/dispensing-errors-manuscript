@@ -9,5 +9,5 @@ Updated notebooks can be found in the `notebooks` directory.
 * `notebooks/` -  amazing new ipython notebook(s) that supplement the manuscript
 * `references/` -  pdfs of especially relevant references
 
-[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org/repo/choderalab/dispensing-errors-manuscript)
+[![Binder](http://mybinder.org/badge.svg)](http://mybinder.org/repo/sonyahanson/dispensing-errors-manuscript)
 
