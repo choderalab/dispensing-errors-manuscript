@@ -1,6 +1,6 @@
 # dispensing-errors-manuscript
 
-Here isn a manuscript based on this [past set of slides and ipynbs](https://github.com/choderalab/cadd-grc-2013).
+Here is a manuscript based on this [past set of slides and ipynbs](https://github.com/choderalab/cadd-grc-2013).
 Updated notebooks can be found in the `notebooks` directory.
 
 ## Manifest
